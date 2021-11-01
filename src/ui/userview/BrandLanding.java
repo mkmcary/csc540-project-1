@@ -1,7 +1,7 @@
 /**
  * 
  */
-package users;
+package ui.userview;
 
 import java.util.Scanner;
 
@@ -15,18 +15,22 @@ public class BrandLanding {
 	final static String SEPARATOR = "------------------------------";
 	
 	/** The id of the brand user */
-	private int id;
+	private static int id;
 
 	/**
 	 * Constructor for Brand Landing page
 	 */
+	@SuppressWarnings("static-access")
 	public BrandLanding(int id) {
 		this.id = id;
+		brandLandingPage();
 	}
 	
 	/**
-	 * 
-	 * @return
+	 * Loops until a valid input is read in.
+	 * @param scanner scanner object that reads in input
+	 * @param pages the max pages that menu can direct to
+	 * @return valid page address
 	 */
 	private static int validPage(Scanner scanner, int pages) {
 		int page = 0;
@@ -35,9 +39,9 @@ public class BrandLanding {
 		// Handles invalid input
 		do {
 			if (!scanner.hasNextInt()) {
+				scanner.next();
 				invalidInput = true;
 				System.out.println("Input must be an integer from 1-" + pages + ".");
-				scanner.next();
 			} else {
 				page = scanner.nextInt();
 				if (page < 1 || page > pages) {
@@ -47,19 +51,21 @@ public class BrandLanding {
 			}
 		} while (invalidInput);
 		
+		scanner.close();
 		return page;
 	}
 	
 	/**
 	 * Default page for brand users
 	 */
+	@SuppressWarnings("unused")
 	public static void brandLandingPage() {
 		Scanner scanner = new Scanner(System.in);
 		boolean logout = false;
 		
 		while (!logout) {
 			System.out.println(SEPARATOR);
-			
+			// Menu
 			System.out.println("1. addLoyaltyProgram");
 			System.out.println("2. addRERules");
 			System.out.println("3. updateRERules");
@@ -67,13 +73,14 @@ public class BrandLanding {
 			System.out.println("5. updateRRRules");
 			System.out.println("6. validateLoyaltyProgram");
 			System.out.println("7. Log out");
+			System.out.println("Enter an interger that corresponds to the menu above:");
 			
 			int page = validPage(scanner, 7);
 			
 			// Directs to page
 			switch (page) {
 			case 1:
-				addLoyaltyProgram(scanner);
+				LoyaltyPrograms lp = new LoyaltyPrograms(id);
 				break;
 			case 2:
 				addRERules(scanner);
@@ -94,106 +101,9 @@ public class BrandLanding {
 				logout = true;
 			}
 		}
-		
-		scanner.close();
 	}
 	
-	/**
-	 * Brand user adding Loyalty Program
-	 */
-	public static void addLoyaltyProgram(Scanner scanner) {
-		boolean back = false;
-		
-		while (!back) {
-			System.out.println(SEPARATOR);
-			System.out.println("1. Regular");
-			System.out.println("2. Tier");
-			System.out.println("3. Go back");
-			
-			int page = validPage(scanner, 3);
-			
-			// Directs to page
-			switch (page) {
-			case 1:
-				addProgramType(scanner, false);
-				break;
-			case 2:
-				addProgramType(scanner, true);
-				break;
-			default:
-				back = true;
-			}
-		}
-	}
-	
-	/**
-	 * Page for adding program type.
-	 * @param scanner input
-	 * @param tiered whether program is 
-	 */
-	public static void addProgramType(Scanner scanner, boolean tiered) {
-		boolean back = false;
-		
-		while (!back) {
-			System.out.println(SEPARATOR);
-			
-			if (tiered) {
-				System.out.println("1. Tier Set up");
-				System.out.println("2. Activity Type");
-				System.out.println("3. Reward Type");
-				System.out.println("4. Go back");
-				
-				int page = validPage(scanner, 4);
-				
-				// Directs to page
-				switch (page) {
-				case 1:
-					tierSetup(scanner);
-					break;
-				case 2:
-					addActivityType(scanner);
-					break;
-				case 3:
-					addRewardType(scanner);
-					break;
-				default:
-					back = true;
-				}
-			} else {
-				System.out.println("1. Activity Type");
-				System.out.println("2. Reward Type");
-				System.out.println("3. Go back");
-				
-				int page = validPage(scanner, 3);
-				
-				// Directs to page
-				switch (page) {
-				case 1:
-					addActivityType(scanner);
-					break;
-				case 2:
-					addRewardType(scanner);
-					break;
-				default:
-					back = true;
-				}
-			}
-		}
-	}
-	
-	public static void tierSetup(Scanner scanner) {
-		
-	}
-	
-	public static void addActivityType(Scanner scanner) {
-		
-	}
-	
-	public static void addRewardType(Scanner scanner) {
-		
-	}
-	
-	// --------------------------------------------------------------------------------------------
+	// -------------------------------------------------------------------------------------------- oops
 	
 	public static void addRERules(Scanner scanner) {
 		
