@@ -5,6 +5,9 @@ package ui;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
+
+import ui.userview.admin.AdminLanding;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.*;
@@ -71,7 +74,7 @@ public class Login {
                     	if (rs.getString("username") == userID && rs.getString("pass").equals(hashedpw)) {
                     		signOn = true;
                     		//TODO: pass in (id, connection)
-                    		BrandLanding = new BrandLanding(rs.getInt("id"), conn);
+                    		BrandLanding brandLanding = new BrandLanding(rs.getInt("id"), conn);
                     	}
                     }
                     
@@ -80,7 +83,7 @@ public class Login {
                     while(rs.next()) {
                     	if (rs.getString("username") == userID && rs.getString("pass").equals(hashedpw)) {
                     		signOn = true;
-                    		CustomerLanding = new CustomerLanding(rs.getInt("id"), conn);
+                    		CustomerLanding customerLanding = new CustomerLanding(rs.getInt("id"), conn);
                     	}
                     }
                     
@@ -89,7 +92,7 @@ public class Login {
                     while(rs.next()) {
                     	if (rs.getString("username") == userID && rs.getString("pass").equals(hashedpw)) {
                     		signOn = true;
-                    		AdminLanding = new AdminLanding(rs.getInt("id"), conn);
+                    		AdminLanding adminLanding = new AdminLanding(rs.getInt("id"), conn);
                     	}
                     }
                     

@@ -75,7 +75,7 @@ public class CustomerSignUp {
     			
     			// If user selected to sign up, otherwise exit to menu above
     			if (selection == 1) {
-    				pstmt = conn.prepareStatement("INSERT INTO Customers VALUES(?,?,?,?,?",
+    				pstmt = conn.prepareStatement("INSERT INTO Customers VALUES(?,?,?,?,?)",
     						Statement.RETURN_GENERATED_KEYS);
                     
                     pstmt.clearParameters();
