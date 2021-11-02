@@ -33,13 +33,13 @@ CREATE TABLE Tiers (
  * Brands
  */
 CREATE TABLE Brands (
-    id integer,
     bname varchar(255),
     baddress varchar(255),
     username varchar(255),
     pass varchar(255),
     joinDate date,
     pId integer,
+    id integer GENERATED ALWAYS AS IDENTITY,
     constraint pk_id primary key (id),
     constraint fk_pId foreign key pId references LoyaltyPrograms (id)
 );
@@ -48,13 +48,22 @@ CREATE TABLE Brands (
  * Customers and their Wallets
  */
 CREATE TABLE Customers (
-    id integer,
     cname varchar(255),
     phoneNumber varchar(15),
     caddress varchar(255),
     username varchar(255),
     pass varchar(255),
+    id integer GENERATED ALWAYS AS IDENTITY,
     constraint pk_id primary key (id) 
+);
+
+/*
+ * Admins
+ */
+CREATE TABLE Admins (
+	username varchar(255),
+	pass varchar(255),
+	id integer GENERATED ALWAYS AS IDENTITY
 );
 
 CREATE TABLE Wallets (
