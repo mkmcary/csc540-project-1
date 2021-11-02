@@ -15,14 +15,11 @@ import java.nio.charset.StandardCharsets;
  * @author Grey Files
  */
 public class Login {
-	
-	// URL to connect to database
-    static final String jdbcURL = "jdbc:oracle:thin:@ora.csc.ncsu.edu:1521:orcl01";
 
     /**
      * Displays the login page and allows for login functionality
      */
-	public Login() {
+	public Login(Connection conn) {
 		Scanner scan = new Scanner(System.in);
 		UserInterface.newScreen();
 		
@@ -32,18 +29,10 @@ public class Login {
 		try {
 			MessageDigest md = MessageDigest.getInstance("SHA3-256");
 			
-			//Set up database connection
-			Class.forName("oracle.jdbc.OracleDriver");
-			String user = "mgfiles";
-			String passwd = "abcd1234";
-			
-            Connection conn = null;
-            Statement stmt = null;
+			//Class.forName("oracle.jdbc.OracleDriver");
+            
+            Statement stmt = conn.createStatement();
             ResultSet rs = null;
-            
-            conn = DriverManager.getConnection(jdbcURL, user, passwd);
-            
-            stmt = conn.createStatement();
             
             while (!signOn) {
             	
@@ -81,7 +70,7 @@ public class Login {
                     	if (rs.getString("username") == userID && rs.getString("pass").equals(hashedpw)) {
                     		signOn = true;
                     		//TODO: pass in (id, connection)
-                    		BrandLanding = new BrandLanding(rs.getInt("id"));
+                    		BrandLanding = new BrandLanding(rs.getInt("id"), conn);
                     	}
                     }
                     
@@ -90,11 +79,18 @@ public class Login {
                     while(rs.next()) {
                     	if (rs.getString("username") == userID && rs.getString("pass").equals(hashedpw)) {
                     		signOn = true;
-                    		CustomerLanding = new CustomerLanding(rs.getInt("id"));
+                    		CustomerLanding = new CustomerLanding(rs.getInt("id"), conn);
                     	}
                     }
                     
-                    //TODO: add Admin users to database schema and query to log in as one
+                    rs = stmt.executeQuery("SELECT id, username, pass FROM Admins");
+                    
+                    while(rs.next()) {
+                    	if (rs.getString("username") == userID && rs.getString("pass").equals(hashedpw)) {
+                    		signOn = true;
+                    		AdminLanding = new AdminLanding(rs.getInt("id"), conn);
+                    	}
+                    }
                     
                     if (!signOn) {
                     	System.out.println("Login Incorrect. Please try again");

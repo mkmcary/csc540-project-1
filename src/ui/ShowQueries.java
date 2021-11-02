@@ -8,7 +8,7 @@ package ui;
  */
 public class ShowQueries {
 
-	public ShowQueries() {
+	public ShowQueries(Connection conn) {
 		//Implement specific queries later
 	}
 }

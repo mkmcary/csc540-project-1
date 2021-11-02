@@ -26,7 +26,7 @@ public class BrandSignUp {
 	/**
 	 * Displays the Brand Sign Up Page and allows the User to make a new brand
 	 */
-	public BrandSignUp() {
+	public BrandSignUp(Connection conn) {
 		Scanner scan = new Scanner(System.in);
 		UserInterface.newScreen();
 		
@@ -36,15 +36,9 @@ public class BrandSignUp {
 		try {
 			MessageDigest md = MessageDigest.getInstance("SHA3-256");
 			
-			//Set up database connection
-			Class.forName("oracle.jdbc.OracleDriver");
-			String user = "mgfiles";
-			String passwd = "abcd1234";
-			
-            Connection conn = null;
+			//Class.forName("oracle.jdbc.OracleDriver");
+
             PreparedStatement pstmt = null;
-            
-            conn = DriverManager.getConnection(jdbcURL, user, passwd);
             
             while (!validInput) {
             	

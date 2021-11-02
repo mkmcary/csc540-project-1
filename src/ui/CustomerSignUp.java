@@ -25,7 +25,7 @@ public class CustomerSignUp {
 	/**
 	 * Displays the Customer Sign Up Page and allows the User to make a new customer
 	 */
-	public CustomerSignUp() {
+	public CustomerSignUp(Connection conn) {
 		Scanner scan = new Scanner(System.in);
 		UserInterface.newScreen();
 		
@@ -35,15 +35,8 @@ public class CustomerSignUp {
 		try {
 			MessageDigest md = MessageDigest.getInstance("SHA3-256");
 			
-			//Set up database connection
-			Class.forName("oracle.jdbc.OracleDriver");
-			String user = "mgfiles";
-			String passwd = "abcd1234";
-			
-            Connection conn = null;
+			//Class.forName("oracle.jdbc.OracleDriver");
             PreparedStatement pstmt = null;
-            
-            conn = DriverManager.getConnection(jdbcURL, user, passwd);
             
             while (!validInput) {
             	
