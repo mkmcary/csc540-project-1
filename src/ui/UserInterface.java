@@ -11,7 +11,7 @@ package ui;
  */
 public class UserInterface {
 	
-	public static void main() {
+	public static void main(String[] args) {
 		Home homepage = new Home();
 	}
 
