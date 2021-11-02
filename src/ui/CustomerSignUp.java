@@ -24,6 +24,7 @@ public class CustomerSignUp {
 
 	/**
 	 * Displays the Customer Sign Up Page and allows the User to make a new customer
+	 * @param conn connection to the database
 	 */
 	public CustomerSignUp(Connection conn) {
 		Scanner scan = new Scanner(System.in);

@@ -18,6 +18,7 @@ public class Login {
 
     /**
      * Displays the login page and allows for login functionality
+     * @param conn connection to the database
      */
 	public Login(Connection conn) {
 		Scanner scan = new Scanner(System.in);

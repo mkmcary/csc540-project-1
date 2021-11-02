@@ -25,6 +25,7 @@ public class BrandSignUp {
 
 	/**
 	 * Displays the Brand Sign Up Page and allows the User to make a new brand
+	 * @param conn connection to the database
 	 */
 	public BrandSignUp(Connection conn) {
 		Scanner scan = new Scanner(System.in);

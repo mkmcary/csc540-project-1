@@ -14,6 +14,7 @@ public class SignUp {
 	
 	/**
 	 * Displays the user type page asking what type of sign up to complete
+	 * @param conn connection to the database
 	 */
 	public SignUp(Connection conn) {
 		boolean running = true;

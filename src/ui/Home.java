@@ -5,10 +5,15 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 /**
+ * Displays homepage and allows users to selection action
  * @author Grey Files
  */
 public class Home {
 
+	/**
+	 * Displays homepage and allows users to selection action
+	 * @param conn connection to the database
+	 */
 	public Home(Connection conn) {
 		boolean running = true;
 		Scanner scan = new Scanner(System.in);
