@@ -80,6 +80,7 @@ public class Login {
                     while(rs.next()) {
                     	if (rs.getString("username") == userID && rs.getString("pass").equals(hashedpw)) {
                     		signOn = true;
+                    		//TODO: pass in (id, connection)
                     		BrandLanding = new BrandLanding(rs.getInt("id"));
                     	}
                     }
