@@ -1,7 +1,7 @@
 /**
  * 
  */
-package ui.userview;
+package ui.userview.brand;
 
 import java.util.Scanner;
 
@@ -20,6 +20,11 @@ public class ProgramType {
 	/** Tiered or not */
 	private static boolean tiered;
 
+	/**
+	 * Constructor for adding program type
+	 * @param id user of the brand
+	 * @param tiered whether program is tiered or not
+	 */
 	@SuppressWarnings("static-access")
 	public ProgramType(int id, boolean tiered) {
 		this.id = id;
@@ -27,6 +32,12 @@ public class ProgramType {
 		addProgramType();
 	}
 	
+	/**
+	 * Loops until a valid input is read in.
+	 * @param scanner scanner object that reads in input
+	 * @param pages the max pages that menu can direct to
+	 * @return valid page address
+	 */
 	private static int validPage(Scanner scanner, int pages) {
 		int page = 0;
 		boolean invalidInput = false;
@@ -42,6 +53,8 @@ public class ProgramType {
 				if (page < 1 || page > pages) {
 					invalidInput = true;
 					System.out.println("Input must be an integer from 1-" + pages + ".");
+				} else {
+					invalidInput = false;
 				}
 			}
 		} while (invalidInput);
@@ -53,7 +66,7 @@ public class ProgramType {
 	/**
 	 * Page for adding program type.
 	 * @param scanner input
-	 * @param tiered whether program is 
+	 * @param tiered whether program is tiered or not
 	 */
 	@SuppressWarnings("unused")
 	public static void addProgramType() {
@@ -78,7 +91,7 @@ public class ProgramType {
 					TierSetup ts = new TierSetup(id);
 					break;
 				case 2:
-					//addActivityType(scanner);
+					ActivityTypes at = new ActivityTypes(id);
 					break;
 				case 3:
 					//addRewardType(scanner);
@@ -97,7 +110,7 @@ public class ProgramType {
 				// Directs to page
 				switch (page) {
 				case 1:
-					//addActivityType(scanner);
+					ActivityTypes at = new ActivityTypes(id);
 					break;
 				case 2:
 					//addRewardType(scanner);
@@ -107,13 +120,5 @@ public class ProgramType {
 				}
 			}
 		}
-	}
-	
-	public static void addActivityType(Scanner scanner) {
-		
-	}
-	
-	public static void addRewardType(Scanner scanner) {
-		
 	}
 }

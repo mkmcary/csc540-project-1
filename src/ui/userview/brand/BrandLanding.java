@@ -1,7 +1,7 @@
 /**
  * 
  */
-package ui.userview;
+package ui.userview.brand;
 
 import java.util.Scanner;
 
@@ -19,6 +19,7 @@ public class BrandLanding {
 
 	/**
 	 * Constructor for Brand Landing page
+	 * @param id user of the brand
 	 */
 	@SuppressWarnings("static-access")
 	public BrandLanding(int id) {
@@ -47,6 +48,8 @@ public class BrandLanding {
 				if (page < 1 || page > pages) {
 					invalidInput = true;
 					System.out.println("Input must be an integer from 1-" + pages + ".");
+				} else {
+					invalidInput = false;
 				}
 			}
 		} while (invalidInput);
@@ -56,7 +59,7 @@ public class BrandLanding {
 	}
 	
 	/**
-	 * Default page for brand users
+	 * Homepage for brand users
 	 */
 	@SuppressWarnings("unused")
 	public static void brandLandingPage() {

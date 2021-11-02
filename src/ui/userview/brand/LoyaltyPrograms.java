@@ -1,7 +1,7 @@
 /**
  * 
  */
-package ui.userview;
+package ui.userview.brand;
 
 import java.util.Scanner;
 
@@ -9,24 +9,30 @@ import java.util.Scanner;
  * @author Tyrone Wu
  *
  */
-public class TierSetup {
-	
+public class LoyaltyPrograms {
+
 	/** CLI separator */
 	final static String SEPARATOR = "------------------------------";
 	
 	/** The id of the brand user */
 	private static int id;
-
+	
 	/**
-	 * @param id 
-	 * 
+	 * Constructor for adding loyalty programs
+	 * @param id user of the brand
 	 */
 	@SuppressWarnings("static-access")
-	public TierSetup(int id) {
+	public LoyaltyPrograms(int id) {
 		this.id = id;
-		tierSetup();
+		addLoyaltyProgram();
 	}
 	
+	/**
+	 * Loops until a valid input is read in.
+	 * @param scanner scanner object that reads in input
+	 * @param pages the max pages that menu can direct to
+	 * @return valid page address
+	 */
 	private static int validPage(Scanner scanner, int pages) {
 		int page = 0;
 		boolean invalidInput = false;
@@ -42,6 +48,8 @@ public class TierSetup {
 				if (page < 1 || page > pages) {
 					invalidInput = true;
 					System.out.println("Input must be an integer from 1-" + pages + ".");
+				} else {
+					invalidInput = false;
 				}
 			}
 		} while (invalidInput);
@@ -49,24 +57,34 @@ public class TierSetup {
 		scanner.close();
 		return page;
 	}
-
-	public static void tierSetup() {
+	
+	/**
+	 * Brand user adding Loyalty Program
+	 */
+	@SuppressWarnings("unused")
+	public static void addLoyaltyProgram() {
 		Scanner scanner = new Scanner(System.in);
 		boolean back = false;
 		
 		while (!back) {
 			System.out.println(SEPARATOR);
-			
-			System.out.println("1. Set up");
-			System.out.println("2. Go back");
+			System.out.println("1. Regular");
+			System.out.println("2. Tier");
+			System.out.println("3. Go back");
 			System.out.println("Enter an interger that corresponds to the menu above:");
 			
-			int page = validPage(scanner, 2);
+			int page = validPage(scanner, 3);
+			ProgramType pt = null;
 			
-			if (page == 1) {
-				System.out.println("Please enter the following information in order:");
-				System.out.println("Please enter the following information in order:");
-			} else {
+			// Directs to page
+			switch (page) {
+			case 1:
+				pt = new ProgramType(id, false);
+				break;
+			case 2:
+				pt = new ProgramType(id, true);
+				break;
+			default:
 				back = true;
 			}
 		}

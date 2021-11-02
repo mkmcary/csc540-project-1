@@ -1,7 +1,7 @@
 /**
  * 
  */
-package ui.userview;
+package ui.userview.brand;
 
 import java.util.Scanner;
 
@@ -9,20 +9,29 @@ import java.util.Scanner;
  * @author Tyrone Wu
  *
  */
-public class LoyaltyPrograms {
-
+public class RewardTypes {
+	
 	/** CLI separator */
 	final static String SEPARATOR = "------------------------------";
 	
 	/** The id of the brand user */
-	private static int id;
-	
-	@SuppressWarnings("static-access")
-	public LoyaltyPrograms(int id) {
+	private int id;
+
+	/**
+	 * Constructor for adding reward type to program.
+	 * @param id
+	 */
+	public RewardTypes(int id) {
 		this.id = id;
-		addLoyaltyProgram();
+		addRewardType();
 	}
 	
+	/**
+	 * Loops until a valid input is read in.
+	 * @param scanner scanner object that reads in input
+	 * @param pages the max pages that menu can direct to
+	 * @return valid page address
+	 */
 	private static int validPage(Scanner scanner, int pages) {
 		int page = 0;
 		boolean invalidInput = false;
@@ -38,43 +47,60 @@ public class LoyaltyPrograms {
 				if (page < 1 || page > pages) {
 					invalidInput = true;
 					System.out.println("Input must be an integer from 1-" + pages + ".");
+				} else {
+					invalidInput = false;
 				}
 			}
 		} while (invalidInput);
 		
-		scanner.close();
 		return page;
 	}
-	
+
 	/**
-	 * Brand user adding Loyalty Program
+	 * Adding reward type to program.
 	 */
-	@SuppressWarnings("unused")
-	public static void addLoyaltyProgram() {
+	public static void addRewardType() {
 		Scanner scanner = new Scanner(System.in);
 		boolean back = false;
 		
 		while (!back) {
 			System.out.println(SEPARATOR);
-			System.out.println("1. Regular");
-			System.out.println("2. Tier");
+			
+			System.out.println("1. Gift Card");
+			System.out.println("2. Free Product");
 			System.out.println("3. Go back");
 			System.out.println("Enter an interger that corresponds to the menu above:");
 			
 			int page = validPage(scanner, 3);
-			ProgramType pt = null;
 			
-			// Directs to page
 			switch (page) {
 			case 1:
-				pt = new ProgramType(id, false);
+				giftCard(scanner);
 				break;
 			case 2:
-				pt = new ProgramType(id, true);
+				freeProduct(scanner);
 				break;
 			default:
 				back = true;
 			}
 		}
+		
+		scanner.close();
+	}
+	
+	/**
+	 * Add gift card reward type.
+	 * @param scanner
+	 */
+	public static void giftCard(Scanner scanner) {
+		// TODO
+	}
+	
+	/**
+	 * Add free product reward type.
+	 * @param scanner
+	 */
+	public static void freeProduct(Scanner scanner) {
+		// TODO
 	}
 }
