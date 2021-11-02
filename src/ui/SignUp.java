@@ -3,6 +3,7 @@
  */
 package ui;
 
+import java.sql.Connection;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -45,13 +46,14 @@ public class SignUp {
 			
 			switch (selection) {
 				case 1: BrandSignUp brandsignup = new BrandSignUp(conn);
+						running = !brandsignup.submitted;
 						break;
 				case 2: CustomerSignUp customersignup = new CustomerSignUp(conn);
+						running = !customersignup.submitted;
 						break;
-				case 3: break;
+				case 3: running = false;
+						break;
 			}
-			
-			// TODO: add functionality to select again if exiting from sub-page
 		}
 		
 		scan.close();

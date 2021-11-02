@@ -19,8 +19,8 @@ import java.util.Scanner;
  */
 public class CustomerSignUp {
 	
-	// URL to connect to database
-    static final String jdbcURL = "jdbc:oracle:thin:@ora.csc.ncsu.edu:1521:orcl01";
+	// Whether the customer sign up information has been submitted
+	public boolean submitted = false;
 
 	/**
 	 * Displays the Customer Sign Up Page and allows the User to make a new customer
@@ -91,6 +91,7 @@ public class CustomerSignUp {
                     }
                     else {
                     	validInput = true;
+                    	this.submitted = true;
                     	System.out.println("Customer information saved");
                     }
     			}
@@ -104,6 +105,8 @@ public class CustomerSignUp {
 		} catch (Throwable e) {
 			System.out.println("Invalid Customer Information. Try Again.");
 		}
+		
+		Login CustomerLogin = new Login(conn);
 		
 		scan.close();
 	}

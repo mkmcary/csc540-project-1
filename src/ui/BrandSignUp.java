@@ -20,8 +20,8 @@ import java.util.Scanner;
  */
 public class BrandSignUp {
 	
-	// URL to connect to database
-    static final String jdbcURL = "jdbc:oracle:thin:@ora.csc.ncsu.edu:1521:orcl01";
+	// Whether the brand sign up information has been submitted
+	public boolean submitted = false;
 
 	/**
 	 * Displays the Brand Sign Up Page and allows the User to make a new brand
@@ -93,6 +93,7 @@ public class BrandSignUp {
                     }
                     else {
                     	validInput = true;
+                    	this.submitted = true;
                     	System.out.println("Brand information saved");
                     }
     			}
@@ -106,6 +107,8 @@ public class BrandSignUp {
 		} catch (Throwable e) {
 			System.out.println("Invalid Brand Information. Try Again.");
 		}
+		
+		Login brandLogin = new Login(conn);
 		
 		scan.close();
 	}

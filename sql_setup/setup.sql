@@ -93,7 +93,7 @@ CREATE TABLE WalletParticipation (
  * Reward Earning
  */
 CREATE TABLE ActivityCategories (
-    acId integer,
+    acId varchar(255),
     acName varchar(255),
     constraint pk_id primary key (acId)
 );
@@ -126,7 +126,7 @@ CREATE TABLE ActivityInstances (
  * Reward Redeeming
  */
 CREATE TABLE Rewards (
-    rId integer,
+    rId varchar(255),
     rName varchar(255),
     constraint pk_id primary key (rId)
 );

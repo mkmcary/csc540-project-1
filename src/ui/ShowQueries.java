@@ -3,6 +3,8 @@
  */
 package ui;
 
+import java.sql.Connection;
+
 /**
  * Shows queries given by instructor
  * @author Grey Files
