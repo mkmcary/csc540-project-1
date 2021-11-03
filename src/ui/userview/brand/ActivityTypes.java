@@ -5,8 +5,11 @@ package ui.userview.brand;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -22,16 +25,17 @@ public class ActivityTypes {
     final static String SEPARATOR = "------------------------------";
 
     /** The id of the brand user */
-    private int id;
+    private static int id;
 
     /**
      * Constructor for adding activity types
      * 
      * @param id user of the brand
      */
+    @SuppressWarnings("static-access")
     public ActivityTypes(int id) {
         this.id = id;
-        addActivityType();
+        activityTypesMenu();
     }
 
     /**
@@ -69,32 +73,30 @@ public class ActivityTypes {
     /**
      * Adding activity type.
      */
-    public static void addActivityType() {
+    public static void activityTypesMenu() {
+        ArrayList<String[]> activities = getActivityTypes();
         Scanner scanner = new Scanner(System.in);
         boolean back = false;
 
         while (!back) {
             System.out.println(SEPARATOR);
+            // Menu
+            int i = 0;
+            for (String[] a : activities) {
+                System.out.println((++i) + ". " + a[1]);
+            }
+            System.out.println((++i) + ". Go back");
 
-            System.out.println("1. Purchase");
-            System.out.println("2. Leave a review");
-            System.out.println("3. Refer a friend");
-            System.out.println("4. Go back");
-            System.out.print("\nEnter an interger that corresponds to the menu above: ");
-
-            int page = validPage(scanner, 4);
-
-            switch (page) {
-            case 1:
-                purchase(scanner);
-                break;
-            case 2:
-                leaveReview(scanner);
-                break;
-            case 3:
-                referFriend(scanner);
-                break;
-            default:
+            int page = validPage(scanner, i);
+            
+            if (page != i) {
+                boolean success = insertActivity(activities.get(i - 1)[0]);
+                if (success) {
+                    System.out.println("Activity Type has been successfully added. :))))");
+                } else {
+                    System.out.println("Activity Type was not added. :((((");
+                }
+            } else {
                 back = true;
             }
         }
@@ -103,45 +105,13 @@ public class ActivityTypes {
     }
 
     /**
-     * Purchase activity type.
-     * 
-     * @param scanner read in input
+     * Get activities
+     * @return array list of activities
      */
-    public static void purchase(Scanner scanner) {
-
-        String statement = "\"INSERT INTO Tiers " + "VALUES ('Colombian', 101, 7.99, 0, 0)";
-    }
-
-    /**
-     * Leaving review activity type.
-     * 
-     * @param scanner read in input
-     */
-    public static void leaveReview(Scanner scanner) {
-        // TODO
-    }
-
-    /**
-     * Referring friend activity type.
-     * 
-     * @param scanner read in input
-     */
-    public static void referFriend(Scanner scanner) {
-        // TODO
-    }
-
-    /**
-     * Add tiers in SQL.
-     * 
-     * @return boolean success of SQL statement
-     */
-    private static boolean executeStatement(String statement) {
-        boolean success = true;
-
+    private static ArrayList<String[]> getActivityTypes() {
+        ArrayList<String[]> activities = new ArrayList<String[]>();
+        
         try {
-            // Load the driver. This creates an instance of the driver
-            // and calls the registerDriver method to make Oracle Thin
-            // driver available to clients.
             Class.forName("oracle.jdbc.OracleDriver");
 
             String user = "tkwu";
@@ -152,25 +122,68 @@ public class ActivityTypes {
             ResultSet rs = null;
 
             try {
-                // Get a connection from the first driver in the
-                // DriverManager list that recognizes the URL jdbcURL
                 conn = DriverManager.getConnection(jdbcURL, user, passwd);
-
-                // Create a statement object that will be sending your
-                // SQL statements to the DBMS
                 stmt = conn.createStatement();
 
-                // Insert Tiers into Tiers table
                 try {
-                    stmt.executeUpdate(statement);
-                } catch (java.sql.SQLException e) {
-                    success = false;
-                    System.out.println(
-                            "Caught SQLException " + e.getErrorCode() + "/" + e.getSQLState() + " " + e.getMessage());
+                    rs = stmt.executeQuery("SELECT acId, acName FROM ActivityCategories");
+                    
+                    while (rs.next()) {
+                        String[] activity = new String[] { rs.getString("acId"), rs.getString("acName") };
+                        activities.add(activity);
+                    }
+                } catch (SQLException e) {
+                    System.out.println("Caught SQLException " + e.getErrorCode() + "/" + e.getSQLState() + " " + e.getMessage());
                 }
             } finally {
                 close(rs);
                 close(stmt);
+                close(conn);
+            }
+        } catch (Throwable oops) {
+            oops.printStackTrace();
+        }
+        
+        return activities;
+    }
+
+    /**
+     * Add activity type in SQL.
+     * 
+     * @return boolean success of SQL statement
+     */
+    private static boolean insertActivity(String acId) {
+        boolean success = true;
+
+        try {
+            Class.forName("oracle.jdbc.OracleDriver");
+
+            String user = "tkwu";
+            String passwd = "abcd1234";
+
+            Connection conn = null;
+            PreparedStatement pstmt = null;
+            // ResultSet rs = null;
+
+            try {
+                conn = DriverManager.getConnection(jdbcURL, user, passwd);
+                pstmt = conn.prepareStatement("INSERT INTO ProgramActivities VALUES(?,?)");
+                pstmt.clearParameters();
+                pstmt.setInt(1, id);
+                pstmt.setString(2, acId);
+
+                try {
+                    int rows = pstmt.executeUpdate();
+                    if (rows < 1) {
+                        throw new SQLException();
+                    }
+                } catch (SQLException e) {
+                    success = false;
+                    System.out.println("Invalid Input: " + e.getErrorCode() + "-" + e.getMessage());
+                }
+            } finally {
+                // close(rs);
+                close(pstmt);
                 close(conn);
             }
         } catch (Throwable oops) {
@@ -190,6 +203,15 @@ public class ActivityTypes {
     }
 
     private static void close(Statement st) {
+        if (st != null) {
+            try {
+                st.close();
+            } catch (Throwable whatever) {
+            }
+        }
+    }
+    
+    private static void close(PreparedStatement st) {
         if (st != null) {
             try {
                 st.close();

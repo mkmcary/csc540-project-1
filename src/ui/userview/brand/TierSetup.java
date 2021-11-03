@@ -4,7 +4,10 @@
 package ui.userview.brand;
 
 import java.util.Scanner;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 /**
  * @author Tyrone Wu
@@ -29,7 +32,7 @@ public class TierSetup {
     @SuppressWarnings("static-access")
     public TierSetup(int id) {
         this.id = id;
-        tierSetup();
+        tierSetupMenu();
     }
 
     /**
@@ -67,7 +70,7 @@ public class TierSetup {
     /**
      * Setup the tiers of the program.
      */
-    public static void tierSetup() {
+    public static void tierSetupMenu() {
         Scanner scanner = new Scanner(System.in);
         boolean back = false;
 
@@ -76,25 +79,47 @@ public class TierSetup {
 
             System.out.println("1. Set up");
             System.out.println("2. Go back");
-            System.out.print("\nEnter an interger that corresponds to the menu above: ");
 
             int page = validPage(scanner, 2);
 
             if (page == 1) {
-                System.out.println("Please enter the following information:");
-                System.out.print("Number of tiers (max 3): ");
-                if (scanner.hasNextInt()) {
+                try {
+                    System.out.println("Please enter the following information:");
+                    System.out.print("Number of tiers (max 3): ");
                     int tiers = scanner.nextInt();
 
                     String[] tierNames = new String[tiers];
-                    System.out.println("Name of the tiers (in increasing order of precedence): ");
-                    for (int i = 0; i < tierNames.length; i++) {
+                    System.out.println("\nName of the tiers (in increasing order of precedence): ");
+                    scanner.nextLine();
+                    for (int i = 0; i < tiers; i++) {
                         System.out.println("Tier " + (i + 1) + " name: ");
-
+                        tierNames[i] = scanner.nextLine();
                     }
-                } else {
+
+                    int[] thresholds = new int[tiers];
+                    System.out.println("\nEnter points required for each tier (lower bound): ");
+                    for (int i = 0; i < tiers; i++) {
+                        System.out.print("Tier " + (i + 1) + " threshold: ");
+                        thresholds[i] = scanner.nextInt();
+                    }
+
+                    float[] multipliers = new float[tiers];
+                    System.out.println("\nEnter multiplier for each tier: ");
+                    for (int i = 0; i < tiers; i++) {
+                        System.out.print("Tier " + (i + 1) + " multiplier: ");
+                        multipliers[i] = scanner.nextFloat();
+                    }
+
+                    boolean success = insertTiers(tierNames, thresholds, multipliers);
+                    if (success) {
+                        System.out.println("Tiers have been successfully added. :))))");
+                    } else {
+                        System.out.println("Tiers were not added. :((((");
+                    }
+                } catch (Exception e) {
+                    // Incorrect data type.
                     scanner.next();
-                    System.out.println("Invalid input.");
+                    System.out.println("\nInvalid input.");
                 }
             } else {
                 back = true;
@@ -105,45 +130,50 @@ public class TierSetup {
     }
 
     /**
-     * Executes the SQL statement give in the parameter.
+     * Executes the SQL statements give in the parameter.
      * 
-     * @return boolean true if success of SQL statement, otherwise false
+     * @param names       tier names
+     * @param thresholds  threshold of tiers
+     * @param multipliers multiplier of tiers
+     * @return true if success of SQL statement, otherwise false
      */
-    private static boolean executeStatement(String statement) {
+    private static boolean insertTiers(String[] names, int[] thresholds, float[] multipliers) {
         boolean success = true;
 
         try {
-            // Load the driver. This creates an instance of the driver and calls the
-            // registerDriver method to make Oracle Thin driver available to clients.
+            // Load the driver
             Class.forName("oracle.jdbc.OracleDriver");
 
             String user = "tkwu";
             String passwd = "abcd1234";
 
             Connection conn = null;
-            Statement stmt = null;
-            ResultSet rs = null;
+            PreparedStatement pstmt = null;
+            // ResultSet rs = null;
 
             try {
-                // Get a connection from the first driver in the DriverManager list that
-                // recognizes the URL jdbcURL
                 conn = DriverManager.getConnection(jdbcURL, user, passwd);
-
-                // Create a statement object that will be sending your SQL statements to the
-                // DBMS
-                stmt = conn.createStatement();
-
-                // Insert Tiers into Tiers table
+                pstmt = conn.prepareStatement("INSERT INTO Brands VALUES(?,?,?,?,?)");
+                
+                for (int i = 0; i < names.length; i++) {
+                    pstmt.clearParameters();
+                    pstmt.setInt(1, id);
+                    pstmt.setInt(2, i + 1);
+                    pstmt.setString(3, names[i]);
+                    pstmt.setFloat(4, multipliers[i]);
+                    pstmt.setInt(5, thresholds[i]);
+                    pstmt.addBatch();
+                }
+                
                 try {
-                    stmt.executeUpdate(statement);
-                } catch (java.sql.SQLException e) {
+                    pstmt.executeBatch();
+                } catch (SQLException e) {
                     success = false;
-                    System.out.println(
-                            "Caught SQLException " + e.getErrorCode() + "/" + e.getSQLState() + " " + e.getMessage());
+                    System.out.println("Invalid input: " + e.getErrorCode() + "-" + e.getMessage());
                 }
             } finally {
-                close(rs);
-                close(stmt);
+                // close(rs);
+                close(pstmt);
                 close(conn);
             }
         } catch (Throwable oops) {
@@ -162,7 +192,7 @@ public class TierSetup {
         }
     }
 
-    private static void close(Statement st) {
+    private static void close(PreparedStatement st) {
         if (st != null) {
             try {
                 st.close();
@@ -171,6 +201,7 @@ public class TierSetup {
         }
     }
 
+    /* 
     private static void close(ResultSet rs) {
         if (rs != null) {
             try {
@@ -179,4 +210,5 @@ public class TierSetup {
             }
         }
     }
+    */
 }

@@ -30,7 +30,7 @@ public class ProgramType {
     public ProgramType(int id, boolean tiered) {
         this.id = id;
         this.tiered = tiered;
-        addProgramType();
+        programTypeMenu();
     }
 
     /**
@@ -72,7 +72,7 @@ public class ProgramType {
      * @param tiered  whether program is tiered or not
      */
     @SuppressWarnings("unused")
-    public static void addProgramType() {
+    public static void programTypeMenu() {
         Scanner scanner = new Scanner(System.in);
         boolean back = false;
 

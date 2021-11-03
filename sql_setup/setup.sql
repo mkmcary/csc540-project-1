@@ -26,7 +26,9 @@ CREATE TABLE Tiers (
     threshold integer,
     constraint fk_pId foreign key pId references LoyaltyPrograms (id),
     constraint pk_tier primary key (pId, tnum),
-    constraint valid_tier check(tnum >= 0 and tnum <= 2)
+    constraint valid_tier check(tnum >= 0 and tnum <= 2),
+    constraint valid_multiplier check(multiplier > 0),
+    constraint valid_threshold check(threshold >= 0)
 );
 
 /*
@@ -84,9 +86,15 @@ CREATE TABLE WalletParticipation (
  * Reward Earning
  */
 CREATE TABLE ActivityCategories (
-    acId integer,
+    acId varchar(255),
     acName varchar(255),
     constraint pk_id primary key (acId)
+);
+
+CREATE TABLE ProgramActivities (
+	pId integer,
+    acId varchar(255),
+    constraint pk_id primary key (pId, acId)
 );
 
 CREATE TABLE RewardEarningRules (
@@ -117,9 +125,15 @@ CREATE TABLE ActivityInstances (
  * Reward Redeeming
  */
 CREATE TABLE Rewards (
-    rId integer,
+    rId varchar(255),
     rName varchar(255),
     constraint pk_id primary key (rId)
+);
+
+CREATE TABLE ProgramRewards (
+	pId integer,
+    rId varchar(255),
+    constraint pk_id primary key (pId, rId)
 );
 
 CREATE TABLE GiftCards (
