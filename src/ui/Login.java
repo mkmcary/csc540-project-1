@@ -68,32 +68,25 @@ public class Login {
     			
     			// If user selected to sign in, otherwise exit to menu above
     			if (selection == 1) {
-                    rs = stmt.executeQuery("SELECT id, username, pass FROM Brands");
+                    rs = stmt.executeQuery("SELECT id FROM Brands WHERE username = " + userID + " AND pass = " + hashedpw);
                     
                     while(rs.next()) {
-                    	if (rs.getString("username") == userID && rs.getString("pass").equals(hashedpw)) {
-                    		signOn = true;
-                    		//TODO: pass in (id, connection)
-                    		BrandLanding brandLanding = new BrandLanding(rs.getInt("id"), conn);
-                    	}
+                    	signOn = true;
+                    	BrandLanding brandLanding = new BrandLanding(rs.getInt("id"), conn);
                     }
                     
-                    rs = stmt.executeQuery("SELECT id, username, pass FROM Customers");
+                    rs = stmt.executeQuery("SELECT id FROM Customers WHERE username = " + userID + " AND pass = " + hashedpw);
                     
                     while(rs.next()) {
-                    	if (rs.getString("username") == userID && rs.getString("pass").equals(hashedpw)) {
-                    		signOn = true;
-                    		CustomerLanding customerLanding = new CustomerLanding(rs.getInt("id"), conn);
-                    	}
+                		signOn = true;
+                		CustomerLanding customerLanding = new CustomerLanding(rs.getInt("id"), conn);
                     }
                     
-                    rs = stmt.executeQuery("SELECT id, username, pass FROM Admins");
+                    rs = stmt.executeQuery("SELECT id FROM Customers WHERE username = " + userID + " AND pass = " + hashedpw);
                     
                     while(rs.next()) {
-                    	if (rs.getString("username") == userID && rs.getString("pass").equals(hashedpw)) {
-                    		signOn = true;
-                    		AdminLanding adminLanding = new AdminLanding(rs.getInt("id"), conn);
-                    	}
+                    	signOn = true;
+                    	AdminLanding adminLanding = new AdminLanding(rs.getInt("id"), conn);
                     }
                     
                     if (!signOn) {
