@@ -88,6 +88,7 @@ public class CustomerLanding {
 				new CustomerEnrollProgram(custId, walletId, conn);
 			} else if (userInput == 2) {
 				// Reward Activities
+				new CustomerRewardActivities(custId, walletId, conn);
 			} else if (userInput == 3) {
 				// View Wallet
 			} else if (userInput == 4) {
