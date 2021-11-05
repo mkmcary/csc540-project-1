@@ -6,7 +6,6 @@ package ui;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -114,12 +113,32 @@ public class CustomerSignUp {
                     pstmt.setString(5, hashedpw);
                     
                     int rows = pstmt.executeUpdate();
+                    rs = pstmt.getGeneratedKeys();
+                    int cid = rs.getInt(1);
+                    
                     if (rows < 1) {
                     	throw new SQLException();
                     }
                     else {
                     	validInput = true;
                     	this.submitted = true;
+                    	
+                    	pstmt = conn.prepareStatement("INSERT INTO Wallets", Statement.RETURN_GENERATED_KEYS);
+                    	pstmt.clearParameters();
+                    	pstmt.executeUpdate();
+                    	rs = pstmt.getGeneratedKeys();
+                    	
+                    	int wid = rs.getInt(1);
+                    	
+                    	pstmt = conn.prepareStatement("INSERT INTO CustomerWallets VALUES(?,?)");
+                    	
+                    	pstmt.clearParameters();
+                    	pstmt.setInt(1, cid);
+                    	pstmt.setInt(2, wid);
+                    	
+                    	pstmt.executeUpdate();
+                    	
+                    	
                     	System.out.println("Customer information saved");
                     }
     			}
