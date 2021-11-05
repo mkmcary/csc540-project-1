@@ -7,6 +7,7 @@ import java.util.Scanner;
 
 /**
  * @author Tyrone Wu
+ * @author Niraj Lavani
  *
  */
 public class LoyaltyPrograms {
@@ -16,6 +17,10 @@ public class LoyaltyPrograms {
 
     /** The id of the brand user */
     private static int id;
+    
+    /** The name of the loyalty program */
+    private String name;
+    
 
     /**
      * Constructor for adding loyalty programs
@@ -23,11 +28,28 @@ public class LoyaltyPrograms {
      * @param id user of the brand
      */
     @SuppressWarnings("static-access")
-    public LoyaltyPrograms(int id) {
+    public LoyaltyPrograms(int id, String name) {
         this.id = id;
+        this.name = name;
         addLoyaltyProgram();
     }
-
+    
+    /**
+     * Gets the name of the loyalty program
+     * @return name of LP
+     */
+    public String getName() {
+    	return this.name;
+    }
+    
+    /**
+     * Gets the name of the loyalty program
+     * @return name of LP
+     */
+    public String getID() {
+    	return this.name;
+    }
+    
     /**
      * Loops until a valid input is read in.
      * 
@@ -66,8 +88,10 @@ public class LoyaltyPrograms {
     @SuppressWarnings("unused")
     public static void addLoyaltyProgram() {
         Scanner scanner = new Scanner(System.in);
+        
+        
+        
         boolean back = false;
-
         while (!back) {
             System.out.println(SEPARATOR);
             System.out.println("1. Regular");
