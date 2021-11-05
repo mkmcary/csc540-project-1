@@ -2,8 +2,10 @@
  * Loyalty Programs and Tiers
  */
 CREATE TABLE LoyaltyPrograms (
-    id integer,
+    pName varchar(255),
+    pCode varchar(255),
     isTiered boolean,
+    id integer GENERATED ALWAYS AS IDENTITY,
     constraint pk_id primary key (id)  
 );
 
@@ -67,7 +69,7 @@ CREATE TABLE Admins (
 );
 
 CREATE TABLE Wallets (
-    id integer,
+	id integer GENERATED ALWAYS AS IDENTITY
     constraint pk_id primary key (id)
 );
 
@@ -83,6 +85,7 @@ CREATE TABLE WalletParticipation (
     wId integer,
     pId integer,
     points integer,
+    alltimepoints integer,
     tierNumber integer, -- A participation in a regular program will have a null tierNumber
     constraint pk_participation primary key (wId, pId),
     constraint fk_wId foreign key wId references Wallets (id),
@@ -110,7 +113,7 @@ CREATE TABLE RewardEarningRules (
 );
 
 CREATE TABLE ActivityInstances (
-    id integer,
+    id integer GENERATED ALWAYS AS IDENTITY,
     instanceDate date,
     relevantInfo varchar(1000),
     pId integer,
@@ -132,7 +135,7 @@ CREATE TABLE Rewards (
 );
 
 CREATE TABLE GiftCards (
-    id integer,
+    id integer GENERATED ALWAYS AS IDENTITY,
     pId integer,
     wId integer,
     cardValue float,
@@ -151,4 +154,16 @@ CREATE TABLE RewardRedeemingRules (
     constraint pk_rr primary key (pId, ruleVersion, ruleCode),
     constraint fk_pId foreign key pId references LoyaltyPrograms (id),
     constraint fk_reward foreign key rId references Rewards (rId)
+);
+
+CREATE TABLE RewardInstances (
+    id integer GENERATED ALWAYS AS IDENTITY,
+    instanceDate date,
+    pId integer,
+    ruleVersion integer(3),
+    ruleCode varchar(6),
+    wId integer NOT NULL,
+    constraint pk_id primary key (id),
+    constraint fk_re foreign key (pId, ruleVersion, ruleCode) references RewardEarningRules (pId, ruleVersion, ruleCode)
+    constraint fk_wId foreign key wId references Wallets (id)
 );
