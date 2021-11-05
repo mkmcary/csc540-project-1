@@ -1,14 +1,20 @@
 package ui;
 
+import java.sql.Connection;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
 /**
+ * Displays homepage and allows users to selection action
  * @author Grey Files
  */
 public class Home {
 
-	public Home() {
+	/**
+	 * Displays homepage and allows users to selection action
+	 * @param conn connection to the database
+	 */
+	public Home(Connection conn) {
 		boolean running = true;
 		Scanner scan = new Scanner(System.in);
 		
@@ -36,11 +42,11 @@ public class Home {
 			}
 			
 			switch (selection) {
-				case 1: Login loginpage = new Login();
+				case 1: Login loginpage = new Login(conn);
 						break;
-				case 2: SignUp signuppage = new SignUp();
+				case 2: SignUp signuppage = new SignUp(conn);
 						break;
-				case 3: ShowQueries showqueriespage = new ShowQueries();
+				case 3: ShowQueries showqueriespage = new ShowQueries(conn);
 						break;
 				case 4: running = false;
 						break;

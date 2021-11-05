@@ -1,33 +1,32 @@
 /**
  * 
  */
-package ui;
+package ui.userview.admin;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.sql.Connection;
 import java.sql.Date;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import ui.Login;
+import ui.UserInterface;
+
 /**
- * Displays the Brand Sign Up Page and allows the User to make a new brand
+ * Displays the Add Brand page and allows for adding brands
  * @author Grey Files
  */
-public class BrandSignUp {
+public class AdminAddBrand {
 	
-	// Whether the brand sign up information has been submitted
-	public boolean submitted = false;
-
 	/**
-	 * Displays the Brand Sign Up Page and allows the User to make a new brand
+	 * Displays the Add Brand page and allows for adding brands
 	 * @param conn connection to the database
 	 */
-	public BrandSignUp(Connection conn) {
+	public AdminAddBrand(Connection conn) {
 		Scanner scan = new Scanner(System.in);
 		UserInterface.newScreen();
 		
@@ -43,17 +42,17 @@ public class BrandSignUp {
             
             while (!validInput) {
             	
-        		System.out.print("Enter Your Name: ");
+        		System.out.print("Enter Brand Name: ");
         		String name = scan.nextLine();
-        		System.out.print("Enter Your Address: ");
+        		System.out.print("Enter Brand Address: ");
         		String address = scan.nextLine();
-        		System.out.print("Enter Your Username: ");
+        		System.out.print("Enter Brand Username: ");
         		String username = scan.nextLine();
-        		System.out.print("Enter Your Password: ");
+        		System.out.print("Enter Brand Password: ");
         		String password = scan.nextLine();
     			String hashedpw = new String(md.digest(password.getBytes()), StandardCharsets.UTF_8);
     			
-    			System.out.println("\n1) Sign-up\n2) Go Back");
+    			System.out.println("\n1) Add Brand\n2) Go Back");
     			System.out.print("\nSelect an Option: ");
     			
     			boolean selected = false;
@@ -73,7 +72,7 @@ public class BrandSignUp {
     				}
     			}
     			
-    			// If user selected to sign up, otherwise exit to menu above
+    			// If user selected to add brand, otherwise exit to menu above
     			if (selection == 1) {
     				pstmt = conn.prepareStatement("INSERT INTO Brands VALUES(?,?,?,?,?,?)",
     						Statement.RETURN_GENERATED_KEYS);
@@ -93,12 +92,11 @@ public class BrandSignUp {
                     }
                     else {
                     	validInput = true;
-                    	this.submitted = true;
                     	System.out.println("Brand information saved");
                     }
     			}
     			else {
-    				// Get out of loop and return to calling class even though no sign up
+    				// Get out of loop and return to calling class even though no submission
     				validInput = true;
     			}
             }
@@ -108,8 +106,7 @@ public class BrandSignUp {
 			System.out.println("Invalid Brand Information. Try Again.");
 		}
 		
-		Login brandLogin = new Login(conn);
-		
 		scan.close();
 	}
+
 }

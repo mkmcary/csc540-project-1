@@ -5,6 +5,9 @@ package ui;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
+
+import ui.userview.admin.AdminLanding;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.*;
@@ -15,14 +18,12 @@ import java.nio.charset.StandardCharsets;
  * @author Grey Files
  */
 public class Login {
-	
-	// URL to connect to database
-    static final String jdbcURL = "jdbc:oracle:thin:@ora.csc.ncsu.edu:1521:orcl01";
 
     /**
      * Displays the login page and allows for login functionality
+     * @param conn connection to the database
      */
-	public Login() {
+	public Login(Connection conn) {
 		Scanner scan = new Scanner(System.in);
 		UserInterface.newScreen();
 		
@@ -32,18 +33,10 @@ public class Login {
 		try {
 			MessageDigest md = MessageDigest.getInstance("SHA3-256");
 			
-			//Set up database connection
-			Class.forName("oracle.jdbc.OracleDriver");
-			String user = "mgfiles";
-			String passwd = "abcd1234";
-			
-            Connection conn = null;
-            Statement stmt = null;
+			//Class.forName("oracle.jdbc.OracleDriver");
+            
+            Statement stmt = conn.createStatement();
             ResultSet rs = null;
-            
-            conn = DriverManager.getConnection(jdbcURL, user, passwd);
-            
-            stmt = conn.createStatement();
             
             while (!signOn) {
             	
@@ -75,25 +68,26 @@ public class Login {
     			
     			// If user selected to sign in, otherwise exit to menu above
     			if (selection == 1) {
-                    rs = stmt.executeQuery("SELECT id, username, pass FROM Brands");
+                    rs = stmt.executeQuery("SELECT id FROM Brands WHERE username = " + userID + " AND pass = " + hashedpw);
                     
                     while(rs.next()) {
-                    	if (rs.getString("username") == userID && rs.getString("pass").equals(hashedpw)) {
-                    		signOn = true;
-                    		BrandLanding = new BrandLanding(rs.getInt("id"));
-                    	}
+                    	signOn = true;
+                    	BrandLanding brandLanding = new BrandLanding(rs.getInt("id"), conn);
                     }
                     
-                    rs = stmt.executeQuery("SELECT id, username, pass FROM Customers");
+                    rs = stmt.executeQuery("SELECT id FROM Customers WHERE username = " + userID + " AND pass = " + hashedpw);
                     
                     while(rs.next()) {
-                    	if (rs.getString("username") == userID && rs.getString("pass").equals(hashedpw)) {
-                    		signOn = true;
-                    		CustomerLanding = new CustomerLanding(rs.getInt("id"));
-                    	}
+                		signOn = true;
+                		CustomerLanding customerLanding = new CustomerLanding(rs.getInt("id"), conn);
                     }
                     
-                    //TODO: add Admin users to database schema and query to log in as one
+                    rs = stmt.executeQuery("SELECT id FROM Customers WHERE username = " + userID + " AND pass = " + hashedpw);
+                    
+                    while(rs.next()) {
+                    	signOn = true;
+                    	AdminLanding adminLanding = new AdminLanding(rs.getInt("id"), conn);
+                    }
                     
                     if (!signOn) {
                     	System.out.println("Login Incorrect. Please try again");

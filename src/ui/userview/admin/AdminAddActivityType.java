@@ -1,59 +1,49 @@
 /**
  * 
  */
-package ui;
+package ui.userview.admin;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import ui.Login;
+import ui.UserInterface;
+
 /**
- * Displays the Customer Sign Up Page and allows the User to make a new customer
+ * Displays the Add Activity Type page and allows for adding activity types
  * @author Grey Files
  */
-public class CustomerSignUp {
+public class AdminAddActivityType {
 	
-	// Whether the customer sign up information has been submitted
-	public boolean submitted = false;
-
 	/**
-	 * Displays the Customer Sign Up Page and allows the User to make a new customer
+	 * Displays the Add Activity Type page and allows for adding activity types
 	 * @param conn connection to the database
 	 */
-	public CustomerSignUp(Connection conn) {
+	public AdminAddActivityType(Connection conn) {
 		Scanner scan = new Scanner(System.in);
 		UserInterface.newScreen();
 		
-		//Used to loop back if invalid brand input
+		//Used to loop back if invalid activity input
 		boolean validInput = false;
 	    
 		try {
-			MessageDigest md = MessageDigest.getInstance("SHA3-256");
-			
 			//Class.forName("oracle.jdbc.OracleDriver");
             PreparedStatement pstmt = null;
             
             while (!validInput) {
             	
-        		System.out.print("Enter Your Name: ");
+        		System.out.print("Enter New Activity Name: ");
         		String name = scan.nextLine();
-        		System.out.print("Enter Your Phone Number: ");
-        		String phoneNumber = scan.nextLine();
-        		System.out.print("Enter Your Address: ");
-        		String address = scan.nextLine();
-        		System.out.print("Enter Your Username: ");
-        		String username = scan.nextLine();
-        		System.out.print("Enter Your Password: ");
-        		String password = scan.nextLine();
-    			String hashedpw = new String(md.digest(password.getBytes()), StandardCharsets.UTF_8);
+        		System.out.print("Enter New Activity Code: ");
+        		String code = scan.nextLine();
     			
-    			System.out.println("\n1) Sign-up\n2) Go Back");
+    			System.out.println("\n1) Add Activity Type\n2) Go Back");
     			System.out.print("\nSelect an Option: ");
     			
     			boolean selected = false;
@@ -73,17 +63,13 @@ public class CustomerSignUp {
     				}
     			}
     			
-    			// If user selected to sign up, otherwise exit to menu above
+    			// If user selected to add type, otherwise exit to menu above
     			if (selection == 1) {
-    				pstmt = conn.prepareStatement("INSERT INTO Customers VALUES(?,?,?,?,?)",
-    						Statement.RETURN_GENERATED_KEYS);
+    				pstmt = conn.prepareStatement("INSERT INTO ActivityCategories VALUES(?,?)");
                     
                     pstmt.clearParameters();
-                    pstmt.setString(1, name);
-                    pstmt.setString(2, phoneNumber);
-                    pstmt.setString(3, address);
-                    pstmt.setString(4, username);
-                    pstmt.setString(5, hashedpw);
+                    pstmt.setString(1, code);
+                    pstmt.setString(2, name);
                     
                     int rows = pstmt.executeUpdate();
                     if (rows < 1) {
@@ -91,12 +77,11 @@ public class CustomerSignUp {
                     }
                     else {
                     	validInput = true;
-                    	this.submitted = true;
-                    	System.out.println("Customer information saved");
+                    	System.out.println("Activity Type Saved");
                     }
     			}
     			else {
-    				// Get out of loop and return to calling class even though no sign up
+    				// Get out of loop and return to calling class even though no submission
     				validInput = true;
     			}
             }
@@ -106,8 +91,7 @@ public class CustomerSignUp {
 			System.out.println("Invalid Customer Information. Try Again.");
 		}
 		
-		Login CustomerLogin = new Login(conn);
-		
 		scan.close();
 	}
+
 }
