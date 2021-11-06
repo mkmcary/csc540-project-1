@@ -10,7 +10,7 @@ CREATE TABLE LoyaltyPrograms (
 );
 
 CREATE TABLE Wallets (
-	id integer GENERATED ALWAYS AS IDENTITY
+	id integer GENERATED ALWAYS AS IDENTITY,
     constraint pk_id primary key (id)
 );
 
@@ -48,7 +48,7 @@ CREATE TABLE Brands (
     pId integer,
     id integer GENERATED ALWAYS AS IDENTITY,
     constraint pk_bId primary key (id),
-    constraint fk_pId foreign key (pId) references LoyaltyPrograms (id)
+    constraint fk_lpId foreign key (pId) references LoyaltyPrograms (id)
 );
 
 /*
@@ -106,7 +106,7 @@ CREATE TABLE RewardEarningRules (
     ruleVersion integer,
     ruleCode varchar(6),
     points integer,
-    acId integer,
+    acId varchar(255),
     constraint pk_re primary key (pId, ruleVersion, ruleCode),
     constraint fk_pId foreign key (pId) references LoyaltyPrograms (id),
     constraint fk_ac foreign key (acId) references ActivityCategories (acId)
@@ -121,7 +121,7 @@ CREATE TABLE ActivityInstances (
     ruleCode varchar(6),
     wId integer NOT NULL,
     constraint pk_aiId primary key (id),
-    constraint fk_re foreign key (pId, ruleVersion, ruleCode) references RewardEarningRules (pId, ruleVersion, ruleCode)
+    constraint fk_re foreign key (pId, ruleVersion, ruleCode) references RewardEarningRules (pId, ruleVersion, ruleCode),
     constraint fk_wId foreign key (wId) references Wallets (id)
 );
 
@@ -141,7 +141,7 @@ CREATE TABLE GiftCards (
     cardValue float,
     constraint pk_gcId primary key (id),
     constraint fk_pId foreign key (pId) references LoyaltyPrograms (id),
-    constraint fk_wId foreign key (wId) references Wallets (id),
+    constraint fk_wId foreign key (wId) references Wallets (id)
 );
 
 CREATE TABLE RewardRedeemingRules (
@@ -149,7 +149,7 @@ CREATE TABLE RewardRedeemingRules (
     ruleVersion integer,
     ruleCode varchar(6),
     points integer,
-    rId integer,
+    rId varchar(255),
     quantity integer,
     constraint pk_rr primary key (pId, ruleVersion, ruleCode),
     constraint fk_pId foreign key (pId) references LoyaltyPrograms (id),
@@ -164,6 +164,6 @@ CREATE TABLE RewardInstances (
     ruleCode varchar(6),
     wId integer NOT NULL,
     constraint pk_riId primary key (id),
-    constraint fk_re foreign key (pId, ruleVersion, ruleCode) references RewardEarningRules (pId, ruleVersion, ruleCode)
+    constraint fk_re foreign key (pId, ruleVersion, ruleCode) references RewardEarningRules (pId, ruleVersion, ruleCode),
     constraint fk_wId foreign key (wId) references Wallets (id)
 );
