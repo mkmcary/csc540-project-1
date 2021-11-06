@@ -12,9 +12,9 @@ INSERT INTO Tiers (pId, tnum, tname, multipler, threshold) values (2, 0, 'Specia
 INSERT INTO Tiers (pId, tnum, tname, multipler, threshold) values (2, 1, 'Premium', 2, 210);
 
 -- Brands
-INSERT INTO Brands (bname, baddress, username, pass, joinDate, pId) values ('Brand X', '503 Rolling Creek Dr Austin, AR', 'brandx', 'c0067d4af4e87f00dbac63b6156828237059172d1bbeac67427345d6a9fda484', '2021-04-01', 1);
-INSERT INTO Brands (bname, baddress, username, pass, joinDate, pId) values ('Brand Y', '939 Orange Ave Coronado, CA', 'brandy', 'c0067d4af4e87f00dbac63b6156828237059172d1bbeac67427345d6a9fda484', '2021-03-25', 2);
-INSERT INTO Brands (bname, baddress, username, pass, joinDate, pId) values ('Brand Z', '20 Roszel Rd Princeton, NJ', 'brandz', 'c0067d4af4e87f00dbac63b6156828237059172d1bbeac67427345d6a9fda484', '2021-05-08', 3);
+INSERT INTO Brands (bname, baddress, username, pass, joinDate, pId) values ('Brand X', '503 Rolling Creek Dr Austin, AR', 'brandx', 'c0067d4af4e87f00dbac63b6156828237059172d1bbeac67427345d6a9fda484', TO_DATE('2021-04-01', 'yyyy-mm-dd'), 1);
+INSERT INTO Brands (bname, baddress, username, pass, joinDate, pId) values ('Brand Y', '939 Orange Ave Coronado, CA', 'brandy', 'c0067d4af4e87f00dbac63b6156828237059172d1bbeac67427345d6a9fda484', TO_DATE('2021-03-25', 'yyyy-mm-dd'), 2);
+INSERT INTO Brands (bname, baddress, username, pass, joinDate, pId) values ('Brand Z', '20 Roszel Rd Princeton, NJ', 'brandz', 'c0067d4af4e87f00dbac63b6156828237059172d1bbeac67427345d6a9fda484', TO_DATE('2021-05-08', 'yyyy-mm-dd'), 3);
 
 -- Customers
 INSERT INTO Customers (cname, phoneNumber, caddress, username, pass) values ('Peter Parker', '8636368778', '20 Ingram Street, NY', 'peterparker', 'c0067d4af4e87f00dbac63b6156828237059172d1bbeac67427345d6a9fda484');
@@ -78,44 +78,44 @@ INSERT INTO RewardRedeemingRules (pId, ruleVersion, ruleCode, points, rId, quant
 INSERT INTO RewardRedeemingRules (pId, ruleVersion, ruleCode, points, rId, quantity) values (3, 1, 'RR01', 100, 'R01', 25);
 
 -- Activity Instances
-INSERT INTO ActivityInstances (instanceDate, relevantInfo, pId, ruleVersion, ruleCode, wId) values ('2021-06-10', 'Description', 1, 1, 'RE01', 1);
-INSERT INTO ActivityInstances (instanceDate, relevantInfo, pId, ruleVersion, ruleCode, wId) values ('2021-06-18', 'Description', 1, 1, 'RE02', 1);
-INSERT INTO ActivityInstances (instanceDate, relevantInfo, pId, ruleVersion, ruleCode, wId) values ('2021-08-09', 'Description', 2, 1, 'RE01', 1);
-INSERT INTO ActivityInstances (instanceDate, relevantInfo, pId, ruleVersion, ruleCode, wId) values ('2021-08-15', 'Description', 2, 1, 'RE01', 1);
-INSERT INTO ActivityInstances (instanceDate, relevantInfo, pId, ruleVersion, ruleCode, wId) values ('2021-10-03', 'Description', 2, 1, 'RE02', 1);
-INSERT INTO ActivityInstances (instanceDate, relevantInfo, pId, ruleVersion, ruleCode, wId) values ('2021-10-18', 'Description', 2, 1, 'RE02', 1);
+INSERT INTO ActivityInstances (instanceDate, relevantInfo, pId, ruleVersion, ruleCode, wId) values (TO_DATE('2021-06-10', 'yyyy-mm-dd'), 'Description', 1, 1, 'RE01', 1);
+INSERT INTO ActivityInstances (instanceDate, relevantInfo, pId, ruleVersion, ruleCode, wId) values (TO_DATE('2021-06-18', 'yyyy-mm-dd'), 'Description', 1, 1, 'RE02', 1);
+INSERT INTO ActivityInstances (instanceDate, relevantInfo, pId, ruleVersion, ruleCode, wId) values (TO_DATE('2021-08-09', 'yyyy-mm-dd'), 'Description', 2, 1, 'RE01', 1);
+INSERT INTO ActivityInstances (instanceDate, relevantInfo, pId, ruleVersion, ruleCode, wId) values (TO_DATE('2021-08-15', 'yyyy-mm-dd'), 'Description', 2, 1, 'RE01', 1);
+INSERT INTO ActivityInstances (instanceDate, relevantInfo, pId, ruleVersion, ruleCode, wId) values (TO_DATE('2021-10-03', 'yyyy-mm-dd'), 'Description', 2, 1, 'RE02', 1);
+INSERT INTO ActivityInstances (instanceDate, relevantInfo, pId, ruleVersion, ruleCode, wId) values (TO_DATE('2021-10-18', 'yyyy-mm-dd'), 'Description', 2, 1, 'RE02', 1);
 
-INSERT INTO ActivityInstances (instanceDate, relevantInfo, pId, ruleVersion, ruleCode, wId) values ('2021-07-02', 'Description', 1, 1, 'RE01', 2);
-INSERT INTO ActivityInstances (instanceDate, relevantInfo, pId, ruleVersion, ruleCode, wId) values ('2021-07-08', 'Description', 1, 1, 'RE01', 2);
-INSERT INTO ActivityInstances (instanceDate, relevantInfo, pId, ruleVersion, ruleCode, wId) values ('2021-08-05', 'Description', 1, 1, 'RE02', 2);
+INSERT INTO ActivityInstances (instanceDate, relevantInfo, pId, ruleVersion, ruleCode, wId) values (TO_DATE('2021-07-02', 'yyyy-mm-dd'), 'Description', 1, 1, 'RE01', 2);
+INSERT INTO ActivityInstances (instanceDate, relevantInfo, pId, ruleVersion, ruleCode, wId) values (TO_DATE('2021-07-08', 'yyyy-mm-dd'), 'Description', 1, 1, 'RE01', 2);
+INSERT INTO ActivityInstances (instanceDate, relevantInfo, pId, ruleVersion, ruleCode, wId) values (TO_DATE('2021-08-05', 'yyyy-mm-dd'), 'Description', 1, 1, 'RE02', 2);
 
-INSERT INTO ActivityInstances (instanceDate, relevantInfo, pId, ruleVersion, ruleCode, wId) values ('2021-07-30', 'Description', 3, 1, 'RE01', 3);
-INSERT INTO ActivityInstances (instanceDate, relevantInfo, pId, ruleVersion, ruleCode, wId) values ('2021-08-01', 'Description', 2, 1, 'RE01', 3);
-INSERT INTO ActivityInstances (instanceDate, relevantInfo, pId, ruleVersion, ruleCode, wId) values ('2021-08-10', 'Description', 2, 1, 'RE01', 3);
-INSERT INTO ActivityInstances (instanceDate, relevantInfo, pId, ruleVersion, ruleCode, wId) values ('2021-09-02', 'Description', 2, 1, 'RE01', 3);
-INSERT INTO ActivityInstances (instanceDate, relevantInfo, pId, ruleVersion, ruleCode, wId) values ('2021-10-01', 'Description', 2, 1, 'RE02', 3);
-INSERT INTO ActivityInstances (instanceDate, relevantInfo, pId, ruleVersion, ruleCode, wId) values ('2021-10-16', 'Description', 2, 1, 'RE02', 3);
+INSERT INTO ActivityInstances (instanceDate, relevantInfo, pId, ruleVersion, ruleCode, wId) values (TO_DATE('2021-07-30', 'yyyy-mm-dd'), 'Description', 3, 1, 'RE01', 3);
+INSERT INTO ActivityInstances (instanceDate, relevantInfo, pId, ruleVersion, ruleCode, wId) values (TO_DATE('2021-08-01', 'yyyy-mm-dd'), 'Description', 2, 1, 'RE01', 3);
+INSERT INTO ActivityInstances (instanceDate, relevantInfo, pId, ruleVersion, ruleCode, wId) values (TO_DATE('2021-08-10', 'yyyy-mm-dd'), 'Description', 2, 1, 'RE01', 3);
+INSERT INTO ActivityInstances (instanceDate, relevantInfo, pId, ruleVersion, ruleCode, wId) values (TO_DATE('2021-09-02', 'yyyy-mm-dd'), 'Description', 2, 1, 'RE01', 3);
+INSERT INTO ActivityInstances (instanceDate, relevantInfo, pId, ruleVersion, ruleCode, wId) values (TO_DATE('2021-10-01', 'yyyy-mm-dd'), 'Description', 2, 1, 'RE02', 3);
+INSERT INTO ActivityInstances (instanceDate, relevantInfo, pId, ruleVersion, ruleCode, wId) values (TO_DATE('2021-10-16', 'yyyy-mm-dd'), 'Description', 2, 1, 'RE02', 3);
 
-INSERT INTO ActivityInstances (instanceDate, relevantInfo, pId, ruleVersion, ruleCode, wId) values ('2021-08-10', 'Description', 1, 1, 'RE01', 5);
-INSERT INTO ActivityInstances (instanceDate, relevantInfo, pId, ruleVersion, ruleCode, wId) values ('2021-09-16', 'Description', 3, 1, 'RE01', 5);
-INSERT INTO ActivityInstances (instanceDate, relevantInfo, pId, ruleVersion, ruleCode, wId) values ('2021-09-30', 'Description', 3, 1, 'RE01', 5);
-INSERT INTO ActivityInstances (instanceDate, relevantInfo, pId, ruleVersion, ruleCode, wId) values ('2021-09-30', 'Description', 1, 1, 'RE02', 5);
-INSERT INTO ActivityInstances (instanceDate, relevantInfo, pId, ruleVersion, ruleCode, wId) values ('2021-10-10', 'Description', 2, 1, 'RE01', 5);
-INSERT INTO ActivityInstances (instanceDate, relevantInfo, pId, ruleVersion, ruleCode, wId) values ('2021-10-15', 'Description', 1, 1, 'RE02', 5);
+INSERT INTO ActivityInstances (instanceDate, relevantInfo, pId, ruleVersion, ruleCode, wId) values (TO_DATE('2021-08-10', 'yyyy-mm-dd'), 'Description', 1, 1, 'RE01', 5);
+INSERT INTO ActivityInstances (instanceDate, relevantInfo, pId, ruleVersion, ruleCode, wId) values (TO_DATE('2021-09-16', 'yyyy-mm-dd'), 'Description', 3, 1, 'RE01', 5);
+INSERT INTO ActivityInstances (instanceDate, relevantInfo, pId, ruleVersion, ruleCode, wId) values (TO_DATE('2021-09-30', 'yyyy-mm-dd'), 'Description', 3, 1, 'RE01', 5);
+INSERT INTO ActivityInstances (instanceDate, relevantInfo, pId, ruleVersion, ruleCode, wId) values (TO_DATE('2021-09-30', 'yyyy-mm-dd'), 'Description', 1, 1, 'RE02', 5);
+INSERT INTO ActivityInstances (instanceDate, relevantInfo, pId, ruleVersion, ruleCode, wId) values (TO_DATE('2021-10-10', 'yyyy-mm-dd'), 'Description', 2, 1, 'RE01', 5);
+INSERT INTO ActivityInstances (instanceDate, relevantInfo, pId, ruleVersion, ruleCode, wId) values (TO_DATE('2021-10-15', 'yyyy-mm-dd'), 'Description', 1, 1, 'RE02', 5);
 
 -- Reward Instances
-INSERT INTO RewardInstances (instanceDate, pId, ruleVersion, ruleCode, wId) values ('2021-07-02', 1, 1, 'RR01', 1);
-INSERT INTO RewardInstances (instanceDate, pId, ruleVersion, ruleCode, wId) values ('2021-08-25', 2, 1, 'RR01', 1);
-INSERT INTO RewardInstances (instanceDate, pId, ruleVersion, ruleCode, wId) values ('2021-10-20', 2, 1, 'RR02', 1);
+INSERT INTO RewardInstances (instanceDate, pId, ruleVersion, ruleCode, wId) values (TO_DATE('2021-07-02', 'yyyy-mm-dd'), 1, 1, 'RR01', 1);
+INSERT INTO RewardInstances (instanceDate, pId, ruleVersion, ruleCode, wId) values (TO_DATE('2021-08-25', 'yyyy-mm-dd'), 2, 1, 'RR01', 1);
+INSERT INTO RewardInstances (instanceDate, pId, ruleVersion, ruleCode, wId) values (TO_DATE('2021-10-20', 'yyyy-mm-dd'), 2, 1, 'RR02', 1);
 
-INSERT INTO RewardInstances (instanceDate, pId, ruleVersion, ruleCode, wId) values ('2021-09-01', 1, 1, 'RR02', 2);
+INSERT INTO RewardInstances (instanceDate, pId, ruleVersion, ruleCode, wId) values (TO_DATE('2021-09-01', 'yyyy-mm-dd'), 1, 1, 'RR02', 2);
 
-INSERT INTO RewardInstances (instanceDate, pId, ruleVersion, ruleCode, wId) values ('2021-08-26', 2, 1, 'RR02', 3);
-INSERT INTO RewardInstances (instanceDate, pId, ruleVersion, ruleCode, wId) values ('2021-10-18', 2, 1, 'RR02', 3);
+INSERT INTO RewardInstances (instanceDate, pId, ruleVersion, ruleCode, wId) values (TO_DATE('2021-08-26', 'yyyy-mm-dd'), 2, 1, 'RR02', 3);
+INSERT INTO RewardInstances (instanceDate, pId, ruleVersion, ruleCode, wId) values (TO_DATE('2021-10-18', 'yyyy-mm-dd'), 2, 1, 'RR02', 3);
 
-INSERT INTO RewardInstances (instanceDate, pId, ruleVersion, ruleCode, wId) values ('2021-10-11', 2, 1, 'RR01', 5);
-INSERT INTO RewardInstances (instanceDate, pId, ruleVersion, ruleCode, wId) values ('2021-10-11', 1, 1, 'RR01', 5);
-INSERT INTO RewardInstances (instanceDate, pId, ruleVersion, ruleCode, wId) values ('2021-10-17', 1, 1, 'RR02', 5);
+INSERT INTO RewardInstances (instanceDate, pId, ruleVersion, ruleCode, wId) values (TO_DATE('2021-10-11', 'yyyy-mm-dd'), 2, 1, 'RR01', 5);
+INSERT INTO RewardInstances (instanceDate, pId, ruleVersion, ruleCode, wId) values (TO_DATE('2021-10-11', 'yyyy-mm-dd'), 1, 1, 'RR01', 5);
+INSERT INTO RewardInstances (instanceDate, pId, ruleVersion, ruleCode, wId) values (TO_DATE('2021-10-17', 'yyyy-mm-dd'), 1, 1, 'RR02', 5);
 
 -- Gift Cards
 INSERT INTO GiftCards (pId, wId, cardValue) values (1, 1, 40);
