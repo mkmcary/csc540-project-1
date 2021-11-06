@@ -4,9 +4,14 @@
 CREATE TABLE LoyaltyPrograms (
     pName varchar(255),
     pCode varchar(255),
-    isTiered boolean,
+    isTiered varchar(1),
     id integer GENERATED ALWAYS AS IDENTITY,
     constraint pk_id primary key (id)  
+);
+
+CREATE TABLE Wallets (
+	id integer GENERATED ALWAYS AS IDENTITY
+    constraint pk_id primary key (id)
 );
 
 -- CREATE TABLE RegularPrograms (
@@ -66,11 +71,6 @@ CREATE TABLE Admins (
 	username varchar(255),
 	pass varchar(255),
 	id integer GENERATED ALWAYS AS IDENTITY
-);
-
-CREATE TABLE Wallets (
-	id integer GENERATED ALWAYS AS IDENTITY
-    constraint pk_id primary key (id)
 );
 
 CREATE TABLE CustomerWallets (

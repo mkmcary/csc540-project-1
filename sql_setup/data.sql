@@ -1,7 +1,7 @@
 -- Loyalty Programs
-INSERT INTO LoyaltyPrograms (pName, pCode, isTiered) values ('SportGoods', 'TLP01', true);
-INSERT INTO LoyaltyPrograms (pName, pCode, isTiered) values ('MegaCenter', 'TLP02', true);
-INSERT INTO LoyaltyPrograms (pName, pCode, isTiered) values ('TechSups', 'RLP01', false);
+INSERT INTO LoyaltyPrograms (pName, pCode, isTiered) values ('SportGoods', 'TLP01', 'Y');
+INSERT INTO LoyaltyPrograms (pName, pCode, isTiered) values ('MegaCenter', 'TLP02', 'Y');
+INSERT INTO LoyaltyPrograms (pName, pCode, isTiered) values ('TechSups', 'RLP01', 'N');
 
 -- Tiers
 INSERT INTO Tiers (pId, tnum, tname, multipler, threshold) values (1, 0, 'Bronze', 1, 0);
