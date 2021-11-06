@@ -23,9 +23,6 @@ public class BrandLanding {
     /** The id of the brand user */
     private static int id;
     
-    /** The loyalty program of the brand */
-    private LoyaltyPrograms lp;
-    
     /** Connection to database */
     private static Connection conn;
 
@@ -102,16 +99,16 @@ public class BrandLanding {
             	addLoyaltyProgram(scanner);
                 break;
             case 2:
-                addRERules(scanner, this.lp);
+                addRERules(scanner);
                 break;
             case 3:
-            	updateRERules(scanner, this.lp);
+            	updateRERules(scanner);
                 break;
             case 4:
-            	addRRRules(scanner, this.lp);
+            	addRRRules(scanner);
                 break;
             case 5:
-            	updateRRRules(scanner, this.lp);
+            	updateRRRules(scanner);
                 break;
             case 6:
             	validateLoyaltyProgram();
@@ -130,11 +127,11 @@ public class BrandLanding {
      * Creates and adds a Loyalty Program to the Brand
      * @param s class-wide scanner for user input
      */
-    private void addLoyaltyProgram(Scanner s) {
+    private static void addLoyaltyProgram(Scanner s) {
     	System.out.print("Enter a name for your loyalty program: ");
     	String name = s.next();
-    	LoyaltyPrograms lp = new LoyaltyPrograms(id, name);
-    	this.lp = lp;
+    	@SuppressWarnings("unused") //Don't need to use LP in app since all storage happens in DB
+		LoyaltyPrograms lp = new LoyaltyPrograms(id, name);
         System.out.println("Loyalty Program successfully added!");
     }
     
@@ -143,7 +140,7 @@ public class BrandLanding {
      * @param s Scanner reading user input
      * @param lp LoyaltyProgram of the brand
      */
-    public static void addRERules(Scanner s, LoyaltyPrograms lp) throws SQLException {
+    public static void addRERules(Scanner s) throws SQLException {
     	//Ask the Brand for Reward earning name
     	System.out.println("\nYou chose 'Add RE Rule'!");
     	
@@ -222,15 +219,17 @@ public class BrandLanding {
                 	}
             	} while (digit);
             	
-            	String loyaltyId = "STRING"; //= lp.getID; FIX THIS IN LOYALTYPROGRAMS
             	
+            	//Get the loyalty ID from Brands table
+            	int lpId = getLoyaltyId(id);
+
             	System.out.println("Press 1 to add another rule.");
                 System.out.println("Press 2 to Go back to Brand Landing page");
                 System.out.print("ans: ");
                 
                 //Adds information to RE table if user hits 1
                 if (s.nextInt() == 1) {
-                	addToTable(loyaltyId, "RewardEarningRules", eaPoints, eaCode, eaBrandRuleCode);
+                	addToTable(lpId, "RewardEarningRules", eaPoints, eaCode, eaBrandRuleCode);
                 	System.out.println("Rule successfully added!");
                 	anotherEntry = true;
                 }
@@ -248,7 +247,7 @@ public class BrandLanding {
      * @param s Scanner reading user input
      * @param lp LoyaltyProgram of the brand
      */
-    public static void updateRERules(Scanner s, LoyaltyPrograms lp) throws SQLException {
+    public static void updateRERules(Scanner s) throws SQLException {
     	System.out.println("\nYou chose 'update RE Rule'!");
     	
     	boolean anotherEntry;
@@ -326,7 +325,8 @@ public class BrandLanding {
                 	}
             	} while (digit);
             	
-            	String loyaltyId = "STRING"; //= lp.getID; FIX THIS IN LOYALTYPROGRAMS
+            	//Get the loyalty ID from Brands table
+            	int lpId = getLoyaltyId(id);
             	
             	System.out.println("Press 1 to add another rule.");
                 System.out.println("Press 2 to Go back to Brand Landing page");
@@ -334,7 +334,7 @@ public class BrandLanding {
         		
             	//adds new rule with updated info and incremented version if user hits 1
                 if (s.nextInt() == 1) {
-                	updateTable(loyaltyId, "RewardEarningRules", eaPoints, eaCode, eaBrandRuleCode);
+                	updateTable(lpId, "RewardEarningRules", eaPoints, eaCode, eaBrandRuleCode);
                 	System.out.println("Rule successfully updated!");
                 	anotherEntry = true;
                 }
@@ -350,9 +350,9 @@ public class BrandLanding {
     /**
      * Adds a Brand's rewarding rules to the loyalty program
      * @param s Scanner reading user input
-     * @param lp LoyaltyProgram of the brand
+     * @param loyaltyId the id of the loyalty program
      */
-    public static void addRRRules(Scanner s, LoyaltyPrograms lp) {
+    public static void addRRRules(Scanner s) {
     	//Ask the Brand for Reward earning name
     	System.out.println("\nYou chose 'Add RR Rule'!");
     	
@@ -431,11 +431,9 @@ public class BrandLanding {
                 	}
             	} while (digit);
             	
-            	String loyaltyId = "CHANGE_THIS";
+            	//Get the loyalty ID from Brands table
+            	int lpId = getLoyaltyId(id);
             	
-            	//Adds information to RE table and handles RE## creation.
-            	
-                
             	System.out.println("Rule successfully added!");
 
                 System.out.println("Press 1 to add another rule.");
@@ -444,7 +442,7 @@ public class BrandLanding {
 
                 //Adds information to RE table if user hits 1
                 if (s.nextInt() == 1) {
-                	addToTable(loyaltyId, "RewardRedeemingRules", rrPoints, rrCode, rrBrandRuleCode);
+                	addToTable(lpId, "RewardRedeemingRules", rrPoints, rrCode, rrBrandRuleCode);
                 	System.out.println("Rule successfully added!");
                 	anotherEntry = true;
                 }
@@ -463,7 +461,7 @@ public class BrandLanding {
      * @param s Scanner reading user input
      * @param lp LoyaltyProgram of the brand
      */
-    public static void updateRRRules(Scanner s, LoyaltyPrograms lp) {
+    public static void updateRRRules(Scanner s) {
     	System.out.println("\nYou chose 'update RR Rule'!");
     	
     	boolean anotherEntry;
@@ -541,7 +539,8 @@ public class BrandLanding {
                 	}
             	} while (digit);
             	
-            	String loyaltyId = "STRING"; //= lp.getID; FIX THIS IN LOYALTYPROGRAMS
+            	//Get the loyalty ID from Brands table
+            	int lpId = getLoyaltyId(id);
             	
             	System.out.println("Press 1 to add another rule.");
                 System.out.println("Press 2 to Go back to Brand Landing page");
@@ -549,7 +548,7 @@ public class BrandLanding {
         		
                 //adds new rule with updated info and incremented version if user hits 1
                 if (s.nextInt() == 1) {
-                	updateTable(loyaltyId, "RewardRedeemingRules", rrPoints, rrCode, rrBrandRuleCode);
+                	updateTable(lpId, "RewardRedeemingRules", rrPoints, rrCode, rrBrandRuleCode);
                 	System.out.println("Rule successfully updated!");
                 	anotherEntry = true;
                 }
@@ -580,13 +579,13 @@ public class BrandLanding {
      * 
      * @throws SQLException 
      */
-    private static void addToTable(String loyaltyId, String tableName, int points, String code, String brandRuleCode) throws SQLException {
+    private static void addToTable(int loyaltyId, String tableName, int points, String code, String brandRuleCode) throws SQLException {
 
     	PreparedStatement pstmt = null;
     	pstmt = conn.prepareStatement("INSERT INTO " + tableName + " VALUES(?,?,?,?,?)",
 				Statement.RETURN_GENERATED_KEYS);
 		pstmt.clearParameters();
-		pstmt.setString(1, loyaltyId);
+		pstmt.setInt(1, loyaltyId);
         pstmt.setInt(2, 1);
         pstmt.setString(3, brandRuleCode);
         pstmt.setInt(4, points);
@@ -611,7 +610,7 @@ public class BrandLanding {
 	 * 
 	 * @throws SQLException 
 	 */
-	private static void updateTable(String loyaltyId, String tableName, int points, String code, String brandRuleCode) throws SQLException {
+	private static void updateTable(int loyaltyId, String tableName, int points, String code, String brandRuleCode) throws SQLException {
 		
 		
 		//We need latest version and increment it by 1
@@ -628,7 +627,7 @@ public class BrandLanding {
 		pstmt = conn.prepareStatement("INSERT INTO " + tableName + " VALUES(?,?,?,?,?)",
 				Statement.RETURN_GENERATED_KEYS);
 		pstmt.clearParameters();
-		pstmt.setString(1, loyaltyId);
+		pstmt.setInt(1, loyaltyId);
         pstmt.setInt(2, latestVersion);
         pstmt.setString(3, brandRuleCode);
         pstmt.setInt(4, points);
@@ -639,5 +638,28 @@ public class BrandLanding {
         if (rows < 1) {
         	throw new SQLException();
         }
+	}
+	
+	/**
+	 * Gets the loyalty program Id from SQL
+	 * @param id the brand's Id
+	 * @return loyalty program id
+	 */
+	private static int getLoyaltyId(int id) {
+		
+		try {
+			Statement stmt = conn.createStatement();
+	    	String SQL = "SELECT pId FROM Brands WHERE id=" + id;
+	    	ResultSet rs = stmt.executeQuery(SQL);
+	    	
+	    	if (rs.next()) {
+	    		return rs.getInt("pId");
+	    	}
+		} catch (SQLException e) {
+			System.out.println("An SQL related error occured when searching for loyalty ID!");
+		}
+		
+		//return negative number to indicate error (brand doesn't have a loyalty program)
+		return -1;
 	}
 }
