@@ -4,12 +4,12 @@ INSERT INTO LoyaltyPrograms (pName, pCode, isTiered) values ('MegaCenter', 'TLP0
 INSERT INTO LoyaltyPrograms (pName, pCode, isTiered) values ('TechSups', 'RLP01', 'N');
 
 -- Tiers
-INSERT INTO Tiers (pId, tnum, tname, multipler, threshold) values (1, 0, 'Bronze', 1, 0);
-INSERT INTO Tiers (pId, tnum, tname, multipler, threshold) values (1, 1, 'Silver', 2, 170);
-INSERT INTO Tiers (pId, tnum, tname, multipler, threshold) values (1, 2, 'Gold', 3, 270);
+INSERT INTO Tiers (pId, tnum, tname, multiplier, threshold) values (1, 0, 'Bronze', 1, 0);
+INSERT INTO Tiers (pId, tnum, tname, multiplier, threshold) values (1, 1, 'Silver', 2, 170);
+INSERT INTO Tiers (pId, tnum, tname, multiplier, threshold) values (1, 2, 'Gold', 3, 270);
 
-INSERT INTO Tiers (pId, tnum, tname, multipler, threshold) values (2, 0, 'Special', 1, 0);
-INSERT INTO Tiers (pId, tnum, tname, multipler, threshold) values (2, 1, 'Premium', 2, 210);
+INSERT INTO Tiers (pId, tnum, tname, multiplier, threshold) values (2, 0, 'Special', 1, 0);
+INSERT INTO Tiers (pId, tnum, tname, multiplier, threshold) values (2, 1, 'Premium', 2, 210);
 
 -- Brands
 INSERT INTO Brands (bname, baddress, username, pass, joinDate, pId) values ('Brand X', '503 Rolling Creek Dr Austin, AR', 'brandx', 'c0067d4af4e87f00dbac63b6156828237059172d1bbeac67427345d6a9fda484', TO_DATE('2021-04-01', 'yyyy-mm-dd'), 1);
