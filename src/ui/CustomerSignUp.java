@@ -123,7 +123,7 @@ public class CustomerSignUp {
                     	validInput = true;
                     	this.submitted = true;
                     	
-                    	pstmt = conn.prepareStatement("INSERT INTO Wallets", Statement.RETURN_GENERATED_KEYS);
+                    	pstmt = conn.prepareStatement("INSERT INTO Wallets VALUES(NULL)", Statement.RETURN_GENERATED_KEYS);
                     	pstmt.clearParameters();
                     	pstmt.executeUpdate();
                     	rs = pstmt.getGeneratedKeys();
