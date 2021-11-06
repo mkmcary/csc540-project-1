@@ -31,7 +31,7 @@ CREATE TABLE Tiers (
     tname varchar(255),
     multiplier float(3),
     threshold integer,
-    constraint fk_pId foreign key (pId) references LoyaltyPrograms (id),
+    constraint fk_tiers_pId foreign key (pId) references LoyaltyPrograms (id),
     constraint pk_tier primary key (pId, tnum),
     constraint valid_tier check(tnum >= 0 and tnum <= 2)
 );
@@ -47,8 +47,8 @@ CREATE TABLE Brands (
     joinDate date,
     pId integer,
     id integer GENERATED ALWAYS AS IDENTITY,
-    constraint pk_bId primary key (id),
-    constraint fk_lpId foreign key (pId) references LoyaltyPrograms (id)
+    constraint pk_brands_bId primary key (id),
+    constraint fk_brands_lpId foreign key (pId) references LoyaltyPrograms (id)
 );
 
 /*
@@ -61,7 +61,7 @@ CREATE TABLE Customers (
     username varchar(255),
     pass varchar(255),
     id integer GENERATED ALWAYS AS IDENTITY,
-    constraint pk_cId primary key (id) 
+    constraint pk_customers_cId primary key (id) 
 );
 
 /*
@@ -76,9 +76,9 @@ CREATE TABLE Admins (
 CREATE TABLE CustomerWallets (
     cId integer UNIQUE,
     wId integer UNIQUE,
-    constraint fk_cId foreign key (cId) references Customers (id),
-    constraint fk_wId foreign key (wId) references Wallets (id),
-    constraint pk_wallet primary key (cId, wId)
+    constraint fk_customerwallets_cId foreign key (cId) references Customers (id),
+    constraint fk_customerwallets_wId foreign key (wId) references Wallets (id),
+    constraint pk_customerwallets_wallet primary key (cId, wId)
 );
 
 CREATE TABLE WalletParticipation (
@@ -87,9 +87,9 @@ CREATE TABLE WalletParticipation (
     points integer,
     alltimepoints integer,
     tierNumber integer, -- A participation in a regular program will have a null tierNumber
-    constraint pk_participation primary key (wId, pId),
-    constraint fk_wId foreign key (wId) references Wallets (id),
-    constraint fk_pId foreign key (pId) references LoyaltyPrograms (id)
+    constraint pk_walletparticipation_participation primary key (wId, pId),
+    constraint fk_walletparticipation_wId foreign key (wId) references Wallets (id),
+    constraint fk_walletparticipation_pId foreign key (pId) references LoyaltyPrograms (id)
 );
 
 /*
@@ -98,7 +98,7 @@ CREATE TABLE WalletParticipation (
 CREATE TABLE ActivityCategories (
     acId varchar(255),
     acName varchar(255),
-    constraint pk_acId primary key (acId)
+    constraint pk_activitycategories_acId primary key (acId)
 );
 
 CREATE TABLE RewardEarningRules (
@@ -107,9 +107,9 @@ CREATE TABLE RewardEarningRules (
     ruleCode varchar(6),
     points integer,
     acId varchar(255),
-    constraint pk_re primary key (pId, ruleVersion, ruleCode),
-    constraint fk_pId foreign key (pId) references LoyaltyPrograms (id),
-    constraint fk_ac foreign key (acId) references ActivityCategories (acId)
+    constraint pk_rewardearningrules_re primary key (pId, ruleVersion, ruleCode),
+    constraint fk_rewardearningrules_pId foreign key (pId) references LoyaltyPrograms (id),
+    constraint fk_rewardearningrules_ac foreign key (acId) references ActivityCategories (acId)
 );
 
 CREATE TABLE ActivityInstances (
@@ -120,9 +120,9 @@ CREATE TABLE ActivityInstances (
     ruleVersion integer,
     ruleCode varchar(6),
     wId integer NOT NULL,
-    constraint pk_aiId primary key (id),
-    constraint fk_re foreign key (pId, ruleVersion, ruleCode) references RewardEarningRules (pId, ruleVersion, ruleCode),
-    constraint fk_wId foreign key (wId) references Wallets (id)
+    constraint pk_activityInstances_aiId primary key (id),
+    constraint fk_activityInstances_re foreign key (pId, ruleVersion, ruleCode) references RewardEarningRules (pId, ruleVersion, ruleCode),
+    constraint fk_activityInstances_wId foreign key (wId) references Wallets (id)
 );
 
 /*
@@ -131,7 +131,7 @@ CREATE TABLE ActivityInstances (
 CREATE TABLE Rewards (
     rId varchar(255),
     rName varchar(255),
-    constraint pk_rId primary key (rId)
+    constraint pk_rewards_rId primary key (rId)
 );
 
 CREATE TABLE GiftCards (
@@ -139,9 +139,9 @@ CREATE TABLE GiftCards (
     pId integer,
     wId integer,
     cardValue float,
-    constraint pk_gcId primary key (id),
-    constraint fk_pId foreign key (pId) references LoyaltyPrograms (id),
-    constraint fk_wId foreign key (wId) references Wallets (id)
+    constraint pk_giftcards_gcId primary key (id),
+    constraint fk_giftcards_pId foreign key (pId) references LoyaltyPrograms (id),
+    constraint fk_giftcards_wId foreign key (wId) references Wallets (id)
 );
 
 CREATE TABLE RewardRedeemingRules (
@@ -151,9 +151,9 @@ CREATE TABLE RewardRedeemingRules (
     points integer,
     rId varchar(255),
     quantity integer,
-    constraint pk_rr primary key (pId, ruleVersion, ruleCode),
-    constraint fk_pId foreign key (pId) references LoyaltyPrograms (id),
-    constraint fk_reward foreign key (rId) references Rewards (rId)
+    constraint pk_rewardredeemingrules_rr primary key (pId, ruleVersion, ruleCode),
+    constraint fk_rewardredeemingrules_pId foreign key (pId) references LoyaltyPrograms (id),
+    constraint fk_rewardredeemingrules_reward foreign key (rId) references Rewards (rId)
 );
 
 CREATE TABLE RewardInstances (
@@ -163,7 +163,7 @@ CREATE TABLE RewardInstances (
     ruleVersion integer,
     ruleCode varchar(6),
     wId integer NOT NULL,
-    constraint pk_riId primary key (id),
-    constraint fk_re foreign key (pId, ruleVersion, ruleCode) references RewardEarningRules (pId, ruleVersion, ruleCode),
-    constraint fk_wId foreign key (wId) references Wallets (id)
+    constraint pk_rewardinstances_riId primary key (id),
+    constraint fk_rewardinstances_re foreign key (pId, ruleVersion, ruleCode) references RewardEarningRules (pId, ruleVersion, ruleCode),
+    constraint fk_rewardinstances_wId foreign key (wId) references Wallets (id)
 );
