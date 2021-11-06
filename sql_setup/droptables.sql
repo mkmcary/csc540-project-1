@@ -1,0 +1,15 @@
+drop table rewardinstances;
+drop table activityinstances;
+drop table rewardredeemingrules;
+drop table rewardearningrules;
+drop table giftcards;
+drop table rewards;
+drop table activitycategories;
+drop table walletparticipation;
+drop table customerwallets;
+drop table admins;
+drop table customers;
+drop table brands;
+drop table tiers;
+drop table wallets;
+drop table loyaltyprograms;
