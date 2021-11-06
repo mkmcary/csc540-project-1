@@ -54,7 +54,8 @@ public class CustomerEnrollProgram {
 					String code = programs.getString("pCode");
 					ids.add(id);
 					String name = programs.getString("pName");
-					Boolean tiered = programs.getBoolean("isTiered");
+					String tieredString = programs.getString("isTiered");
+					boolean tiered = (tieredString.equals("Y")) ? true: false;
 					tieredOrNot.add(tiered);
 					
 					// Print out option to user

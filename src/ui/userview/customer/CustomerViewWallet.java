@@ -49,7 +49,8 @@ public class CustomerViewWallet {
 				boolean isTiered = false;
 				while(programInfo.next()) {
 					programName = programInfo.getString("pName");
-					isTiered = programInfo.getBoolean("isTiered");
+					String tieredString = programInfo.getString("isTiered");
+					isTiered = (tieredString.equals("Y")) ? true : false;
 				}
 				
 				// tier name
