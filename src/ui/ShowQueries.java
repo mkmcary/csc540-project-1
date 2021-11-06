@@ -84,6 +84,8 @@ public class ShowQueries {
 			}
 			
 		}
+		
+		scan.close();
 	}
 	
 	private void query1(Connection conn) {
@@ -128,7 +130,7 @@ public class ShowQueries {
 					+ "(B1.id = 1 AND B1.pId = RR1.pId AND RR1.rId = R1.rId)");
 			
 			while (rs.next()) {
-				System.out.println(rs.getString("cname"));
+				System.out.println(rs.getString("rName"));
 			}
 		} catch (Throwable e) {
 			e.printStackTrace();
@@ -136,7 +138,18 @@ public class ShowQueries {
 	}
 	
 	private void query4(Connection conn) {
-		
+		try {
+			Statement stmt = conn.createStatement();
+			
+			ResultSet rs = stmt.executeQuery("SELECT DISTINCT LP1.pName FROM LoyaltyPrograms LP1, RewardRedeemingRules RR1, Rewards R1 WHERE "
+					+ "(LP1.id = RR1.pId AND R1.rId = RR1.rId AND R1.rName = 'Refer a Friend')");
+			
+			while (rs.next()) {
+				System.out.println(rs.getString("pName"));
+			}
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
 	}
 	
 	private void query5(Connection conn) {
