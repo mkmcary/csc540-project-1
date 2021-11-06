@@ -6,12 +6,12 @@ CREATE TABLE LoyaltyPrograms (
     pCode varchar(255),
     isTiered varchar(1),
     id integer GENERATED ALWAYS AS IDENTITY,
-    constraint pk_id primary key (id)  
+    constraint pk_loyaltyprograms_id primary key (id)  
 );
 
 CREATE TABLE Wallets (
 	id integer GENERATED ALWAYS AS IDENTITY,
-    constraint pk_id primary key (id)
+    constraint pk_wallets_id primary key (id)
 );
 
 -- CREATE TABLE RegularPrograms (
@@ -32,7 +32,7 @@ CREATE TABLE Tiers (
     multiplier float(3),
     threshold integer,
     constraint fk_tiers_pId foreign key (pId) references LoyaltyPrograms (id),
-    constraint pk_tier primary key (pId, tnum),
+    constraint pk_tiers_tier primary key (pId, tnum),
     constraint valid_tier check(tnum >= 0 and tnum <= 2)
 );
 
