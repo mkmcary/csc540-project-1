@@ -11,21 +11,21 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
- * Displays the program enrollment page.  The user will be presented with a list of available loyalty
- * programs and will choose to enroll as appropriate.
+ * Displays the Reward Activities page.  Customers can choose a program and an activity
+ * that they would like to complete in order to earn points for that program.
  * 
  * @author Matthew Martin
  *
  */
 public class CustomerRewardActivities {
-	
-	// URL to connect to database
-    static final String jdbcURL = "jdbc:oracle:thin:@ora.csc.ncsu.edu:1521:orcl01";
-	
+
 	/**
-	 * Constructs a new Program Enrollment Page, allowing the customer to view all available
-	 * programs to enroll in as they choose to do so.  When the customer selects to exit, they will
-	 * be brought out of this screen, they will be brought back to the customer landing page.
+	 * Constructs a new Reward Activities page.  Customers can choose a program and an activity
+	 * that they would like to complete in order to earn points for that program.
+	 * 
+	 * @param custId the id of the customer currently using the system.
+	 * @param walletId the wallet id of the customer.
+	 * @param conn the Connection to the database.
 	 */
 	public CustomerRewardActivities(int custId, int walletId, Connection conn) {
 		// Create the scanner for user input

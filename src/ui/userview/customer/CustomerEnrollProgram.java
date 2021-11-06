@@ -19,13 +19,14 @@ import java.util.Scanner;
  */
 public class CustomerEnrollProgram {
 	
-	// URL to connect to database
-    static final String jdbcURL = "jdbc:oracle:thin:@ora.csc.ncsu.edu:1521:orcl01";
-	
 	/**
 	 * Constructs a new Program Enrollment Page, allowing the customer to view all available
 	 * programs to enroll in as they choose to do so.  When the customer selects to exit, they will
 	 * be brought out of this screen, they will be brought back to the customer landing page.
+	 * 
+	 * @param custId the customer's id value.
+	 * @param walletId the customer's wallet id.
+	 * @param conn the Connection to the database.
 	 */
 	public CustomerEnrollProgram(int custId, int walletId, Connection conn) {
 		// Create the scanner for user input
@@ -43,14 +44,15 @@ public class CustomerEnrollProgram {
 				PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM LoyaltyPrograms");
 				
 				ResultSet programs = pstmt.executeQuery();
-				ArrayList<String> codes = new ArrayList<String>();
+				ArrayList<Integer> ids = new ArrayList<Integer>();
 				ArrayList<Boolean> tieredOrNot = new ArrayList<Boolean>();
 				
 				int i = 1;
 				while(programs.next()) {
 					// Get the Program id and name
+					int id = programs.getInt("id");
 					String code = programs.getString("pCode");
-					codes.add(code);
+					ids.add(id);
 					String name = programs.getString("pName");
 					Boolean tiered = programs.getBoolean("isTiered");
 					tieredOrNot.add(tiered);
@@ -59,7 +61,6 @@ public class CustomerEnrollProgram {
 					System.out.println(i + ") " + code + ": " + name);
 					
 					// Move to next tuple
-					programs.next();
 					i++;
 				}
 				
@@ -90,7 +91,7 @@ public class CustomerEnrollProgram {
 				}
 				
 				// Else, use their input
-				String pChosen = codes.get(userInput - 1);
+				int pChosen = ids.get(userInput - 1);
 				boolean isTiered = tieredOrNot.get(userInput - 1);
 				int choice = 0;
 				while(choice == 0) {
@@ -113,13 +114,13 @@ public class CustomerEnrollProgram {
 							if (isTiered) {
 								PreparedStatement insertion = conn.prepareStatement("INSERT INTO WalletParticipation (wId, pId, points, alltimepoints, tierNumber) values (?,?,0,0,0)");
 								insertion.setInt(0, walletId);
-								insertion.setString(1, pChosen);
+								insertion.setInt(1, pChosen);
 								insertion.executeUpdate();
 								System.out.println("Successfully enrolled in loyalty program " + pChosen + ".");
 							} else {
 								PreparedStatement insertion = conn.prepareStatement("INSERT INTO WalletParticipation (wId, pId, points, alltimepoints) values (?,?,0,0)");
 								insertion.setInt(0, walletId);
-								insertion.setString(1, pChosen);
+								insertion.setInt(1, pChosen);
 								insertion.executeUpdate();
 								System.out.println("Successfully enrolled in loyalty program " + pChosen + ".");
 							}

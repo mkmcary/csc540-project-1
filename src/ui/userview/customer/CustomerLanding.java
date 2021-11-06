@@ -21,10 +21,6 @@ import java.util.Scanner;
  */
 public class CustomerLanding {
 	
-	public static void main(String args[]) {
-		//new CustomerLanding(new Connection());
-	}
-	
 	/**
 	 * Constructs a new CustomerLanding page, displaying the proper options to a customer user.
 	 * When the user selects to exit this page, the constructor will end and fall back to the previous
@@ -78,7 +74,7 @@ public class CustomerLanding {
 			}
 			
 			if (userInput < 1 || userInput > 5) {
-				System.out.println("Please enter a valid choice (1, 2, 3, 4, or 5)");
+				System.out.println("Please enter a valid choice (1-5)");
 				continue;
 			}
 			
@@ -91,8 +87,10 @@ public class CustomerLanding {
 				new CustomerRewardActivities(custId, walletId, conn);
 			} else if (userInput == 3) {
 				// View Wallet
+				new CustomerViewWallet(custId, walletId, conn);
 			} else if (userInput == 4) {
 				// Redeem Points
+				new CustomerRedeemPoints(custId, walletId, conn);
 			}
 		}
 	}

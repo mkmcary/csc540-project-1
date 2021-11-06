@@ -12,21 +12,24 @@ import java.util.List;
 import java.util.Scanner;
 
 /**
- * Displays the program enrollment page.  The user will be presented with a list of available loyalty
- * programs and will choose to enroll as appropriate.
+ * Displays the Purchase Activity page for the customer to interact with.  This can be used
+ * for the customer to enter information on purchases they have made to get points.
  * 
  * @author Matthew Martin
  *
  */
 public class CustomerPurchase {
-	
-	// URL to connect to database
-    static final String jdbcURL = "jdbc:oracle:thin:@ora.csc.ncsu.edu:1521:orcl01";
-	
 	/**
-	 * Constructs a new Program Enrollment Page, allowing the customer to view all available
-	 * programs to enroll in as they choose to do so.  When the customer selects to exit, they will
-	 * be brought out of this screen, they will be brought back to the customer landing page.
+	 * Constructs a new Purchase Activity page for the customer to interact with.  This can be used
+	 * for the customer to enter information on purchases they have made to get points.
+	 * 
+	 * @param conn the Connection to the database.
+	 * @param walletId the customer's wallet id.
+	 * @param pid the program id that the customer is working with.
+	 * @param ruleVersion the version of the reward earning rule the customer is interacting with.
+	 * @param ruleCode the code for the reward earning rule the customer is interacting with.
+	 * @param pointsToEarn the amount of points the user should earn if they complete the activity.
+	 * @param tierThresholds the list of tierThresholds that need to be considered when updating the user's tier in a program
 	 */
 	public CustomerPurchase(Connection conn, int walletId, int pid, int ruleVersion, String ruleCode, int pointsToEarn, List<Integer> tierThresholds) {
 		// Create the scanner for user input

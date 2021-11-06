@@ -6,11 +6,22 @@ import java.sql.ResultSet;
 import java.util.Scanner;
 
 /**
+ * Displays a Customer wallet view page.  The customer can see all of their points for each program that they
+ * are enrolled in.
  * 
  * @author Matthew Martin
  *
  */
 public class CustomerViewWallet {
+	
+	/**
+	 * Constructs a new Customer wallet view page.  The customer can see all of their points for each program that they
+	 * are enrolled in.
+	 * 
+	 * @param custId the customer's id value.
+	 * @param walletId the customer's wallet id.
+	 * @param conn the Connection to the database.
+	 */
 	public CustomerViewWallet(int custId, int walletId, Connection conn) {
 		try {
 			PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM WalletParticipation WHERE wId = ?");
