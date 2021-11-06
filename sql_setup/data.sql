@@ -24,11 +24,11 @@ INSERT INTO Customers (cname, phoneNumber, caddress, username, pass) values ('Bi
 INSERT INTO Customers (cname, phoneNumber, caddress, username, pass) values ('Tony Stark', '8731596464', '10880 Malibu Point, CA', 'tonystark', 'c0067d4af4e87f00dbac63b6156828237059172d1bbeac67427345d6a9fda484');
 
 -- Wallets
-INSERT INTO Wallets;
-INSERT INTO Wallets;
-INSERT INTO Wallets;
-INSERT INTO Wallets;
-INSERT INTO Wallets;
+INSERT INTO Wallets values(NULL);
+INSERT INTO Wallets values(NULL);
+INSERT INTO Wallets values(NULL);
+INSERT INTO Wallets values(NULL);
+INSERT INTO Wallets values(NULL);
 
 -- CustomerWallets
 INSERT INTO CustomerWallets (cId, wId) values (1, 1);
@@ -44,11 +44,11 @@ INSERT INTO WalletParticipation (wId, pId, points, alltimepoints, tierNumber) va
 INSERT INTO WalletParticipation (wId, pId, points, alltimepoints, tierNumber) values (2, 1, 0, 70, 0);
 
 INSERT INTO WalletParticipation (wId, pId, points, alltimepoints, tierNumber) values (3, 2, 20, 200, 0);
-INSERT INTO WalletParticipation (wId, pId, points, alltimepoints, tierNumber) values (3, 3, 40, 40, null);
+INSERT INTO WalletParticipation (wId, pId, points, alltimepoints, tierNumber) values (3, 3, 40, 40, NULL);
 
 INSERT INTO WalletParticipation (wId, pId, points, alltimepoints, tierNumber) values (5, 1, 20, 170, 1);
 INSERT INTO WalletParticipation (wId, pId, points, alltimepoints, tierNumber) values (5, 2, 40, 160, 0);
-INSERT INTO WalletParticipation (wId, pId, points, alltimepoints, tierNumber) values (5, 3, 50, 50, null);
+INSERT INTO WalletParticipation (wId, pId, points, alltimepoints, tierNumber) values (5, 3, 50, 50, NULL);
 
 -- Activity Categories
 INSERT INTO ActivityCategories (acId, acName) values ('A01', 'Purchase');
