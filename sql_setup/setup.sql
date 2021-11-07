@@ -17,7 +17,7 @@ CREATE SEQUENCE TLPCount
 CREATE TABLE Brands (
     bname varchar(255),
     baddress varchar(255),
-    username varchar(255),
+    username varchar(255) UNIQUE,
     pass varchar(255),
     joinDate date,
     id integer GENERATED ALWAYS AS IDENTITY,
@@ -73,7 +73,7 @@ CREATE TABLE Customers (
     cname varchar(255),
     phoneNumber varchar(15),
     caddress varchar(255),
-    username varchar(255),
+    username varchar(255) UNIQUE,
     pass varchar(255),
     id integer GENERATED ALWAYS AS IDENTITY,
     constraint pk_customers_cId primary key (id) 
@@ -83,7 +83,7 @@ CREATE TABLE Customers (
  * Admins
  */
 CREATE TABLE Admins (
-	username varchar(255),
+	username varchar(255) UNIQUE,
 	pass varchar(255),
 	id integer GENERATED ALWAYS AS IDENTITY
 );
@@ -217,3 +217,35 @@ BEGIN
 	END IF;
 END;
 /
+
+/*
+ * Trigger for adding wallet and customer-wallet binding for ever new customer
+ */
+CREATE OR REPLACE TRIGGER addWallets
+	AFTER INSERT ON Customers
+	FOR EACH
+BEGIN
+	INSERT INTO Wallets VALUES(NULL);
+	INSERT INTO CustomerWallets(cId, wId) VALUES(:NEW.id, :New.id);
+END 
+/
+
+/*
+ * Assertion to ensure not username same between customers and brands
+ */
+CREATE ASSERTION noOverlapCustomerBrand
+CHECK ( NOT EXISTS(SELECT C.username FROM Customers C, Brands B WHERE C.username = B.username))
+
+/*
+ * Assertion to ensure not username same between customers and admins
+ */
+CREATE ASSERTION noOverlapCustomerAdmin
+CHECK ( NOT EXISTS(SELECT C.username FROM Customers C, Admins A WHERE C.username = A.username))
+
+/*
+ * Assertion to ensure not username same between customers and brands
+ */
+CREATE ASSERTION noOverlapAdminBrand
+CHECK ( NOT EXISTS(SELECT A.username FROM Admins A, Brands B WHERE A.username = B.username))
+
+
