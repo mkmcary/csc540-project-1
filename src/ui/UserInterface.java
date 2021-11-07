@@ -30,6 +30,7 @@ public class UserInterface {
             conn = DriverManager.getConnection(jdbcURL, user, passwd);
             
     	} catch (Throwable e) {
+    		System.out.println(e.getMessage());
 	        System.out.println("Error in database connection");
         }
 		
