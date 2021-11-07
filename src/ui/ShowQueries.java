@@ -160,8 +160,8 @@ public class ShowQueries {
 			Statement stmt = conn.createStatement();
 			
 			ResultSet rs = stmt.executeQuery("SELECT AC.acName AS name, COUNT(*) AS count"
-					+ "FROM Brands B, LoyaltyPrograms LP, ActivityInstances AI, RewardEarningRules RE, ActivityCategories AC"
-					+ "WHERE B.bname = \'Brand01\' AND LP.bId = B.id AND AI.pId = LP.id AND RE.pId = AI.pId AND RE.ruleVersion = AI.ruleVersion AND RE.ruleCode = AI.ruleCode"
+					+ "FROM LoyaltyPrograms LP, ActivityInstances AI, RewardEarningRules RE, ActivityCategories AC"
+					+ "WHERE LP.bId = 1 AND AI.pId = LP.id AND RE.pId = AI.pId AND RE.ruleVersion = AI.ruleVersion AND RE.ruleCode = AI.ruleCode"
 					+ "AND RE.acId = AC.acId"
 					+ "GROUP BY AC.acName");
 			
