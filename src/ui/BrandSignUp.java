@@ -75,42 +75,6 @@ public class BrandSignUp {
 				// If user selected to sign up, otherwise exit to menu above
 				if (selection == 1) {
 					
-					// Make sure new user is unique
-					pstmt = conn.prepareStatement("SELECT id FROM Brands WHERE username = ?");
-					pstmt.clearParameters();
-					pstmt.setString(1, username);
-					
-					rs = pstmt.executeQuery();
-					int i = 0;
-					
-					while (rs.next()) {
-						i++;
-					}
-					
-					pstmt = conn.prepareStatement("SELECT id FROM Customers WHERE username = ?");
-					pstmt.clearParameters();
-					pstmt.setString(1, username);
-					
-					rs = pstmt.executeQuery();
-					
-					while (rs.next()) {
-						i++;
-					}
-					
-					pstmt = conn.prepareStatement("SELECT id FROM Admins WHERE username = ?");
-					pstmt.clearParameters();
-					pstmt.setString(1, username);
-					
-					rs = pstmt.executeQuery();
-					
-					while (rs.next()) {
-						i++;
-					}
-					
-					if (i > 0) {
-						throw new SQLException();
-					}
-					
 					pstmt = conn.prepareStatement("INSERT INTO Brands(bname, baddress, username, pass, joinDate) VALUES(?,?,?,?,?)",
 							Statement.RETURN_GENERATED_KEYS);
 	                

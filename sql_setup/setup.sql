@@ -229,3 +229,23 @@ BEGIN
 	INSERT INTO CustomerWallets(cId, wId) VALUES(:NEW.id, :New.id);
 END 
 /
+
+/*
+ * Assertion to ensure not username same between customers and brands
+ */
+CREATE ASSERTION noOverlapCustomerBrand
+CHECK ( NOT EXISTS(SELECT C.username FROM Customers C, Brands B WHERE C.username = B.username))
+
+/*
+ * Assertion to ensure not username same between customers and admins
+ */
+CREATE ASSERTION noOverlapCustomerAdmin
+CHECK ( NOT EXISTS(SELECT C.username FROM Customers C, Admins A WHERE C.username = A.username))
+
+/*
+ * Assertion to ensure not username same between customers and brands
+ */
+CREATE ASSERTION noOverlapAdminBrand
+CHECK ( NOT EXISTS(SELECT A.username FROM Admins A, Brands B WHERE A.username = B.username))
+
+
