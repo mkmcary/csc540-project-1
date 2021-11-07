@@ -24,6 +24,7 @@ BEGIN
         :NEW.pCode := CONCAT('RLP', LPAD(RLPCount.NEXTVAL, 2, '0'));
 	END IF;
 END;
+/
 
 /*
  * Brands
