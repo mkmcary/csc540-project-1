@@ -1,4 +1,31 @@
 /*
+ * Variables for LoyaltyPrograms pCode generation
+ */
+CREATE SEQUENCE RLPCount 
+	START WITH 1 
+	INCREMENT BY 1 
+	NOMAXVALUE;
+
+CREATE SEQUENCE TLPCount 
+	START WITH 1 
+	INCREMENT BY 1 
+	NOMAXVALUE;
+
+/*
+ * Trigger for dynamically generating pCode in LoyaltyPrograms
+ */
+CREATE OR REPLACE TRIGGER generateLPCode 
+    BEFORE INSERT ON LoyaltyPrograms 
+    FOR EACH ROW 
+BEGIN
+    IF :NEW.isTiered = 'Y' THEN 
+	    :NEW.pCode := CONCAT('TLP', LPAD(TLPCount.NEXTVAL, 2, '0'));
+	ELSE
+        :NEW.pCode := CONCAT('RLP', LPAD(RLPCount.NEXTVAL, 2, '0'));
+	END IF;
+END;
+
+/*
  * Brands
  */
 CREATE TABLE Brands (
@@ -46,9 +73,11 @@ CREATE TABLE Tiers (
     tname varchar(255),
     multiplier float(3),
     threshold integer,
-    constraint fk_tiers_pId foreign key (pId) references LoyaltyPrograms (id),
+    constraint fk_tiers_pId foreign key pId references LoyaltyPrograms (id),
     constraint pk_tiers_tier primary key (pId, tnum),
-    constraint valid_tier check(tnum >= 0 and tnum <= 2)
+    constraint valid_tier check(tnum >= 0 and tnum <= 2),
+    constraint valid_multiplier check(multiplier > 0),
+    constraint valid_threshold check(threshold >= 0)
 );
 
 /*
@@ -101,6 +130,14 @@ CREATE TABLE ActivityCategories (
     constraint pk_activitycategories_acId primary key (acId)
 );
 
+CREATE TABLE ProgramActivities (
+	pId integer,
+    acId varchar(255),
+    constraint pk_id primary key (pId, acId),
+    constraint fk_pId foreign key pId references LoyaltyPrograms (id),
+    constraint fk_acId foreign key acId references ActivityCategories (acId)
+);
+
 CREATE TABLE RewardEarningRules (
     pId integer,
     ruleVersion integer,
@@ -134,11 +171,21 @@ CREATE TABLE Rewards (
     constraint pk_rewards_rId primary key (rId)
 );
 
+CREATE TABLE ProgramRewards (
+	pId integer,
+    rId varchar(255),
+    rewardQuantity integer,
+    constraint pk_id primary key (pId, rId),
+    constraint fk_pId foreign key pId references LoyaltyPrograms (id),
+    constraint fk_rId foreign key rId references ActivityCategories (rId)
+);
+
 CREATE TABLE GiftCards (
     id integer GENERATED ALWAYS AS IDENTITY,
     pId integer,
     wId integer,
     cardValue float,
+    expiryDate date,
     constraint pk_giftcards_gcId primary key (id),
     constraint fk_giftcards_pId foreign key (pId) references LoyaltyPrograms (id),
     constraint fk_giftcards_wId foreign key (wId) references Wallets (id)
@@ -151,6 +198,8 @@ CREATE TABLE RewardRedeemingRules (
     points integer,
     rId varchar(255),
     quantity integer,
+    gcVal integer,
+    gcExp date,
     constraint pk_rewardredeemingrules_rr primary key (pId, ruleVersion, ruleCode),
     constraint fk_rewardredeemingrules_pId foreign key (pId) references LoyaltyPrograms (id),
     constraint fk_rewardredeemingrules_reward foreign key (rId) references Rewards (rId)
