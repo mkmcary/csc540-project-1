@@ -4,9 +4,9 @@ INSERT INTO Brands (bname, baddress, username, pass, joinDate) values ('Brand Y'
 INSERT INTO Brands (bname, baddress, username, pass, joinDate) values ('Brand Z', '20 Roszel Rd Princeton, NJ', 'brandz', 'pass', TO_DATE('2021-05-08', 'yyyy-mm-dd'));
 
 -- Loyalty Programs
-INSERT INTO LoyaltyPrograms (pName, pCode, isTiered, bId) values ('SportGoods', 'TLP01', 'Y', 1);
-INSERT INTO LoyaltyPrograms (pName, pCode, isTiered, bId) values ('MegaCenter', 'TLP02', 'Y', 2);
-INSERT INTO LoyaltyPrograms (pName, pCode, isTiered, bId) values ('TechSups', 'RLP01', 'N', 3);
+INSERT INTO LoyaltyPrograms (pName, isTiered, bId) values ('SportGoods', 'Y', 1);
+INSERT INTO LoyaltyPrograms (pName, isTiered, bId) values ('MegaCenter', 'Y', 2);
+INSERT INTO LoyaltyPrograms (pName, isTiered, bId) values ('TechSups', 'N', 3);
 
 -- Tiers
 INSERT INTO Tiers (pId, tnum, tname, multiplier, threshold) values (1, 0, 'Bronze', 1, 0);
