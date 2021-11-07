@@ -217,3 +217,15 @@ BEGIN
 	END IF;
 END;
 /
+
+/*
+ * Trigger for adding wallet and customer-wallet binding for ever new customer
+ */
+CREATE OR REPLACE TRIGGER addWallets
+	AFTER INSERT ON Customers
+	FOR EACH
+BEGIN
+	INSERT INTO Wallets VALUES(NULL);
+	INSERT INTO CustomerWallets(cId, wId) VALUES(:NEW.id, :New.id);
+END 
+/

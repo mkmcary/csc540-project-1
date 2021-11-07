@@ -132,24 +132,7 @@ public class CustomerSignUp {
 	                else {
 	                	validInput = true;
 	                	this.submitted = true;
-	                	
-	                	pstmt = conn.prepareStatement("INSERT INTO Wallets VALUES(NULL)", Statement.RETURN_GENERATED_KEYS);
-	                	pstmt.clearParameters();
-	                	pstmt.executeUpdate();
-	                	rs = pstmt.getGeneratedKeys();
-	                	
-	                	rs.next();
-	                	int wid = rs.getInt(1);
-	                	
-	                	pstmt = conn.prepareStatement("INSERT INTO CustomerWallets(cId, wId) VALUES(?,?)");
-	                	
-	                	pstmt.clearParameters();
-	                	pstmt.setInt(1, cid);
-	                	pstmt.setInt(2, wid);
-	                	
-	                	pstmt.executeUpdate();
-	                	
-	                	
+	         
 	                	System.out.println("Customer information saved");
 	                }
 				}
