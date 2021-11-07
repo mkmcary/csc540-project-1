@@ -179,7 +179,7 @@ public class ShowQueries {
 			
 			ResultSet rs = stmt.executeQuery("SELECT C.cname AS name"
 					+ "FROM Customers C, CustomerWallets CW, Brands B, LoyaltyPrograms LP, RewardInstances RI"
-					+ "WHERE B.bname = \\'Brand01\\' AND LP.bId = B.id AND RI.pId = LP.id AND CW.cId = C.id AND RI.wId = CW.wId"
+					+ "WHERE B.id = 1 AND LP.bId = B.id AND RI.pId = LP.id AND CW.cId = C.id AND RI.wId = CW.wId"
 					+ "GROUP BY C.cname"
 					+ "HAVING COUNT(*) > 1");
 			
@@ -220,7 +220,7 @@ public class ShowQueries {
 			
 			ResultSet rs = stmt.executeQuery("SELECT COUNT(*) AS count"
 					+ "FROM Customers C, CustomerWallets CW, Brands B, LoyaltyPrograms LP, ActivityInstances AI"
-					+ "WHERE C.id = 3 AND CW.cId = 3 AND B.bname = \'Brand02\' AND LP.bId = B.id AND AI.wId = CW.wId"
+					+ "WHERE C.id = 3 AND CW.cId = 3 AND B.id = 2 AND LP.bId = B.id AND AI.wId = CW.wId"
 					+ "AND AI.pId = LP.id AND AI.instanceDate >= to_date(\'01-08-2021\') AND AI.instanceDate <= to_date(\'30-09-2021\')");
 		
 			while (rs.next()) {
