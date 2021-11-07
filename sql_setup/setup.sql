@@ -17,7 +17,7 @@ CREATE SEQUENCE TLPCount
 CREATE TABLE Brands (
     bname varchar(255),
     baddress varchar(255),
-    username varchar(255),
+    username varchar(255) UNIQUE,
     pass varchar(255),
     joinDate date,
     id integer GENERATED ALWAYS AS IDENTITY,
@@ -73,7 +73,7 @@ CREATE TABLE Customers (
     cname varchar(255),
     phoneNumber varchar(15),
     caddress varchar(255),
-    username varchar(255),
+    username varchar(255) UNIQUE,
     pass varchar(255),
     id integer GENERATED ALWAYS AS IDENTITY,
     constraint pk_customers_cId primary key (id) 
@@ -83,7 +83,7 @@ CREATE TABLE Customers (
  * Admins
  */
 CREATE TABLE Admins (
-	username varchar(255),
+	username varchar(255) UNIQUE,
 	pass varchar(255),
 	id integer GENERATED ALWAYS AS IDENTITY
 );
