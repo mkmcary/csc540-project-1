@@ -652,13 +652,12 @@ public class BrandLanding {
             	ResultSet rs = stmt.executeQuery(SQL);
             	
             	if(!rs.next()) throw new SQLException();
-            	
         	} catch (SQLException e) {
         		System.out.println("Loyalty Program is tiered but has no tier levels!");
         		return false;
         	}
     	}
-    	
+    	System.out.println("Loyalty Program is valid!");
     	return true;
     }
     
