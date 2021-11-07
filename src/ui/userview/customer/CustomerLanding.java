@@ -94,6 +94,6 @@ public class CustomerLanding {
 			}
 		}
 		
-		scan.close();
+		//scan.close();
 	}
 }

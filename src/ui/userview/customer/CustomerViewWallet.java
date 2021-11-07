@@ -25,7 +25,7 @@ public class CustomerViewWallet {
 	public CustomerViewWallet(int custId, int walletId, Connection conn) {
 		try {
 			PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM WalletParticipation WHERE wId = ?");
-			pstmt.setInt(0, walletId);
+			pstmt.setInt(1, walletId);
 			ResultSet rs = pstmt.executeQuery();
 			
 			System.out.println("------------------------------");
@@ -41,7 +41,7 @@ public class CustomerViewWallet {
 				
 				// Get the program name and isTiered
 				PreparedStatement programQuery = conn.prepareStatement("SELECT * FROM LoyaltyPrograms WHERE id = ?");
-				programQuery.setInt(0, pid);
+				programQuery.setInt(1, pid);
 				ResultSet programInfo = programQuery.executeQuery();
 				
 				// program name
@@ -56,8 +56,8 @@ public class CustomerViewWallet {
 				// tier name
 				if (isTiered) {
 					PreparedStatement tierQuery = conn.prepareStatement("SELECT * FROM Tiers WHERE pId = ? AND tnum = ?");
-					tierQuery.setInt(0, pid);
-					tierQuery.setInt(1, tier);
+					tierQuery.setInt(1, pid);
+					tierQuery.setInt(2, tier);
 					ResultSet tierInfo = tierQuery.executeQuery();
 					
 					String tierName = "";
@@ -77,9 +77,9 @@ public class CustomerViewWallet {
 			System.exit(1);
 		}
 		
-		System.out.println("Press enter to go back.");
+		System.out.println("Type \'exit\' and press enter to go back.");
 		Scanner scan = new Scanner(System.in);
 		scan.next();
-		scan.close();
+		//scan.close();
 	}
 }

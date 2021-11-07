@@ -43,14 +43,15 @@ public class CustomerRewardActivities {
 				PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM LoyaltyPrograms");
 				
 				ResultSet programs = pstmt.executeQuery();
-				ArrayList<String> codes = new ArrayList<String>();
+				ArrayList<Integer> ids = new ArrayList<Integer>();
 				ArrayList<Boolean> tieredOrNot = new ArrayList<Boolean>();
 				
 				int i = 1;
 				while(programs.next()) {
 					// Get the Program id and name
 					String code = programs.getString("pCode");
-					codes.add(code);
+					int id = programs.getInt("id");
+					ids.add(id);
 					String name = programs.getString("pName");
 					String tieredString = programs.getString("isTiered");
 					boolean tiered = (tieredString.equals("Y")) ? true : false;
@@ -91,20 +92,9 @@ public class CustomerRewardActivities {
 				}
 				
 				// Else, use their input
-				String pChosen = codes.get(userInput - 1);
+				int pChosen = ids.get(userInput - 1);
 				boolean isTiered = tieredOrNot.get(userInput - 1);
 				int choice = 0;
-				
-				// Find the appropriate earning types for this program
-				ResultSet reRules = null;
-				try {
-					PreparedStatement findRules = conn.prepareStatement("SELECT * FROM RewardEarningRules WHERE pId = ?");
-					findRules.setString(0, pChosen);
-					reRules = findRules.executeQuery();
-				} catch (Exception e) {
-					System.out.println("Could not connect to db.");
-					System.exit(1);
-				}
 				
 				int goBackChoice = -1;
 				while(choice != goBackChoice) {
@@ -113,14 +103,25 @@ public class CustomerRewardActivities {
 					// List each choice
 					ArrayList<String> activityChoices = new ArrayList<String>();
 					int choiceNum = 1;
-					reRules.beforeFirst();
+
+					// Find the appropriate earning types for this program
+					ResultSet reRules = null;
+					try {
+						PreparedStatement findRules = conn.prepareStatement("SELECT * FROM RewardEarningRules WHERE pId = ?");
+						findRules.setInt(1, pChosen);
+						reRules = findRules.executeQuery();
+					} catch (Exception e) {
+						System.out.println("Could not connect to db1.");
+						System.exit(1);
+					}
+					
 					while (reRules.next()) {
 						String acId = reRules.getString("acId");
 						String acName = "NoName";
 						try {
 							// Get the activity info (name)
 							PreparedStatement findActivity = conn.prepareStatement("SELECT * FROM ActivityCategories WHERE acId = ?");
-							findActivity.setString(0, acId);
+							findActivity.setString(1, acId);
 							ResultSet activities = findActivity.executeQuery();
 							
 							while(activities.next()) {
@@ -128,7 +129,7 @@ public class CustomerRewardActivities {
 								activityChoices.add(acName);
 							}
 						} catch (Exception e) {
-							System.out.println("Could not connect to db.");
+							System.out.println("Could not connect to db2.");
 							System.exit(1);
 						}
 						
@@ -142,7 +143,7 @@ public class CustomerRewardActivities {
 					goBackChoice = choiceNum;
 					
 					// Ask for user input
-					System.out.println("Please enter your choice: ");
+					System.out.print("Please enter your choice: ");
 					String nextInput = scan.next();
 					
 					// Convert and validate the user input
@@ -162,7 +163,18 @@ public class CustomerRewardActivities {
 						int ruleVersion = 0;
 						String ruleCode = "";
 						int pointsToEarn = 0;
-						reRules.beforeFirst();
+						
+						// Reset reRules
+						reRules = null;
+						try {
+							PreparedStatement findRules = conn.prepareStatement("SELECT * FROM RewardEarningRules WHERE pId = ?");
+							findRules.setInt(1, pChosen);
+							reRules = findRules.executeQuery();
+						} catch (Exception e) {
+							System.out.println("Could not connect to db1.");
+							System.exit(1);
+						}
+						
 						while(reRules.next()) {
 							String localACID = reRules.getString("acId");
 							if (localACID.equals(chosenActivity)) {
@@ -177,12 +189,12 @@ public class CustomerRewardActivities {
 						ArrayList<Integer> tierThresholds = new ArrayList<Integer>();
 						if(isTiered) {
 							PreparedStatement tierCheck = conn.prepareStatement("SELECT * FROM Tiers WHERE pId = ?");
-							tierCheck.setInt(0, pid);
+							tierCheck.setInt(1, pid);
 							ResultSet programTiers = tierCheck.executeQuery();
 							
 							tierCheck = conn.prepareStatement("SELECT tierNumber FROM WalletParticipation WHERE pId = ? AND wId = ?");
-							tierCheck.setInt(0, pid);
-							tierCheck.setInt(1, walletId);
+							tierCheck.setInt(1, pid);
+							tierCheck.setInt(2, walletId);
 							ResultSet customerTier = tierCheck.executeQuery();
 							int tierNum = 0;
 							while (customerTier.next()) {
@@ -203,7 +215,7 @@ public class CustomerRewardActivities {
 						if (chosenActivity.equalsIgnoreCase("Purchase")) {
 							// Purchase page
 							new CustomerPurchase(conn, walletId, pid, ruleVersion, ruleCode, pointsToEarn, tierThresholds);
-						} else if (chosenActivity.equalsIgnoreCase("Leave a review")) {
+						} else if (chosenActivity.equalsIgnoreCase("Write a review")) {
 							// Review Page
 							new CustomerReview(conn, walletId, pid, ruleVersion, ruleCode, pointsToEarn, tierThresholds);
 						} else if (chosenActivity.equalsIgnoreCase("Refer a friend")) {
@@ -221,11 +233,12 @@ public class CustomerRewardActivities {
 				
 			} catch (SQLException e1) {
 				// Could not connect to database - stop running
+				System.out.println(e1.getMessage());
 				System.out.println("Could not connect to the database");
 				System.exit(1);
 			}
 		}
-		scan.close();
+		//scan.close();
 		
 	}
 }

@@ -4,6 +4,7 @@
 package ui.userview.customer;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -72,14 +73,16 @@ public class CustomerGenericActivity {
 				String content = scan.next();
 				
 				// Insert the information on this review
-				PreparedStatement purchase = conn.prepareStatement("INSERT INTO ActivityInstances (instanceDate, relevantInfo, pId, ruleVersion, ruleCode, wId) values (now(), ?, ?, ?, ?, ?)");
-				purchase.setString(0, content);
-				purchase.setInt(1, pid);
-				purchase.setInt(2, ruleVersion);
-				purchase.setString(3, ruleCode);
-				purchase.setInt(4, walletId);
+				PreparedStatement genericActivity = conn.prepareStatement("INSERT INTO ActivityInstances (instanceDate, relevantInfo, pId, ruleVersion, ruleCode, wId) values (?, ?, ?, ?, ?, ?)");
+				long millis = System.currentTimeMillis();
+				genericActivity.setDate(1, new Date(millis));
+				genericActivity.setString(2, content);
+				genericActivity.setInt(3, pid);
+				genericActivity.setInt(4, ruleVersion);
+				genericActivity.setString(5, ruleCode);
+				genericActivity.setInt(6, walletId);
 				try {
-					purchase.executeUpdate();
+					genericActivity.executeUpdate();
 				} catch (Exception e) {
 					System.out.println("Could not complete activity.");
 					break;
@@ -87,8 +90,8 @@ public class CustomerGenericActivity {
 				
 				// Update the user's points and tier
 				PreparedStatement customerWallet = conn.prepareStatement("SELECT points, alltimepoints, tierNumber FROM WalletParticipation WHERE wId = ? AND pId = ?");
-				customerWallet.setInt(0, walletId);
-				customerWallet.setInt(1, pid);
+				customerWallet.setInt(1, walletId);
+				customerWallet.setInt(2, pid);
 				ResultSet origPoints = customerWallet.executeQuery();
 				int points = 0;
 				int allTimePoints = 0;
@@ -111,11 +114,11 @@ public class CustomerGenericActivity {
 				
 				// Run the update query
 				PreparedStatement updateWallet = conn.prepareStatement("UPDATE WalletParticipation SET points = ?, alltimepoints = ?, tierNumber = ? WHERE wId = ? AND pId = ?");
-				updateWallet.setInt(0, points);
-				updateWallet.setInt(1, allTimePoints);
-				updateWallet.setInt(2, tierNumber);
-				updateWallet.setInt(3, walletId);
-				updateWallet.setInt(4, pid);
+				updateWallet.setInt(1, points);
+				updateWallet.setInt(2, allTimePoints);
+				updateWallet.setInt(3, tierNumber);
+				updateWallet.setInt(4, walletId);
+				updateWallet.setInt(5, pid);
 				updateWallet.executeUpdate();
 				
 				break;
@@ -125,7 +128,7 @@ public class CustomerGenericActivity {
 				System.exit(1);
 			}
 		}
-		scan.close();
+		//scan.close();
 		
 	}
 }
