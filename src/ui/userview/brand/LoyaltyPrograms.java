@@ -104,7 +104,7 @@ public class LoyaltyPrograms {
                 stmt = conn.createStatement();
                 
                 rs = stmt.executeQuery("SELECT id FROM LoyaltyPrograms WHERE bId =" + bId);
-                while (rs.next()) {
+                if (rs.next()) {
                     programId = rs.getInt("id");
                 }
             } finally {

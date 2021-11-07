@@ -116,7 +116,7 @@ public class TierSetup {
                 for (int i = 0; i < names.length; i++) {
                     pstmt.clearParameters();
                     pstmt.setInt(1, id);
-                    pstmt.setInt(2, i + 1);
+                    pstmt.setInt(2, i);
                     pstmt.setString(3, names[i]);
                     pstmt.setFloat(4, multipliers[i]);
                     pstmt.setInt(5, thresholds[i]);

@@ -128,17 +128,15 @@ public class ProgramType {
             ResultSet rs = null;
 
             try {
-                pstmt = conn.prepareStatement("INSERT INTO LoyaltyPrograms VALUES(?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+                pstmt = conn.prepareStatement("INSERT INTO LoyaltyPrograms (pName, isTiered, bId) VALUES(?,?,?)", Statement.RETURN_GENERATED_KEYS);
                 pstmt.clearParameters();
-                // pstmt.setInt(1, 0); id auto generate
-                pstmt.setString(2, pName);
-                // pstmt.setString(3, null); pCode
+                pstmt.setString(1, pName);
                 if (tiered) {
-                    pstmt.setString(4, "Y");
+                    pstmt.setString(2, "Y");
                 } else {
-                    pstmt.setString(4, "N");
+                    pstmt.setString(2, "N");
                 }
-                pstmt.setInt(5, bId);
+                pstmt.setInt(3, bId);
 
                 try {
                     int rows = pstmt.executeUpdate();

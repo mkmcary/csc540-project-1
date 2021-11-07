@@ -1,4 +1,31 @@
 /*
+ * Variables for LoyaltyPrograms pCode generation
+ */
+CREATE SEQUENCE RLPCount 
+	START WITH 1 
+	INCREMENT BY 1 
+	NOMAXVALUE;
+
+CREATE SEQUENCE TLPCount 
+	START WITH 1 
+	INCREMENT BY 1 
+	NOMAXVALUE;
+
+/*
+ * Trigger for dynamically generating pCode in LoyaltyPrograms
+ */
+CREATE OR REPLACE TRIGGER generateLPCode 
+    BEFORE INSERT ON LoyaltyPrograms 
+    FOR EACH ROW 
+BEGIN
+    IF :NEW.isTiered = 'Y' THEN 
+	    :NEW.pCode := CONCAT('TLP', LPAD(TLPCount.NEXTVAL, 2, '0'));
+	ELSE
+        :NEW.pCode := CONCAT('RLP', LPAD(RLPCount.NEXTVAL, 2, '0'));
+	END IF;
+END;
+
+/*
  * Loyalty Programs and Tiers
  */
 CREATE TABLE LoyaltyPrograms (
@@ -96,7 +123,9 @@ CREATE TABLE ActivityCategories (
 CREATE TABLE ProgramActivities (
 	pId integer,
     acId varchar(255),
-    constraint pk_id primary key (pId, acId)
+    constraint pk_id primary key (pId, acId),
+    constraint fk_pId foreign key pId references LoyaltyPrograms (id),
+    constraint fk_acId foreign key acId references ActivityCategories (acId)
 );
 
 CREATE TABLE RewardEarningRules (
@@ -135,7 +164,10 @@ CREATE TABLE Rewards (
 CREATE TABLE ProgramRewards (
 	pId integer,
     rId varchar(255),
-    constraint pk_id primary key (pId, rId)
+    rewardQuantity integer,
+    constraint pk_id primary key (pId, rId),
+    constraint fk_pId foreign key pId references LoyaltyPrograms (id),
+    constraint fk_rId foreign key rId references ActivityCategories (rId)
 );
 
 CREATE TABLE GiftCards (
@@ -143,6 +175,7 @@ CREATE TABLE GiftCards (
     pId integer,
     wId integer,
     cardValue float,
+    expiryDate date,
     constraint pk_id primary key (id),
     constraint fk_pId foreign key pId references LoyaltyPrograms (id),
     constraint fk_wId foreign key wId references Wallets (id),
