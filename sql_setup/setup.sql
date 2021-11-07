@@ -1,4 +1,17 @@
 /*
+ * Brands
+ */
+CREATE TABLE Brands (
+    bname varchar(255),
+    baddress varchar(255),
+    username varchar(255),
+    pass varchar(255),
+    joinDate date,
+    id integer GENERATED ALWAYS AS IDENTITY,
+    constraint pk_brands_bId primary key (id)
+);
+
+/*
  * Loyalty Programs and Tiers
  */
 CREATE TABLE LoyaltyPrograms (
@@ -8,7 +21,7 @@ CREATE TABLE LoyaltyPrograms (
     bId integer,
     id integer GENERATED ALWAYS AS IDENTITY,
     constraint pk_loyaltyprograms_id primary key (id),
-    constraint fk_bId foreign key bId references Brands (id)
+    constraint fk_bId foreign key (bId) references Brands (id)
 );
 
 CREATE TABLE Wallets (
@@ -36,19 +49,6 @@ CREATE TABLE Tiers (
     constraint fk_tiers_pId foreign key (pId) references LoyaltyPrograms (id),
     constraint pk_tiers_tier primary key (pId, tnum),
     constraint valid_tier check(tnum >= 0 and tnum <= 2)
-);
-
-/*
- * Brands
- */
-CREATE TABLE Brands (
-    bname varchar(255),
-    baddress varchar(255),
-    username varchar(255),
-    pass varchar(255),
-    joinDate date,
-    id integer GENERATED ALWAYS AS IDENTITY,
-    constraint pk_brands_bId primary key (id)
 );
 
 /*
