@@ -76,20 +76,32 @@ public class BrandSignUp {
 				if (selection == 1) {
 					
 					// Make sure new user is unique
-					rs = stmt.executeQuery("SELECT id FROM Brands WHERE username = " + username);
+					pstmt = conn.prepareStatement("SELECT id FROM Brands WHERE username = ?");
+					pstmt.clearParameters();
+					pstmt.setString(1, username);
+					
+					rs = pstmt.executeQuery();
 					int i = 0;
 					
 					while (rs.next()) {
 						i++;
 					}
 					
-					rs = stmt.executeQuery("SELECT id FROM Customers WHERE username = " + username);
+					pstmt = conn.prepareStatement("SELECT id FROM Customers WHERE username = ?");
+					pstmt.clearParameters();
+					pstmt.setString(1, username);
+					
+					rs = pstmt.executeQuery();
 					
 					while (rs.next()) {
 						i++;
 					}
 					
-					rs = stmt.executeQuery("SELECT id FROM Admins WHERE username = " + username);
+					pstmt = conn.prepareStatement("SELECT id FROM Admins WHERE username = ?");
+					pstmt.clearParameters();
+					pstmt.setString(1, username);
+					
+					rs = pstmt.executeQuery();
 					
 					while (rs.next()) {
 						i++;
