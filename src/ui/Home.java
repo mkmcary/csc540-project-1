@@ -30,7 +30,7 @@ public class Home {
 			
 			while (!selected) {
 				try {
-					selection = scan.nextInt();
+					selection = Integer.parseInt(scan.nextLine());
 					if (selection < 1 || selection > 4) {
 						throw new InputMismatchException();
 					}

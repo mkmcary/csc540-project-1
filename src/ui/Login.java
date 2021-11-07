@@ -11,6 +11,7 @@ import java.util.Scanner;
 
 import ui.userview.admin.AdminLanding;
 import ui.userview.customer.CustomerLanding;
+import ui.userview.brand.BrandLanding;
 
 /**
  * Displays the login page and allows for login functionality
@@ -54,7 +55,7 @@ public class Login {
     			//Validate user selection of menu
     			while (!selected) {
     				try {
-    					selection = scan.nextInt();
+    					selection = Integer.parseInt(scan.nextLine());
     					if (selection < 1 || selection > 2) {
     						throw new InputMismatchException();
     					}
@@ -71,7 +72,7 @@ public class Login {
                     
                     while(rs.next()) {
                     	signOn = true;
-                    	//BrandLanding brandLanding = new BrandLanding(rs.getInt("id"), conn);
+                    	new BrandLanding(rs.getInt("id"), conn);
                     }
                     
                     rs = stmt.executeQuery("SELECT id FROM Customers WHERE username = \'" + userID + "\' AND pass = \'" + password + "\'");

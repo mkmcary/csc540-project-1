@@ -51,7 +51,7 @@ public class ShowQueries {
 			//Validate user selection of menu
 			while (!selected) {
 				try {
-					selection = scan.nextInt();
+					selection = Integer.parseInt(scan.nextLine());
 					if (selection < 1 || selection > 8) {
 						throw new InputMismatchException();
 					}
