@@ -99,7 +99,7 @@ public class CustomerEnrollProgram {
 					System.out.println("------------------------------");
 					System.out.println("1. Enroll in Loyalty Program!");
 					System.out.println("2. Go Back");
-					System.out.println("Please enter your choice: ");
+					System.out.print("Please enter your choice: ");
 					String nextInput = scan.next();
 					// Convert and validate the user input
 					try {
@@ -114,14 +114,14 @@ public class CustomerEnrollProgram {
 						try {
 							if (isTiered) {
 								PreparedStatement insertion = conn.prepareStatement("INSERT INTO WalletParticipation (wId, pId, points, alltimepoints, tierNumber) values (?,?,0,0,0)");
-								insertion.setInt(0, walletId);
-								insertion.setInt(1, pChosen);
+								insertion.setInt(1, walletId);
+								insertion.setInt(2, pChosen);
 								insertion.executeUpdate();
 								System.out.println("Successfully enrolled in loyalty program " + pChosen + ".");
 							} else {
 								PreparedStatement insertion = conn.prepareStatement("INSERT INTO WalletParticipation (wId, pId, points, alltimepoints) values (?,?,0,0)");
-								insertion.setInt(0, walletId);
-								insertion.setInt(1, pChosen);
+								insertion.setInt(1, walletId);
+								insertion.setInt(2, pChosen);
 								insertion.executeUpdate();
 								System.out.println("Successfully enrolled in loyalty program " + pChosen + ".");
 							}
@@ -139,7 +139,7 @@ public class CustomerEnrollProgram {
 				System.exit(1);
 			}
 		}
-		scan.close();
+		//scan.close();
 		
 	}
 }

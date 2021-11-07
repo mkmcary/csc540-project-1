@@ -23,20 +23,6 @@ INSERT INTO Customers (cname, phoneNumber, caddress, username, pass) values ('Di
 INSERT INTO Customers (cname, phoneNumber, caddress, username, pass) values ('Billy Batson', '8974562583', '5015 Broad St, Philadelphia, PA', 'billybatson', 'pass');
 INSERT INTO Customers (cname, phoneNumber, caddress, username, pass) values ('Tony Stark', '8731596464', '10880 Malibu Point, CA', 'tonystark', 'pass');
 
--- Wallets
-INSERT INTO Wallets values(NULL);
-INSERT INTO Wallets values(NULL);
-INSERT INTO Wallets values(NULL);
-INSERT INTO Wallets values(NULL);
-INSERT INTO Wallets values(NULL);
-
--- CustomerWallets
-INSERT INTO CustomerWallets (cId, wId) values (1, 1);
-INSERT INTO CustomerWallets (cId, wId) values (2, 2);
-INSERT INTO CustomerWallets (cId, wId) values (3, 3);
-INSERT INTO CustomerWallets (cId, wId) values (4, 4);
-INSERT INTO CustomerWallets (cId, wId) values (5, 5);
-
 -- Wallet Partipation
 INSERT INTO WalletParticipation (wId, pId, points, alltimepoints, tierNumber) values (1, 1, 0, 80, 0);
 INSERT INTO WalletParticipation (wId, pId, points, alltimepoints, tierNumber) values (1, 2, 0, 210, 1);

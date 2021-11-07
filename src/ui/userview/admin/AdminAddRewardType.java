@@ -27,67 +27,67 @@ public class AdminAddRewardType {
 		
 		//Used to loop back if invalid reward input
 		boolean validInput = false;
-	    
-		try {
-			//Class.forName("oracle.jdbc.OracleDriver");
-            PreparedStatement pstmt = null;
-            
-            while (!validInput) {
-            	
-        		System.out.print("Enter New Reward Name: ");
-        		String name = scan.nextLine();
-        		System.out.print("Enter New Reward Code: ");
-        		String code = scan.nextLine();
-    			
-    			System.out.println("\n1) Add Reward Type\n2) Go Back");
-    			System.out.print("\nSelect an Option: ");
-    			
-    			boolean selected = false;
-    			int selection = 0;
-    			
-    			//Validate user selection of menu
-    			while (!selected) {
-    				try {
-    					selection = scan.nextInt();
-    					if (selection < 1 || selection > 2) {
-    						throw new InputMismatchException();
-    					}
-    					selected = true;
-    					
-    				} catch (InputMismatchException e) {
-    					UserInterface.invalidInput();
-    				}
-    			}
-    			
-    			// If user selected to add type, otherwise exit to menu above
-    			if (selection == 1) {
-    				pstmt = conn.prepareStatement("INSERT INTO Rewards VALUES(?,?)");
-                    
-                    pstmt.clearParameters();
-                    pstmt.setString(1, code);
-                    pstmt.setString(2, name);
-                    
-                    int rows = pstmt.executeUpdate();
-                    if (rows < 1) {
-                    	throw new SQLException();
-                    }
-                    else {
-                    	validInput = true;
-                    	System.out.println("Reward Type Saved");
-                    }
-    			}
-    			else {
-    				// Get out of loop and return to calling class even though no submission
-    				validInput = true;
-    			}
-            }
-            
-            
-		} catch (Throwable e) {
-			System.out.println("Invalid Customer Information. Try Again.");
-		}
 		
-		scan.close();
+		while (!validInput) {
+			
+			try {
+				//Class.forName("oracle.jdbc.OracleDriver");
+	            PreparedStatement pstmt = null;
+	            	
+	    		System.out.print("Enter New Reward Name: ");
+	    		String name = scan.nextLine();
+	    		System.out.print("Enter New Reward Code: ");
+	    		String code = scan.nextLine();
+				
+				System.out.println("\n1) Add Reward Type\n2) Go Back");
+				System.out.print("\nSelect an Option: ");
+				
+				boolean selected = false;
+				int selection = 0;
+				
+				//Validate user selection of menu
+				while (!selected) {
+					try {
+						selection = Integer.parseInt(scan.nextLine());
+						if (selection < 1 || selection > 2) {
+							throw new InputMismatchException();
+						}
+						selected = true;
+						
+					} catch (InputMismatchException e) {
+						UserInterface.invalidInput();
+					}
+				}
+				
+				// If user selected to add type, otherwise exit to menu above
+				if (selection == 1) {
+					pstmt = conn.prepareStatement("INSERT INTO Rewards(rId, rName) VALUES(?,?)");
+	                
+	                pstmt.clearParameters();
+	                pstmt.setString(1, code);
+	                pstmt.setString(2, name);
+	                
+	                int rows = pstmt.executeUpdate();
+	                if (rows < 1) {
+	                	throw new SQLException();
+	                }
+	                else {
+	                	validInput = true;
+	                	System.out.println("Reward Type Saved");
+	                }
+				}
+				else {
+					// Get out of loop and return to calling class even though no submission
+					validInput = true;
+				}
+	            
+	            
+			} catch (Throwable e) {
+				System.out.println("Invalid Reward Information. Try Again.");
+			}
+			
+		}
+	    
 	}
 
 }

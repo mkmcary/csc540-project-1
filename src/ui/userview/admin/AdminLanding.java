@@ -36,7 +36,7 @@ public class AdminLanding {
 			
 			while (!selected) {
 				try {
-					selection = scan.nextInt();
+					selection = Integer.parseInt(scan.nextLine());
 					if (selection < 1 || selection > 7) {
 						throw new InputMismatchException();
 					}
@@ -64,8 +64,6 @@ public class AdminLanding {
 						break;
 			}
 		}
-		
-		scan.close();
 	}
 
 }

@@ -28,75 +28,69 @@ public class AdminShowBrandInfo {
 		
 		//Used to loop back if invalid brand input
 		boolean validInput = false;
-	    
-		try {
-			//Class.forName("oracle.jdbc.OracleDriver");
-
-            PreparedStatement pstmt = null;
-            
-            while (!validInput) {
-            	
-        		System.out.print("Enter Brand User ID: ");
-        		String username = scan.nextLine();
-    			
-    			System.out.println("\n1) Show Brand Info\n2) Go Back");
-    			System.out.print("\nSelect an Option: ");
-    			
-    			boolean selected = false;
-    			int selection = 0;
-    			
-    			//Validate user selection of menu
-    			while (!selected) {
-    				try {
-    					selection = scan.nextInt();
-    					if (selection < 1 || selection > 2) {
-    						throw new InputMismatchException();
-    					}
-    					selected = true;
-    					
-    				} catch (InputMismatchException e) {
-    					UserInterface.invalidInput();
-    				}
-    			}
-    			
-    			// If user selected to show brand info, otherwise exit to menu above
-    			if (selection == 1) {
-    				pstmt = conn.prepareStatement("SELECT * FROM Brands WHERE username = ?");
-                    
-                    pstmt.clearParameters();
-                    pstmt.setString(1, username);
-                    
-                    ResultSet rs = pstmt.executeQuery();
-                    
-                    int i = 0;
-                    while (rs.next()) {
-                    	i++;
-                    }
-                    if (i != 1) {
-                    	throw new SQLException();
-                    }
-                    else {
-                    	validInput = true;
-                    	rs.first();
-                    	
-                    	System.out.println("Name: " + rs.getString("bname"));
-                    	System.out.println("Address: " + rs.getString("baddress"));
-                    	System.out.println("User ID: " + rs.getString("username"));
-                    	System.out.println("Join Date: " + rs.getDate("joinDate"));
-                    }
-    			}
-    			else {
-    				// Get out of loop and return to calling class even though no submission
-    				validInput = true;
-    			}
-            }
-            
-            
-		} catch (Throwable e) {
-			System.out.println("Invalid Brand User ID. Try Again.");
-		}
 		
-		scan.close();
+		while (!validInput) {
+			try {
+				//Class.forName("oracle.jdbc.OracleDriver");
+
+	            PreparedStatement pstmt = null;
+	            	
+	    		System.out.print("Enter Brand User ID: ");
+	    		String username = scan.nextLine();
+				
+				System.out.println("\n1) Show Brand Info\n2) Go Back");
+				System.out.print("\nSelect an Option: ");
+				
+				boolean selected = false;
+				int selection = 0;
+				
+				//Validate user selection of menu
+				while (!selected) {
+					try {
+						selection = Integer.parseInt(scan.nextLine());
+						if (selection < 1 || selection > 2) {
+							throw new InputMismatchException();
+						}
+						selected = true;
+						
+					} catch (InputMismatchException e) {
+						UserInterface.invalidInput();
+					}
+				}
+				
+				// If user selected to show brand info, otherwise exit to menu above
+				if (selection == 1) {
+					pstmt = conn.prepareStatement("SELECT * FROM Brands WHERE username = ?");
+	                
+	                pstmt.clearParameters();
+	                pstmt.setString(1, username);
+	                
+	                ResultSet rs = pstmt.executeQuery();
+	                
+	                if (rs.next()) {
+	                	validInput = true;
+	                	
+	                	System.out.println("Name: " + rs.getString("bname"));
+	                	System.out.println("Address: " + rs.getString("baddress"));
+	                	System.out.println("User ID: " + rs.getString("username"));
+	                	System.out.println("Join Date: " + rs.getDate("joinDate"));
+	                }
+	                else {
+	                	throw new SQLException();
+	                }
+				}
+				else {
+					// Get out of loop and return to calling class even though no submission
+					validInput = true;
+				}
+	            
+	            
+			} catch (Throwable e) {
+				System.out.println("Invalid Brand User ID. Try Again.");
+				System.out.println(e.getMessage());
+			}
+		}
+	    
 	}
 
 }
