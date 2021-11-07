@@ -163,7 +163,7 @@ CREATE TABLE ProgramRewards (
     rewardQuantity integer,
     constraint pk_programrewards_id primary key (pId, rId),
     constraint fk_programrewards_pId foreign key (pId) references LoyaltyPrograms (id),
-    constraint fk_programrewards_rId foreign key (rId) references ActivityCategories (rId)
+    constraint fk_programrewards_rId foreign key (rId) references Rewards (rId)
 );
 
 CREATE TABLE GiftCards (
