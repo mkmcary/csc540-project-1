@@ -45,7 +45,6 @@ CREATE TABLE Brands (
     username varchar(255),
     pass varchar(255),
     joinDate date,
-    pId integer,
     id integer GENERATED ALWAYS AS IDENTITY,
     constraint pk_brands_bId primary key (id),
     constraint fk_brands_lpId foreign key (pId) references LoyaltyPrograms (id)

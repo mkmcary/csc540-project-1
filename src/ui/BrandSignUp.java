@@ -100,7 +100,7 @@ public class BrandSignUp {
     					throw new SQLException();
     				}
     				
-    				pstmt = conn.prepareStatement("INSERT INTO Brands VALUES(?,?,?,?,?,?)",
+    				pstmt = conn.prepareStatement("INSERT INTO Brands VALUES(?,?,?,?,?)",
     						Statement.RETURN_GENERATED_KEYS);
                     
                     pstmt.clearParameters();
@@ -110,7 +110,6 @@ public class BrandSignUp {
                     pstmt.setString(4, password);
                     long millis=System.currentTimeMillis();  
                     pstmt.setDate(5, new Date(millis));
-                    pstmt.setNull(6, 4);
                     
                     int rows = pstmt.executeUpdate();
                     if (rows < 1) {

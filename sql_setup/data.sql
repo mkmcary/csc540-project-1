@@ -12,9 +12,9 @@ INSERT INTO Tiers (pId, tnum, tname, multiplier, threshold) values (2, 0, 'Speci
 INSERT INTO Tiers (pId, tnum, tname, multiplier, threshold) values (2, 1, 'Premium', 2, 210);
 
 -- Brands
-INSERT INTO Brands (bname, baddress, username, pass, joinDate, pId) values ('Brand X', '503 Rolling Creek Dr Austin, AR', 'brandx', 'pass', TO_DATE('2021-04-01', 'yyyy-mm-dd'), 1);
-INSERT INTO Brands (bname, baddress, username, pass, joinDate, pId) values ('Brand Y', '939 Orange Ave Coronado, CA', 'brandy', 'pass', TO_DATE('2021-03-25', 'yyyy-mm-dd'), 2);
-INSERT INTO Brands (bname, baddress, username, pass, joinDate, pId) values ('Brand Z', '20 Roszel Rd Princeton, NJ', 'brandz', 'pass', TO_DATE('2021-05-08', 'yyyy-mm-dd'), 3);
+INSERT INTO Brands (bname, baddress, username, pass, joinDate) values ('Brand X', '503 Rolling Creek Dr Austin, AR', 'brandx', 'pass', TO_DATE('2021-04-01', 'yyyy-mm-dd'));
+INSERT INTO Brands (bname, baddress, username, pass, joinDate) values ('Brand Y', '939 Orange Ave Coronado, CA', 'brandy', 'pass', TO_DATE('2021-03-25', 'yyyy-mm-dd'));
+INSERT INTO Brands (bname, baddress, username, pass, joinDate) values ('Brand Z', '20 Roszel Rd Princeton, NJ', 'brandz', 'pass', TO_DATE('2021-05-08', 'yyyy-mm-dd'));
 
 -- Customers
 INSERT INTO Customers (cname, phoneNumber, caddress, username, pass) values ('Peter Parker', '8636368778', '20 Ingram Street, NY', 'peterparker', 'pass');
