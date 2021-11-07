@@ -40,6 +40,38 @@ public class BrandLanding {
     }
 
     /**
+     * Loops until a valid input is read in.
+     * 
+     * @param scanner scanner object that reads in input
+     * @param pages   the max pages that menu can direct to
+     * @return valid page address
+     */
+    private static int validPage(Scanner scanner, int pages) {
+        int page = 0;
+        boolean invalidInput = false;
+        
+        // Handles invalid input
+        do {
+            System.out.print("\nEnter an interger that corresponds to the menu above: ");
+            if (scanner.hasNextInt()) {
+                page = scanner.nextInt();
+                if (page < 1 || page > pages) {
+                    invalidInput = true;
+                    System.out.println("Input must be an integer from 1-" + pages + ".");
+                } else {
+                    invalidInput = false;
+                }
+            } else {
+                scanner.next();
+                invalidInput = true;
+                System.out.println("Input must be an integer from 1-" + pages + ".");
+            }
+        } while (invalidInput);
+        
+        return page;
+    }
+
+    /**
      * Homepage for brand users
      * @throws SQLException 
      */
@@ -64,7 +96,7 @@ public class BrandLanding {
             switch (page) {
             case 1:
             	//Loyalty program instantiation happens in LoyaltyPrograms.java
-            	addLoyaltyProgram(conn);
+            	addLoyaltyProgram(scanner);
                 break;
             case 2:
                 addRERules(scanner);
@@ -89,13 +121,13 @@ public class BrandLanding {
         scanner.close();
     }
 
-    // --------------------------------------------------------------------------------------------
+    // -------------------------------------------------------------------------------------------- oops
 
     /**
      * Creates and adds a Loyalty Program to the Brand
      * @param s class-wide scanner for user input
      */
-    private static void addLoyaltyProgram(Connection conn) {
+    private static void addLoyaltyProgram(Scanner s) {
     	@SuppressWarnings("unused") //Don't need to use LP in app since all storage happens in DB
 		LoyaltyPrograms lp = new LoyaltyPrograms(id, conn);
     }
@@ -187,6 +219,7 @@ public class BrandLanding {
             	
             	//Get the loyalty ID from Brands table
             	int lpId = getLoyaltyId(id);
+            	if (lpId == -1) return;
 
             	System.out.println("Press 1 to add another rule.");
                 System.out.println("Press 2 to Go back to Brand Landing page");
@@ -528,10 +561,105 @@ public class BrandLanding {
     }
 
     /**
-     * 
+     * checks if a loyalty program is initialized (LP, RE, RR tables have a tuple)
      */
-    public static void validateLoyaltyProgram() {
-
+    public static boolean validateLoyaltyProgram() {
+    	System.out.println("\nYou chose 'Validate Loyalty Program'!");
+    	
+    	//Check if loyalty program is connected to a brand
+    	try {
+        	Statement stmt = conn.createStatement();
+        	String SQL = "SELECT * "
+        			+ "FROM LoyaltyPrograms"
+        			+ "WHERE bId = " + id;
+        	ResultSet rs = stmt.executeQuery(SQL);
+        	
+        	if(!rs.next()) throw new SQLException();
+    	} catch (SQLException e) {
+    		System.out.println("Brand doesn't have a Loyalty Program!");
+    		return false;
+    	}
+    	
+    	
+    	//Check if loyalty program has RE Rules
+    	try {
+        	Statement stmt = conn.createStatement();
+        	
+        	//LoyaltyProgram id of the brand
+        	int loyaltyId = getLoyaltyId(id);
+        	
+        	String SQL = "SELECT * "
+        			+ "FROM RewardEarningRules"
+        			+ "WHERE pId = " + loyaltyId;
+        	ResultSet rs = stmt.executeQuery(SQL);
+        	
+        	if(!rs.next()) throw new SQLException();
+    	} catch (SQLException e) {
+    		System.out.println("Loyalty Program doesn't have a Reward Earning Rule!");
+    	}
+    	
+    	//Check if loyalty program has RR rules
+    	try {
+        	Statement stmt = conn.createStatement();
+        	
+        	//LoyaltyProgram id of the brand
+        	int loyaltyId = getLoyaltyId(id);
+        	
+        	String SQL = "SELECT * "
+        			+ "FROM RewardRedeemingRules"
+        			+ "WHERE pId = " + loyaltyId;
+        	ResultSet rs = stmt.executeQuery(SQL);
+        	
+        	if(!rs.next()) throw new SQLException();
+    	} catch (SQLException e) {
+    		System.out.println("Loyalty Program doesn't have a Reward Redeeming Rule!");
+    	}
+    	
+    	boolean checkTiered = false;
+    	//Check if loyalty program is tiered or regular
+    	try {
+    		Statement stmt = conn.createStatement();
+    		
+    		//LoyaltyProgram id of the brand
+        	int loyaltyId = getLoyaltyId(id);
+        	
+        	String SQL = "SELECT isTiered "
+        			+ "FROM LoyaltyPrograms"
+        			+ "WHERE id = " + loyaltyId;
+        	ResultSet rs = stmt.executeQuery(SQL);
+        	
+        	//Confirms we have a loyalty program that is tiered
+        	if (rs.next()) {
+        		checkTiered = true;
+        	}
+        	
+    	} catch (SQLException e) {
+    		System.out.println("An SQL error has occured!");
+    		return false;
+    	}
+    	
+    	//Check if a tiered loyalty program has tiers
+    	if (checkTiered) {
+        	try {
+            	Statement stmt = conn.createStatement();
+            	
+            	//LoyaltyProgram id of the brand
+            	int loyaltyId = getLoyaltyId(id);
+            	
+            	String SQL = "SELECT * "
+            			+ "FROM Tiers"
+            			+ "WHERE pId = " + loyaltyId;
+            	ResultSet rs = stmt.executeQuery(SQL);
+            	
+            	if(!rs.next()) throw new SQLException();
+            	
+        	} catch (SQLException e) {
+        		System.out.println("Loyalty Program is tiered but has no tier levels!");
+        		return false;
+        	}
+    	}
+    	
+    	return true;
     }
     
     /**
@@ -620,43 +748,12 @@ public class BrandLanding {
 	    	if (rs.next()) {
 	    		return rs.getInt("pId");
 	    	}
+	    	
 		} catch (SQLException e) {
 			System.out.println("An SQL related error occured when searching for loyalty ID!");
 		}
-		
+		System.out.println("Loyalty Program doesn't exist!");
 		//return negative number to indicate error (brand doesn't have a loyalty program)
 		return -1;
 	}
-	
-	/**
-     * Loops until a valid input is read in.
-     * 
-     * @param scanner scanner object that reads in input
-     * @param pages   the max pages that menu can direct to
-     * @return valid page address
-     */
-    private static int validPage(Scanner scanner, int pages) {
-        int page = 0;
-        boolean invalidInput = false;
-        
-        // Handles invalid input
-        do {
-            System.out.print("\nEnter an interger that corresponds to the menu above: ");
-            if (scanner.hasNextInt()) {
-                page = scanner.nextInt();
-                if (page < 1 || page > pages) {
-                    invalidInput = true;
-                    System.out.println("Input must be an integer from 1-" + pages + ".");
-                } else {
-                    invalidInput = false;
-                }
-            } else {
-                scanner.next();
-                invalidInput = true;
-                System.out.println("Input must be an integer from 1-" + pages + ".");
-            }
-        } while (invalidInput);
-        
-        return page;
-    }
 }
