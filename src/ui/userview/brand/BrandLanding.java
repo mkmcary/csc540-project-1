@@ -118,7 +118,6 @@ public class BrandLanding {
             }
         }
 
-        scanner.close();
     }
 
     // -------------------------------------------------------------------------------------------- oops
@@ -379,7 +378,7 @@ public class BrandLanding {
                 	
                 	System.out.print("Enter your Brand Reward rule code (format: RR##): ");
                 	rrBrandRuleCode = s.next();
-                	if (!rrBrandRuleCode.substring(0,1).equals("RE") 
+                	if (!rrBrandRuleCode.substring(0,1).equals("RR") 
                 			|| Integer.parseInt(rrBrandRuleCode.substring(0,1)) < 0) {
                 		System.out.println("Brand Reward rule codes are in format 'RR##' "
                 				+ "where the number is positive");
@@ -527,9 +526,9 @@ public class BrandLanding {
                 	
                 	System.out.print("\nEnter your Brand Reward rule code (format: RR##): ");
                 	rrBrandRuleCode = s.next();
-                	if (!rrBrandRuleCode.substring(0,1).equals("RE") 
+                	if (!rrBrandRuleCode.substring(0,1).equals("RR") 
                 			|| Integer.parseInt(rrBrandRuleCode.substring(0,1)) < 0) {
-                		System.out.println("Brand Reward rule codes are in format 'RE##' "
+                		System.out.println("Brand Reward rule codes are in format 'RR##' "
                 				+ "where the number is positive");
                 		brandRuleCodeRepeat = true;
                 	}
@@ -751,7 +750,7 @@ public class BrandLanding {
     private static void addToRETable(int loyaltyId, int points, String code, String brandRuleCode) throws SQLException {
 
     	PreparedStatement pstmt = null;
-    	pstmt = conn.prepareStatement("INSERT INTO RewardEarningRules VALUES(?,?,?,?,?)",
+    	pstmt = conn.prepareStatement("INSERT INTO RewardEarningRules (pId, ruleVersion, ruleCode, points, acId) VALUES(?,?,?,?,?)",
 				Statement.RETURN_GENERATED_KEYS);
 		pstmt.clearParameters();
 		pstmt.setInt(1, loyaltyId);
@@ -797,7 +796,7 @@ public class BrandLanding {
     	
     	
     	if (giftcard) {
-    		pstmt = conn.prepareStatement("INSERT INTO RewardRedeemingRules VALUES(?,?,?,?,?,?,?,?)",
+    		pstmt = conn.prepareStatement("INSERT INTO RewardRedeemingRules (pId, ruleVersion, ruleCode, points, rId, quantity, gcVal, gcExp) VALUES(?,?,?,?,?,?,?,?)",
     				Statement.RETURN_GENERATED_KEYS);
     		pstmt.clearParameters();
     		pstmt.setInt(1, loyaltyId);
@@ -810,7 +809,7 @@ public class BrandLanding {
         	pstmt.setDate(8, java.sql.Date.valueOf(gcExpiration));
     	
     	} else {
-        	pstmt = conn.prepareStatement("INSERT INTO RewardRedeemingRules VALUES(?,?,?,?,?,?)",
+        	pstmt = conn.prepareStatement("INSERT INTO RewardRedeemingRules (pId, ruleVersion, ruleCode, points, rId, quantity) VALUES(?,?,?,?,?,?)",
     				Statement.RETURN_GENERATED_KEYS);
     		pstmt.clearParameters();
     		pstmt.setInt(1, loyaltyId);
@@ -853,8 +852,14 @@ public class BrandLanding {
     	latestVersion++;
 		
 		//Add entry into table
+//    	pId integer,
+//        ruleVersion integer,
+//        ruleCode varchar(6),
+//        points integer,
+//        acId varchar(255),
+    	
 		PreparedStatement pstmt = null;
-		pstmt = conn.prepareStatement("INSERT INTO RewardEarningRules VALUES(?,?,?,?,?)",
+		pstmt = conn.prepareStatement("INSERT INTO RewardEarningRules (pId, ruleVersion, ruleCode, points, acId) VALUES(?,?,?,?,?)",
 				Statement.RETURN_GENERATED_KEYS);
 		pstmt.clearParameters();
 		pstmt.setInt(1, loyaltyId);
@@ -900,7 +905,7 @@ public class BrandLanding {
 		//Add entry into table
 		PreparedStatement pstmt = null;
 		if (giftcard) {
-    		pstmt = conn.prepareStatement("INSERT INTO RewardRedeemingRules VALUES(?,?,?,?,?,?,?,?)",
+    		pstmt = conn.prepareStatement("INSERT INTO RewardRedeemingRules (pId, ruleVersion, ruleCode, points, rId, quantity, gcVal, gcExp) VALUES(?,?,?,?,?,?,?,?)",
     				Statement.RETURN_GENERATED_KEYS);
     		pstmt.clearParameters();
     		pstmt.setInt(1, loyaltyId);
@@ -913,7 +918,7 @@ public class BrandLanding {
         	pstmt.setDate(8, java.sql.Date.valueOf(gcExpiration));
     	
     	} else {
-        	pstmt = conn.prepareStatement("INSERT INTO RewardRedeemingRules VALUES(?,?,?,?,?,?)",
+        	pstmt = conn.prepareStatement("INSERT INTO RewardRedeemingRules (pId, ruleVersion, ruleCode, points, rId, quantity) VALUES(?,?,?,?,?,?)",
     				Statement.RETURN_GENERATED_KEYS);
     		pstmt.clearParameters();
     		pstmt.setInt(1, loyaltyId);
@@ -937,7 +942,7 @@ public class BrandLanding {
 	 * @param id the brand's Id
 	 * @return loyalty program id
 	 */
-	private static int getLoyaltyId(int id) {
+	private static int getLoyaltyId(int id) { 
 		
 		try {
 			Statement stmt = conn.createStatement();
