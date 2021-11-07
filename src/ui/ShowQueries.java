@@ -93,7 +93,7 @@ public class ShowQueries {
 			ResultSet rs = stmt.executeQuery("SELECT C1.cname FROM Customers C1 WHERE NOT EXISTS "
 					+ "(SELECT WP1.wId FROM WalletParticipation WP1 WHERE (WP1.wId = "
 					+ "(SELECT CW1.wId FROM CustomerWallets CW1 WHERE (CW1.cId = C1.id)) AND "
-					+ "WP1.pId = (SELECT B1.pId FROM Brands B1 WHERE (B1.id = 2)))");
+					+ "WP1.pId = (SELECT LP1.id FROM LoyaltyPrograms LP1 WHERE (LP1.bId = 2)))");
 			
 			while (rs.next()) {
 				System.out.println(rs.getString("cname"));
@@ -124,8 +124,8 @@ public class ShowQueries {
 		try {
 			Statement stmt = conn.createStatement();
 			
-			ResultSet rs = stmt.executeQuery("Select R1.rName FROM Rewards R1, RewardRedeemingRules RR1, Brands B1 WHERE "
-					+ "(B1.id = 1 AND B1.pId = RR1.pId AND RR1.rId = R1.rId)");
+			ResultSet rs = stmt.executeQuery("Select R1.rName FROM Rewards R1, RewardRedeemingRules RR1 WHERE "
+					+ "(RR1.pId = 1 AND RR1.rId = R1.rId)");
 			
 			while (rs.next()) {
 				System.out.println(rs.getString("rName"));
@@ -158,8 +158,8 @@ public class ShowQueries {
 			Statement stmt = conn.createStatement();
 			
 			ResultSet rs = stmt.executeQuery("SELECT AC.acName AS name, COUNT(*) AS count"
-					+ "FROM Brands B, LoyaltyPrograms LP, ActivityInstances AI, RewardEarningRules RE, ActivityCategories AC"
-					+ "WHERE B.bname = \'Brand01\' AND LP.bId = B.id AND AI.pId = LP.id AND RE.pId = AI.pId AND RE.ruleVersion = AI.ruleVersion AND RE.ruleCode = AI.ruleCode"
+					+ "FROM LoyaltyPrograms LP, ActivityInstances AI, RewardEarningRules RE, ActivityCategories AC"
+					+ "WHERE LP.bId = 1 AND AI.pId = LP.id AND RE.pId = AI.pId AND RE.ruleVersion = AI.ruleVersion AND RE.ruleCode = AI.ruleCode"
 					+ "AND RE.acId = AC.acId"
 					+ "GROUP BY AC.acName");
 			

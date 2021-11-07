@@ -4,6 +4,7 @@
 package ui.userview.customer;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -48,8 +49,8 @@ public class CustomerPurchase {
 					System.out.println("Select A Gift Card to Use:");
 					// Get gift cards for this user
 					PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM GiftCards WHERE wId = ? AND pId = ?");
-					pstmt.setInt(0, walletId);
-					pstmt.setInt(1, pid);
+					pstmt.setInt(1, walletId);
+					pstmt.setInt(2, pid);
 					ResultSet cards = pstmt.executeQuery();
 					
 					ArrayList<Integer> cardIds = new ArrayList<Integer>();
@@ -126,23 +127,26 @@ public class CustomerPurchase {
 				String purchaseAmount = scan.next();
 				
 				// Insert the information on this purchase
-				PreparedStatement purchase = conn.prepareStatement("INSERT INTO ActivityInstances (instanceDate, relevantInfo, pId, ruleVersion, ruleCode, wId) values (now(), ?, ?, ?, ?, ?)");
-				purchase.setString(0, purchaseAmount);
-				purchase.setInt(1, pid);
-				purchase.setInt(2, ruleVersion);
-				purchase.setString(3, ruleCode);
-				purchase.setInt(4, walletId);
+				PreparedStatement purchase = conn.prepareStatement("INSERT INTO ActivityInstances (instanceDate, relevantInfo, pId, ruleVersion, ruleCode, wId) values (?, ?, ?, ?, ?, ?)");
+				long millis = System.currentTimeMillis();
+				purchase.setDate(1, new Date(millis));
+				purchase.setString(2, purchaseAmount);
+				purchase.setInt(3, pid);
+				purchase.setInt(4, ruleVersion);
+				purchase.setString(5, ruleCode);
+				purchase.setInt(6, walletId);
 				try {
 					purchase.executeUpdate();
 				} catch (Exception e) {
+					System.out.println(e.getMessage());
 					System.out.println("Could not complete purchase.");
 					break;
 				}
 				
 				// Update the user's points and tier
 				PreparedStatement customerWallet = conn.prepareStatement("SELECT points, alltimepoints, tierNumber FROM WalletParticipation WHERE wId = ? AND pId = ?");
-				customerWallet.setInt(0, walletId);
-				customerWallet.setInt(1, pid);
+				customerWallet.setInt(1, walletId);
+				customerWallet.setInt(2, pid);
 				ResultSet origPoints = customerWallet.executeQuery();
 				int points = 0;
 				int allTimePoints = 0;
@@ -165,11 +169,11 @@ public class CustomerPurchase {
 				
 				// Run the update query
 				PreparedStatement updateWallet = conn.prepareStatement("UPDATE WalletParticipation SET points = ?, alltimepoints = ?, tierNumber = ? WHERE wId = ? AND pId = ?");
-				updateWallet.setInt(0, points);
-				updateWallet.setInt(1, allTimePoints);
-				updateWallet.setInt(2, tierNumber);
-				updateWallet.setInt(3, walletId);
-				updateWallet.setInt(4, pid);
+				updateWallet.setInt(1, points);
+				updateWallet.setInt(2, allTimePoints);
+				updateWallet.setInt(3, tierNumber);
+				updateWallet.setInt(4, walletId);
+				updateWallet.setInt(5, pid);
 				updateWallet.executeUpdate();
 				
 				// Delete a gift card if necessary
@@ -179,6 +183,7 @@ public class CustomerPurchase {
 					deleteCard.executeUpdate();
 				}
 				
+				System.out.println("Successfully completed a purchase!");
 				break;
 			} catch (SQLException e1) {
 				// Could not connect to database - stop running
@@ -186,7 +191,7 @@ public class CustomerPurchase {
 				System.exit(1);
 			}
 		}
-		scan.close();
+		//scan.close();
 		
 	}
 }
