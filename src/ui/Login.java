@@ -3,16 +3,16 @@
  */
 package ui;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import ui.userview.admin.AdminLanding;
 import ui.userview.customer.CustomerLanding;
-
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.sql.*;
-import java.nio.charset.StandardCharsets;
 
 /**
  * Displays the login page and allows for login functionality
@@ -73,21 +73,21 @@ public class Login {
                     
                     while(rs.next()) {
                     	signOn = true;
-                    	BrandLanding brandLanding = new BrandLanding(rs.getInt("id"), conn);
+                    	//BrandLanding brandLanding = new BrandLanding(rs.getInt("id"), conn);
                     }
                     
                     rs = stmt.executeQuery("SELECT id FROM Customers WHERE username = " + userID + " AND pass = " + hashedpw);
                     
                     while(rs.next()) {
                 		signOn = true;
-                		CustomerLanding customerLanding = new CustomerLanding(rs.getInt("id"), conn);
+                		new CustomerLanding(rs.getInt("id"), conn);
                     }
                     
                     rs = stmt.executeQuery("SELECT id FROM Customers WHERE username = " + userID + " AND pass = " + hashedpw);
                     
                     while(rs.next()) {
                     	signOn = true;
-                    	AdminLanding adminLanding = new AdminLanding(rs.getInt("id"), conn);
+                    	new AdminLanding(rs.getInt("id"), conn);
                     }
                     
                     if (!signOn) {

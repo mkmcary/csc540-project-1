@@ -135,7 +135,7 @@ public class BrandSignUp {
 			System.out.println("Invalid Brand Information. Try Again.");
 		}
 		
-		Login brandLogin = new Login(conn);
+		new Login(conn);
 		
 		scan.close();
 	}

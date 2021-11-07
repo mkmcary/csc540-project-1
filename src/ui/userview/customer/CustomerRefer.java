@@ -7,7 +7,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -35,7 +34,6 @@ public class CustomerRefer {
 	public CustomerRefer(Connection conn, int walletId, int pid, int ruleVersion, String ruleCode, int pointsToEarn, List<Integer> tierThresholds) {
 		// Create the scanner for user input
 		Scanner scan = new Scanner(System.in);
-		int userInput = 0;
 		boolean done = false;
 		
 		while (!done) {

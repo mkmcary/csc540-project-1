@@ -80,5 +80,6 @@ public class CustomerViewWallet {
 		System.out.println("Press enter to go back.");
 		Scanner scan = new Scanner(System.in);
 		scan.next();
+		scan.close();
 	}
 }

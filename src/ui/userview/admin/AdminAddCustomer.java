@@ -12,7 +12,6 @@ import java.sql.Statement;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-import ui.Login;
 import ui.UserInterface;
 
 /**

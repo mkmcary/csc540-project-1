@@ -7,7 +7,6 @@ import java.sql.Connection;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-
 import ui.UserInterface;
 
 /**
@@ -49,17 +48,17 @@ public class AdminLanding {
 			}
 			
 			switch (selection) {
-				case 1: AdminAddBrand addBrandPage = new AdminAddBrand(conn);
+				case 1: new AdminAddBrand(conn);
 						break;
-				case 2: AdminAddCustomer addCustomerPage = new AdminAddCustomer(conn);
+				case 2: new AdminAddCustomer(conn);
 						break;
-				case 3: AdminShowBrandInfo showBrandInfoPage = new AdminShowBrandInfo(conn);
+				case 3: new AdminShowBrandInfo(conn);
 						break;
-				case 4: AdminShowCustomerInfo showCustomerInfoPage = new AdminShowCustomerInfo(conn);
+				case 4: new AdminShowCustomerInfo(conn);
 						break;
-				case 5: AdminAddActivityType addActivityTypePage = new AdminAddActivityType(conn);
+				case 5: new AdminAddActivityType(conn);
 						break;
-				case 6: AdminAddRewardType addRewardTypePage = new AdminAddRewardType(conn);
+				case 6: new AdminAddRewardType(conn);
 						break;
 				case 7: running = false;
 						break;

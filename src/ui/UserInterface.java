@@ -32,7 +32,7 @@ public class UserInterface {
 	        System.out.println("Error in database connection");
         }
 		
-		Home homepage = new Home(conn);
+		new Home(conn);
 	}
 
 	public static void newScreen() {

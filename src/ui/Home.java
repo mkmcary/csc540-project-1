@@ -42,11 +42,11 @@ public class Home {
 			}
 			
 			switch (selection) {
-				case 1: Login loginpage = new Login(conn);
+				case 1: new Login(conn);
 						break;
-				case 2: SignUp signuppage = new SignUp(conn);
+				case 2: new SignUp(conn);
 						break;
-				case 3: ShowQueries showqueriespage = new ShowQueries(conn);
+				case 3: new ShowQueries(conn);
 						break;
 				case 4: running = false;
 						break;

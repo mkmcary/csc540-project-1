@@ -93,5 +93,7 @@ public class CustomerLanding {
 				new CustomerRedeemPoints(custId, walletId, conn);
 			}
 		}
+		
+		scan.close();
 	}
 }

@@ -153,7 +153,7 @@ public class CustomerSignUp {
 			System.out.println("Invalid Customer Information. Try Again.");
 		}
 		
-		Login CustomerLogin = new Login(conn);
+		new Login(conn);
 		
 		scan.close();
 	}

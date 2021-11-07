@@ -3,16 +3,12 @@
  */
 package ui.userview.admin;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-import ui.Login;
 import ui.UserInterface;
 
 /**
