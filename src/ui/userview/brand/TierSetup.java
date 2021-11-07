@@ -93,7 +93,7 @@ public class TierSetup {
             }
         }
 
-        scanner.close();
+        // scanner.close();
     }
 
     /**

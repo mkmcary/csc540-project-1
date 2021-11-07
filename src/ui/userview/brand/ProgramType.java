@@ -72,7 +72,6 @@ public class ProgramType {
                 System.out.println("2. Activity Type");
                 System.out.println("3. Reward Type");
                 System.out.println("4. Go back");
-                System.out.print("\nEnter an interger that corresponds to the menu above: ");
 
                 int page = validPage(scanner, 4);
 
@@ -94,7 +93,6 @@ public class ProgramType {
                 System.out.println("1. Activity Type");
                 System.out.println("2. Reward Type");
                 System.out.println("3. Go back");
-                System.out.print("\nEnter an interger that corresponds to the menu above: ");
 
                 int page = validPage(scanner, 3);
 
@@ -112,7 +110,7 @@ public class ProgramType {
             }
         }
         
-        scanner.close();
+        // scanner.close();
     }
     
     /**

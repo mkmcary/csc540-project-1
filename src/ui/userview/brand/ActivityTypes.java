@@ -58,7 +58,7 @@ public class ActivityTypes {
             int page = validPage(scanner, i);
             
             if (page != i) {
-                boolean success = insertActivity(activities.get(i - 1)[0]);
+                boolean success = insertActivity(activities.get(i - 2)[0]);
                 if (success) {
                     System.out.println("Activity Type has been successfully added. :))))");
                 } else {
@@ -69,7 +69,7 @@ public class ActivityTypes {
             }
         }
 
-        scanner.close();
+        // scanner.close();
     }
 
     /**
