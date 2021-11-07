@@ -3,8 +3,6 @@
  */
 package ui;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -34,7 +32,7 @@ public class CustomerSignUp {
 		boolean validInput = false;
 	    
 		try {
-			MessageDigest md = MessageDigest.getInstance("SHA3-256");
+			//MessageDigest md = MessageDigest.getInstance("SHA3-256");
 			
 			//Class.forName("oracle.jdbc.OracleDriver");
             PreparedStatement pstmt = null;
@@ -53,7 +51,7 @@ public class CustomerSignUp {
         		String username = scan.nextLine();
         		System.out.print("Enter Your Password: ");
         		String password = scan.nextLine();
-    			String hashedpw = new String(md.digest(password.getBytes()), StandardCharsets.UTF_8);
+    			//String hashedpw = new String(md.digest(password.getBytes()), StandardCharsets.UTF_8);
     			
     			System.out.println("\n1) Sign-up\n2) Go Back");
     			System.out.print("\nSelect an Option: ");
@@ -110,7 +108,7 @@ public class CustomerSignUp {
                     pstmt.setString(2, phoneNumber);
                     pstmt.setString(3, address);
                     pstmt.setString(4, username);
-                    pstmt.setString(5, hashedpw);
+                    pstmt.setString(5, password);
                     
                     int rows = pstmt.executeUpdate();
                     rs = pstmt.getGeneratedKeys();

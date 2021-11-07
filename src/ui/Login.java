@@ -3,8 +3,6 @@
  */
 package ui;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -32,7 +30,7 @@ public class Login {
 		boolean signOn = false;
 	    
 		try {
-			MessageDigest md = MessageDigest.getInstance("SHA3-256");
+			//MessageDigest md = MessageDigest.getInstance("SHA3-256");
 			
 			//Class.forName("oracle.jdbc.OracleDriver");
             
@@ -45,7 +43,7 @@ public class Login {
         		String userID = scan.nextLine();
         		System.out.print("Enter Your Password: ");
         		String password = scan.nextLine();
-    			String hashedpw = new String(md.digest(password.getBytes()), StandardCharsets.UTF_8);
+    			//String hashedpw = new String(md.digest(password.getBytes()), StandardCharsets.UTF_8);
     			
     			System.out.println("\n1) Sign-in\n2) Go Back");
     			System.out.print("\nSelect an Option: ");
@@ -69,21 +67,21 @@ public class Login {
     			
     			// If user selected to sign in, otherwise exit to menu above
     			if (selection == 1) {
-                    rs = stmt.executeQuery("SELECT id FROM Brands WHERE username = " + userID + " AND pass = " + hashedpw);
+                    rs = stmt.executeQuery("SELECT id FROM Brands WHERE username = " + userID + " AND pass = " + password);
                     
                     while(rs.next()) {
                     	signOn = true;
                     	//BrandLanding brandLanding = new BrandLanding(rs.getInt("id"), conn);
                     }
                     
-                    rs = stmt.executeQuery("SELECT id FROM Customers WHERE username = " + userID + " AND pass = " + hashedpw);
+                    rs = stmt.executeQuery("SELECT id FROM Customers WHERE username = " + userID + " AND pass = " + password);
                     
                     while(rs.next()) {
                 		signOn = true;
                 		new CustomerLanding(rs.getInt("id"), conn);
                     }
                     
-                    rs = stmt.executeQuery("SELECT id FROM Customers WHERE username = " + userID + " AND pass = " + hashedpw);
+                    rs = stmt.executeQuery("SELECT id FROM Customers WHERE username = " + userID + " AND pass = " + password);
                     
                     while(rs.next()) {
                     	signOn = true;

@@ -12,16 +12,16 @@ INSERT INTO Tiers (pId, tnum, tname, multiplier, threshold) values (2, 0, 'Speci
 INSERT INTO Tiers (pId, tnum, tname, multiplier, threshold) values (2, 1, 'Premium', 2, 210);
 
 -- Brands
-INSERT INTO Brands (bname, baddress, username, pass, joinDate, pId) values ('Brand X', '503 Rolling Creek Dr Austin, AR', 'brandx', 'c0067d4af4e87f00dbac63b6156828237059172d1bbeac67427345d6a9fda484', TO_DATE('2021-04-01', 'yyyy-mm-dd'), 1);
-INSERT INTO Brands (bname, baddress, username, pass, joinDate, pId) values ('Brand Y', '939 Orange Ave Coronado, CA', 'brandy', 'c0067d4af4e87f00dbac63b6156828237059172d1bbeac67427345d6a9fda484', TO_DATE('2021-03-25', 'yyyy-mm-dd'), 2);
-INSERT INTO Brands (bname, baddress, username, pass, joinDate, pId) values ('Brand Z', '20 Roszel Rd Princeton, NJ', 'brandz', 'c0067d4af4e87f00dbac63b6156828237059172d1bbeac67427345d6a9fda484', TO_DATE('2021-05-08', 'yyyy-mm-dd'), 3);
+INSERT INTO Brands (bname, baddress, username, pass, joinDate, pId) values ('Brand X', '503 Rolling Creek Dr Austin, AR', 'brandx', 'pass', TO_DATE('2021-04-01', 'yyyy-mm-dd'), 1);
+INSERT INTO Brands (bname, baddress, username, pass, joinDate, pId) values ('Brand Y', '939 Orange Ave Coronado, CA', 'brandy', 'pass', TO_DATE('2021-03-25', 'yyyy-mm-dd'), 2);
+INSERT INTO Brands (bname, baddress, username, pass, joinDate, pId) values ('Brand Z', '20 Roszel Rd Princeton, NJ', 'brandz', 'pass', TO_DATE('2021-05-08', 'yyyy-mm-dd'), 3);
 
 -- Customers
-INSERT INTO Customers (cname, phoneNumber, caddress, username, pass) values ('Peter Parker', '8636368778', '20 Ingram Street, NY', 'peterparker', 'c0067d4af4e87f00dbac63b6156828237059172d1bbeac67427345d6a9fda484');
-INSERT INTO Customers (cname, phoneNumber, caddress, username, pass) values ('Steve Rogers', '8972468552', '569 Leaman Place, NY', 'steverogers', 'c0067d4af4e87f00dbac63b6156828237059172d1bbeac67427345d6a9fda484');
-INSERT INTO Customers (cname, phoneNumber, caddress, username, pass) values ('Diana Prince', '8547963210', '1700 Broadway St, NY', 'dianaprince', 'c0067d4af4e87f00dbac63b6156828237059172d1bbeac67427345d6a9fda484');
-INSERT INTO Customers (cname, phoneNumber, caddress, username, pass) values ('Billy Batson', '8974562583', '5015 Broad St, Philadelphia, PA', 'billybatson', 'c0067d4af4e87f00dbac63b6156828237059172d1bbeac67427345d6a9fda484');
-INSERT INTO Customers (cname, phoneNumber, caddress, username, pass) values ('Tony Stark', '8731596464', '10880 Malibu Point, CA', 'tonystark', 'c0067d4af4e87f00dbac63b6156828237059172d1bbeac67427345d6a9fda484');
+INSERT INTO Customers (cname, phoneNumber, caddress, username, pass) values ('Peter Parker', '8636368778', '20 Ingram Street, NY', 'peterparker', 'pass');
+INSERT INTO Customers (cname, phoneNumber, caddress, username, pass) values ('Steve Rogers', '8972468552', '569 Leaman Place, NY', 'steverogers', 'pass');
+INSERT INTO Customers (cname, phoneNumber, caddress, username, pass) values ('Diana Prince', '8547963210', '1700 Broadway St, NY', 'dianaprince', 'pass');
+INSERT INTO Customers (cname, phoneNumber, caddress, username, pass) values ('Billy Batson', '8974562583', '5015 Broad St, Philadelphia, PA', 'billybatson', 'pass');
+INSERT INTO Customers (cname, phoneNumber, caddress, username, pass) values ('Tony Stark', '8731596464', '10880 Malibu Point, CA', 'tonystark', 'pass');
 
 -- Wallets
 INSERT INTO Wallets values(NULL);
@@ -125,4 +125,4 @@ INSERT INTO GiftCards (pId, wId, cardValue) values (2, 5, 30);
 INSERT INTO GiftCards (pId, wId, cardValue) values (1, 5, 40);
 
 -- Admin
-INSERT INTO Admins (username, pass) values ('admin', 'c0067d4af4e87f00dbac63b6156828237059172d1bbeac67427345d6a9fda484');
+INSERT INTO Admins (username, pass) values ('admin', 'pass');
