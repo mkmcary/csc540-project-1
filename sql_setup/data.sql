@@ -1,7 +1,12 @@
+-- Brands
+INSERT INTO Brands (bname, baddress, username, pass, joinDate) values ('Brand X', '503 Rolling Creek Dr Austin, AR', 'brandx', 'pass', TO_DATE('2021-04-01', 'yyyy-mm-dd'));
+INSERT INTO Brands (bname, baddress, username, pass, joinDate) values ('Brand Y', '939 Orange Ave Coronado, CA', 'brandy', 'pass', TO_DATE('2021-03-25', 'yyyy-mm-dd'));
+INSERT INTO Brands (bname, baddress, username, pass, joinDate) values ('Brand Z', '20 Roszel Rd Princeton, NJ', 'brandz', 'pass', TO_DATE('2021-05-08', 'yyyy-mm-dd'));
+
 -- Loyalty Programs
-INSERT INTO LoyaltyPrograms (pName, pCode, isTiered) values ('SportGoods', 'TLP01', 'Y');
-INSERT INTO LoyaltyPrograms (pName, pCode, isTiered) values ('MegaCenter', 'TLP02', 'Y');
-INSERT INTO LoyaltyPrograms (pName, pCode, isTiered) values ('TechSups', 'RLP01', 'N');
+INSERT INTO LoyaltyPrograms (pName, pCode, isTiered, bId) values ('SportGoods', 'TLP01', 'Y', 1);
+INSERT INTO LoyaltyPrograms (pName, pCode, isTiered, bId) values ('MegaCenter', 'TLP02', 'Y', 2);
+INSERT INTO LoyaltyPrograms (pName, pCode, isTiered, bId) values ('TechSups', 'RLP01', 'N', 3);
 
 -- Tiers
 INSERT INTO Tiers (pId, tnum, tname, multiplier, threshold) values (1, 0, 'Bronze', 1, 0);
@@ -10,11 +15,6 @@ INSERT INTO Tiers (pId, tnum, tname, multiplier, threshold) values (1, 2, 'Gold'
 
 INSERT INTO Tiers (pId, tnum, tname, multiplier, threshold) values (2, 0, 'Special', 1, 0);
 INSERT INTO Tiers (pId, tnum, tname, multiplier, threshold) values (2, 1, 'Premium', 2, 210);
-
--- Brands
-INSERT INTO Brands (bname, baddress, username, pass, joinDate) values ('Brand X', '503 Rolling Creek Dr Austin, AR', 'brandx', 'pass', TO_DATE('2021-04-01', 'yyyy-mm-dd'));
-INSERT INTO Brands (bname, baddress, username, pass, joinDate) values ('Brand Y', '939 Orange Ave Coronado, CA', 'brandy', 'pass', TO_DATE('2021-03-25', 'yyyy-mm-dd'));
-INSERT INTO Brands (bname, baddress, username, pass, joinDate) values ('Brand Z', '20 Roszel Rd Princeton, NJ', 'brandz', 'pass', TO_DATE('2021-05-08', 'yyyy-mm-dd'));
 
 -- Customers
 INSERT INTO Customers (cname, phoneNumber, caddress, username, pass) values ('Peter Parker', '8636368778', '20 Ingram Street, NY', 'peterparker', 'pass');

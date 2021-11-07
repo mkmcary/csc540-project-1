@@ -5,8 +5,10 @@ CREATE TABLE LoyaltyPrograms (
     pName varchar(255),
     pCode varchar(255),
     isTiered varchar(1),
+    bId integer,
     id integer GENERATED ALWAYS AS IDENTITY,
-    constraint pk_loyaltyprograms_id primary key (id)  
+    constraint pk_loyaltyprograms_id primary key (id),
+    constraint fk_bId foreign key bId references Brands (id)
 );
 
 CREATE TABLE Wallets (
@@ -46,8 +48,7 @@ CREATE TABLE Brands (
     pass varchar(255),
     joinDate date,
     id integer GENERATED ALWAYS AS IDENTITY,
-    constraint pk_brands_bId primary key (id),
-    constraint fk_brands_lpId foreign key (pId) references LoyaltyPrograms (id)
+    constraint pk_brands_bId primary key (id)
 );
 
 /*
