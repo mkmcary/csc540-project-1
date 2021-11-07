@@ -25,7 +25,8 @@ public class UserInterface {
 
 		    String user = args[0];
 		    String passwd = args[1];
-	            
+	        
+		    System.out.println("user: " + user + " pass: " + passwd);
             conn = DriverManager.getConnection(jdbcURL, user, passwd);
             
     	} catch (Throwable e) {
