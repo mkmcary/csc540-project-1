@@ -56,7 +56,6 @@ public class LoyaltyPrograms {
             System.out.println("1. Regular");
             System.out.println("2. Tier");
             System.out.println("3. Go back");
-            System.out.print("\nEnter an interger that corresponds to the menu above: ");
 
             int page = validPage(scanner, 3);
             ProgramType pt = null;
@@ -74,7 +73,7 @@ public class LoyaltyPrograms {
             }
         }
 
-        scanner.close();
+        // scanner.close();
     }
     
     /**

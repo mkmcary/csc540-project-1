@@ -58,7 +58,7 @@ public class RewardTypes {
             int page = validPage(scanner, i);
 
             if (page != i) {
-                boolean success = insertReward(rewards.get(i - 1)[0]);
+                boolean success = insertReward(rewards.get(i - 2)[0]);
                 if (success) {
                     System.out.println("Reward Type has been successfully added. :))))");
                 } else {
@@ -69,7 +69,7 @@ public class RewardTypes {
             }
         }
 
-        scanner.close();
+        // scanner.close();
     }
     
     /**
