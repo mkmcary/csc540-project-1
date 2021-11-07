@@ -68,21 +68,16 @@ public class AdminShowBrandInfo {
                     
                     ResultSet rs = pstmt.executeQuery();
                     
-                    int i = 0;
-                    while (rs.next()) {
-                    	i++;
-                    }
-                    if (i != 1) {
-                    	throw new SQLException();
-                    }
-                    else {
+                    if (rs.next()) {
                     	validInput = true;
-                    	rs.first();
                     	
                     	System.out.println("Name: " + rs.getString("bname"));
                     	System.out.println("Address: " + rs.getString("baddress"));
                     	System.out.println("User ID: " + rs.getString("username"));
                     	System.out.println("Join Date: " + rs.getDate("joinDate"));
+                    }
+                    else {
+                    	throw new SQLException();
                     }
     			}
     			else {
@@ -94,9 +89,8 @@ public class AdminShowBrandInfo {
             
 		} catch (Throwable e) {
 			System.out.println("Invalid Brand User ID. Try Again.");
+			System.out.println(e.getMessage());
 		}
-		
-		scan.close();
 	}
 
 }

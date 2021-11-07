@@ -64,8 +64,6 @@ public class AdminLanding {
 						break;
 			}
 		}
-		
-		scan.close();
 	}
 
 }

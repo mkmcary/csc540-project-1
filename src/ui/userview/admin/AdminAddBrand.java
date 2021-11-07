@@ -73,7 +73,7 @@ public class AdminAddBrand {
     			
     			// If user selected to add brand, otherwise exit to menu above
     			if (selection == 1) {
-    				pstmt = conn.prepareStatement("INSERT INTO Brands VALUES(?,?,?,?,?,?)",
+    				pstmt = conn.prepareStatement("INSERT INTO Brands VALUES(?,?,?,?,?)",
     						Statement.RETURN_GENERATED_KEYS);
                     
                     pstmt.clearParameters();
@@ -83,7 +83,6 @@ public class AdminAddBrand {
                     pstmt.setString(4, hashedpw);
                     long millis=System.currentTimeMillis();  
                     pstmt.setDate(5, new Date(millis));
-                    pstmt.setNull(6, 4);
                     
                     int rows = pstmt.executeUpdate();
                     if (rows < 1) {
@@ -103,9 +102,8 @@ public class AdminAddBrand {
             
 		} catch (Throwable e) {
 			System.out.println("Invalid Brand Information. Try Again.");
+			System.out.println(e.getMessage());
 		}
-		
-		scan.close();
 	}
 
 }

@@ -152,7 +152,5 @@ public class CustomerSignUp {
 		}
 		
 		new Login(conn);
-		
-		scan.close();
 	}
 }

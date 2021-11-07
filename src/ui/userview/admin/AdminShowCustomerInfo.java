@@ -68,21 +68,16 @@ public class AdminShowCustomerInfo {
                     
                     ResultSet rs = pstmt.executeQuery();
                     
-                    int i = 0;
-                    while (rs.next()) {
-                    	i++;
-                    }
-                    if (i != 1) {
-                    	throw new SQLException();
-                    }
-                    else {
+                    if (rs.next()) {
                     	validInput = true;
-                    	rs.first();
                     	
                     	System.out.println("Name: " + rs.getString("cname"));
                     	System.out.println("Phone Number: " + rs.getString("phoneNumber"));
                     	System.out.println("Address: " + rs.getString("caddress"));
                     	System.out.println("User ID: " + rs.getString("username"));
+                    }
+                    else {
+                    	throw new SQLException();
                     }
     			}
     			else {
@@ -95,8 +90,6 @@ public class AdminShowCustomerInfo {
 		} catch (Throwable e) {
 			System.out.println("Invalid Customer User ID. Try Again.");
 		}
-		
-		scan.close();
 	}
 
 }

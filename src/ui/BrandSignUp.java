@@ -133,7 +133,5 @@ public class BrandSignUp {
 		}
 		
 		new Login(conn);
-		
-		scan.close();
 	}
 }

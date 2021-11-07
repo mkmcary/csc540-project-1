@@ -86,8 +86,6 @@ public class AdminAddRewardType {
 		} catch (Throwable e) {
 			System.out.println("Invalid Customer Information. Try Again.");
 		}
-		
-		scan.close();
 	}
 
 }

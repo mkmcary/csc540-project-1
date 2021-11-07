@@ -84,8 +84,6 @@ public class ShowQueries {
 			}
 			
 		}
-		
-		scan.close();
 	}
 	
 	private void query1(Connection conn) {
