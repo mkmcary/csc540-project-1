@@ -12,21 +12,6 @@ CREATE SEQUENCE TLPCount
 	NOMAXVALUE;
 
 /*
- * Trigger for dynamically generating pCode in LoyaltyPrograms
- */
-CREATE OR REPLACE TRIGGER generateLPCode 
-    BEFORE INSERT ON LoyaltyPrograms 
-    FOR EACH ROW 
-BEGIN
-    IF :NEW.isTiered = 'Y' THEN 
-	    :NEW.pCode := CONCAT('TLP', LPAD(TLPCount.NEXTVAL, 2, '0'));
-	ELSE
-        :NEW.pCode := CONCAT('RLP', LPAD(RLPCount.NEXTVAL, 2, '0'));
-	END IF;
-END;
-/
-
-/*
  * Brands
  */
 CREATE TABLE Brands (
@@ -74,7 +59,7 @@ CREATE TABLE Tiers (
     tname varchar(255),
     multiplier float(3),
     threshold integer,
-    constraint fk_tiers_pId foreign key pId references LoyaltyPrograms (id),
+    constraint fk_tiers_pId foreign key (pId) references LoyaltyPrograms (id),
     constraint pk_tiers_tier primary key (pId, tnum),
     constraint valid_tier check(tnum >= 0 and tnum <= 2),
     constraint valid_multiplier check(multiplier > 0),
@@ -135,8 +120,8 @@ CREATE TABLE ProgramActivities (
 	pId integer,
     acId varchar(255),
     constraint pk_id primary key (pId, acId),
-    constraint fk_pId foreign key pId references LoyaltyPrograms (id),
-    constraint fk_acId foreign key acId references ActivityCategories (acId)
+    constraint fk_programactivities_pId foreign key (pId) references LoyaltyPrograms (id),
+    constraint fk_programactivities_acId foreign key (acId) references ActivityCategories (acId)
 );
 
 CREATE TABLE RewardEarningRules (
@@ -176,9 +161,9 @@ CREATE TABLE ProgramRewards (
 	pId integer,
     rId varchar(255),
     rewardQuantity integer,
-    constraint pk_id primary key (pId, rId),
-    constraint fk_pId foreign key pId references LoyaltyPrograms (id),
-    constraint fk_rId foreign key rId references ActivityCategories (rId)
+    constraint pk_programrewards_id primary key (pId, rId),
+    constraint fk_programrewards_pId foreign key (pId) references LoyaltyPrograms (id),
+    constraint fk_programrewards_rId foreign key (rId) references ActivityCategories (rId)
 );
 
 CREATE TABLE GiftCards (
@@ -217,3 +202,18 @@ CREATE TABLE RewardInstances (
     constraint fk_rewardinstances_re foreign key (pId, ruleVersion, ruleCode) references RewardRedeemingRules (pId, ruleVersion, ruleCode),
     constraint fk_rewardinstances_wId foreign key (wId) references Wallets (id)
 );
+
+/*
+ * Trigger for dynamically generating pCode in LoyaltyPrograms
+ */
+CREATE OR REPLACE TRIGGER generateLPCode 
+    BEFORE INSERT ON LoyaltyPrograms 
+    FOR EACH ROW 
+BEGIN
+    IF :NEW.isTiered = 'Y' THEN 
+	    :NEW.pCode := CONCAT('TLP', LPAD(TLPCount.NEXTVAL, 2, '0'));
+	ELSE
+        :NEW.pCode := CONCAT('RLP', LPAD(RLPCount.NEXTVAL, 2, '0'));
+	END IF;
+END;
+/
