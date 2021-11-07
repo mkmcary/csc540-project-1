@@ -3,6 +3,11 @@
  */
 package ui.userview.brand;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Scanner;
 
 /**
@@ -13,12 +18,21 @@ public class ProgramType {
 
     /** CLI separator */
     final static String SEPARATOR = "------------------------------";
+    
+    /** The id of the brand */
+    private static int bId;
 
-    /** The id of the brand user */
-    private static int id;
+    /** The id of the program */
+    private static int programId;
+   
+    /** The name of the program */
+    private static String pName;
 
     /** Tiered or not */
     private static boolean tiered;
+    
+    /** Connection to database */
+    private static Connection conn;
 
     /**
      * Constructor for adding program type
@@ -27,12 +41,129 @@ public class ProgramType {
      * @param tiered whether program is tiered or not
      */
     @SuppressWarnings("static-access")
-    public ProgramType(int id, boolean tiered) {
-        this.id = id;
+    public ProgramType(int bId, int programId, String pName, boolean tiered, Connection conn) {
+        this.bId = bId;
+        this.programId = programId;
+        this.pName = pName;
         this.tiered = tiered;
+        this.conn = conn;
+
+        if (this.programId < 0) {
+            this.programId = addProgram();
+        }
         programTypeMenu();
     }
 
+    /**
+     * Page for adding program type.
+     * 
+     * @param tiered  whether program is tiered or not
+     */
+    @SuppressWarnings("unused")
+    public static void programTypeMenu() {
+        Scanner scanner = new Scanner(System.in);
+        boolean back = false;
+
+        while (!back) {
+            System.out.println(SEPARATOR);
+
+            if (tiered) {
+                System.out.println("1. Tier Set up");
+                System.out.println("2. Activity Type");
+                System.out.println("3. Reward Type");
+                System.out.println("4. Go back");
+                System.out.print("\nEnter an interger that corresponds to the menu above: ");
+
+                int page = validPage(scanner, 4);
+
+                // Directs to page
+                switch (page) {
+                case 1:
+                    TierSetup ts = new TierSetup(programId, conn);
+                    break;
+                case 2:
+                    ActivityTypes at = new ActivityTypes(programId, conn);
+                    break;
+                case 3:
+                    RewardTypes rt = new RewardTypes(programId, conn);
+                    break;
+                default:
+                    back = true;
+                }
+            } else {
+                System.out.println("1. Activity Type");
+                System.out.println("2. Reward Type");
+                System.out.println("3. Go back");
+                System.out.print("\nEnter an interger that corresponds to the menu above: ");
+
+                int page = validPage(scanner, 3);
+
+                // Directs to page
+                switch (page) {
+                case 1:
+                    ActivityTypes at = new ActivityTypes(programId, conn);
+                    break;
+                case 2:
+                    RewardTypes rt = new RewardTypes(programId, conn);
+                    break;
+                default:
+                    back = true;
+                }
+            }
+        }
+        
+        scanner.close();
+    }
+    
+    /**
+     * Creates a new loyalty program for the user.
+     * @param scanner input
+     * @return id of program
+     */
+    private static int addProgram() {
+        int programId = -1;
+        
+        try {
+            PreparedStatement pstmt = null;
+            ResultSet rs = null;
+
+            try {
+                pstmt = conn.prepareStatement("INSERT INTO LoyaltyPrograms VALUES(?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+                pstmt.clearParameters();
+                // pstmt.setInt(1, 0); id auto generate
+                pstmt.setString(2, pName);
+                // pstmt.setString(3, null); pCode
+                if (tiered) {
+                    pstmt.setString(4, "Y");
+                } else {
+                    pstmt.setString(4, "N");
+                }
+                pstmt.setInt(5, bId);
+
+                try {
+                    int rows = pstmt.executeUpdate();
+                    if (rows < 1) {
+                        throw new SQLException();
+                    }
+                    
+                    rs = pstmt.getGeneratedKeys();
+                    if (rs.next()) {
+                        programId = rs.getInt(1);
+                    }
+                } catch (SQLException e) {
+                    System.out.println("Invalid Input: " + e.getErrorCode() + "-" + e.getMessage());
+                }
+            } finally {
+                close(rs);
+                close(pstmt);
+            }
+        } catch (Throwable oops) {
+            oops.printStackTrace();
+        }
+
+        return programId;
+    }
+    
     /**
      * Loops until a valid input is read in.
      * 
@@ -64,66 +195,22 @@ public class ProgramType {
 
         return page;
     }
-
-    /**
-     * Page for adding program type.
-     * 
-     * @param scanner input
-     * @param tiered  whether program is tiered or not
-     */
-    @SuppressWarnings("unused")
-    public static void programTypeMenu() {
-        Scanner scanner = new Scanner(System.in);
-        boolean back = false;
-
-        while (!back) {
-            System.out.println(SEPARATOR);
-
-            if (tiered) {
-                System.out.println("1. Tier Set up");
-                System.out.println("2. Activity Type");
-                System.out.println("3. Reward Type");
-                System.out.println("4. Go back");
-                System.out.print("\nEnter an interger that corresponds to the menu above: ");
-
-                int page = validPage(scanner, 4);
-
-                // Directs to page
-                switch (page) {
-                case 1:
-                    TierSetup ts = new TierSetup(id);
-                    break;
-                case 2:
-                    ActivityTypes at = new ActivityTypes(id);
-                    break;
-                case 3:
-                    // addRewardType(scanner);
-                    break;
-                default:
-                    back = true;
-                }
-            } else {
-                System.out.println("1. Activity Type");
-                System.out.println("2. Reward Type");
-                System.out.println("3. Go back");
-                System.out.print("\nEnter an interger that corresponds to the menu above: ");
-
-                int page = validPage(scanner, 3);
-
-                // Directs to page
-                switch (page) {
-                case 1:
-                    ActivityTypes at = new ActivityTypes(id);
-                    break;
-                case 2:
-                    // addRewardType(scanner);
-                    break;
-                default:
-                    back = true;
-                }
+    
+    private static void close(PreparedStatement st) {
+        if (st != null) {
+            try {
+                st.close();
+            } catch (Throwable whatever) {
             }
         }
-
-        scanner.close();
+    }
+    
+    private static void close(ResultSet rs) {
+        if (rs != null) {
+            try {
+                rs.close();
+            } catch (Throwable whatever) {
+            }
+        }
     }
 }

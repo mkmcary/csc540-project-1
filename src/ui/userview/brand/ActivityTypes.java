@@ -4,7 +4,6 @@
 package ui.userview.brand;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,14 +17,14 @@ import java.util.Scanner;
  */
 public class ActivityTypes {
 
-    /** JDBC url to connect to oracledb */
-    static final String jdbcURL = "jdbc:oracle:thin:@ora.csc.ncsu.edu:1521:orcl01";
-
     /** CLI separator */
     final static String SEPARATOR = "------------------------------";
 
-    /** The id of the brand user */
+    /** The id of the program */
     private static int id;
+    
+    /** Connection to database */
+    private static Connection conn;
 
     /**
      * Constructor for adding activity types
@@ -33,41 +32,10 @@ public class ActivityTypes {
      * @param id user of the brand
      */
     @SuppressWarnings("static-access")
-    public ActivityTypes(int id) {
+    public ActivityTypes(int id, Connection conn) {
         this.id = id;
+        this.conn = conn;
         activityTypesMenu();
-    }
-
-    /**
-     * Loops until a valid input is read in.
-     * 
-     * @param scanner scanner object that reads in input
-     * @param pages   the max pages that menu can direct to
-     * @return valid page address
-     */
-    private static int validPage(Scanner scanner, int pages) {
-        int page = 0;
-        boolean invalidInput = false;
-
-        // Handles invalid input
-        do {
-            System.out.print("\nEnter an interger that corresponds to the menu above: ");
-            if (scanner.hasNextInt()) {
-                page = scanner.nextInt();
-                if (page < 1 || page > pages) {
-                    invalidInput = true;
-                    System.out.println("Input must be an integer from 1-" + pages + ".");
-                } else {
-                    invalidInput = false;
-                }
-            } else {
-                scanner.next();
-                invalidInput = true;
-                System.out.println("Input must be an integer from 1-" + pages + ".");
-            }
-        } while (invalidInput);
-
-        return page;
     }
 
     /**
@@ -112,17 +80,10 @@ public class ActivityTypes {
         ArrayList<String[]> activities = new ArrayList<String[]>();
         
         try {
-            Class.forName("oracle.jdbc.OracleDriver");
-
-            String user = "tkwu";
-            String passwd = "abcd1234";
-
-            Connection conn = null;
             Statement stmt = null;
             ResultSet rs = null;
 
             try {
-                conn = DriverManager.getConnection(jdbcURL, user, passwd);
                 stmt = conn.createStatement();
 
                 try {
@@ -138,7 +99,6 @@ public class ActivityTypes {
             } finally {
                 close(rs);
                 close(stmt);
-                close(conn);
             }
         } catch (Throwable oops) {
             oops.printStackTrace();
@@ -156,17 +116,9 @@ public class ActivityTypes {
         boolean success = true;
 
         try {
-            Class.forName("oracle.jdbc.OracleDriver");
-
-            String user = "tkwu";
-            String passwd = "abcd1234";
-
-            Connection conn = null;
             PreparedStatement pstmt = null;
-            // ResultSet rs = null;
 
             try {
-                conn = DriverManager.getConnection(jdbcURL, user, passwd);
                 pstmt = conn.prepareStatement("INSERT INTO ProgramActivities VALUES(?,?)");
                 pstmt.clearParameters();
                 pstmt.setInt(1, id);
@@ -182,9 +134,7 @@ public class ActivityTypes {
                     System.out.println("Invalid Input: " + e.getErrorCode() + "-" + e.getMessage());
                 }
             } finally {
-                // close(rs);
                 close(pstmt);
-                close(conn);
             }
         } catch (Throwable oops) {
             oops.printStackTrace();
@@ -192,14 +142,37 @@ public class ActivityTypes {
 
         return success;
     }
+    
+    /**
+     * Loops until a valid input is read in.
+     * 
+     * @param scanner scanner object that reads in input
+     * @param pages   the max pages that menu can direct to
+     * @return valid page address
+     */
+    private static int validPage(Scanner scanner, int pages) {
+        int page = 0;
+        boolean invalidInput = false;
 
-    private static void close(Connection conn) {
-        if (conn != null) {
-            try {
-                conn.close();
-            } catch (Throwable whatever) {
+        // Handles invalid input
+        do {
+            System.out.print("\nEnter an interger that corresponds to the menu above: ");
+            if (scanner.hasNextInt()) {
+                page = scanner.nextInt();
+                if (page < 1 || page > pages) {
+                    invalidInput = true;
+                    System.out.println("Input must be an integer from 1-" + pages + ".");
+                } else {
+                    invalidInput = false;
+                }
+            } else {
+                scanner.next();
+                invalidInput = true;
+                System.out.println("Input must be an integer from 1-" + pages + ".");
             }
-        }
+        } while (invalidInput);
+
+        return page;
     }
 
     private static void close(Statement st) {

@@ -40,38 +40,6 @@ public class BrandLanding {
     }
 
     /**
-     * Loops until a valid input is read in.
-     * 
-     * @param scanner scanner object that reads in input
-     * @param pages   the max pages that menu can direct to
-     * @return valid page address
-     */
-    private static int validPage(Scanner scanner, int pages) {
-        int page = 0;
-        boolean invalidInput = false;
-        
-        // Handles invalid input
-        do {
-            System.out.print("\nEnter an interger that corresponds to the menu above: ");
-            if (scanner.hasNextInt()) {
-                page = scanner.nextInt();
-                if (page < 1 || page > pages) {
-                    invalidInput = true;
-                    System.out.println("Input must be an integer from 1-" + pages + ".");
-                } else {
-                    invalidInput = false;
-                }
-            } else {
-                scanner.next();
-                invalidInput = true;
-                System.out.println("Input must be an integer from 1-" + pages + ".");
-            }
-        } while (invalidInput);
-        
-        return page;
-    }
-
-    /**
      * Homepage for brand users
      * @throws SQLException 
      */
@@ -96,7 +64,7 @@ public class BrandLanding {
             switch (page) {
             case 1:
             	//Loyalty program instantiation happens in LoyaltyPrograms.java
-            	addLoyaltyProgram(scanner);
+            	addLoyaltyProgram(conn);
                 break;
             case 2:
                 addRERules(scanner);
@@ -121,18 +89,15 @@ public class BrandLanding {
         scanner.close();
     }
 
-    // -------------------------------------------------------------------------------------------- oops
+    // --------------------------------------------------------------------------------------------
 
     /**
      * Creates and adds a Loyalty Program to the Brand
      * @param s class-wide scanner for user input
      */
-    private static void addLoyaltyProgram(Scanner s) {
-    	System.out.print("Enter a name for your loyalty program: ");
-    	String name = s.next();
+    private static void addLoyaltyProgram(Connection conn) {
     	@SuppressWarnings("unused") //Don't need to use LP in app since all storage happens in DB
-		LoyaltyPrograms lp = new LoyaltyPrograms(id, name);
-        System.out.println("Loyalty Program successfully added!");
+		LoyaltyPrograms lp = new LoyaltyPrograms(id, conn);
     }
     
     /**
@@ -662,4 +627,36 @@ public class BrandLanding {
 		//return negative number to indicate error (brand doesn't have a loyalty program)
 		return -1;
 	}
+	
+	/**
+     * Loops until a valid input is read in.
+     * 
+     * @param scanner scanner object that reads in input
+     * @param pages   the max pages that menu can direct to
+     * @return valid page address
+     */
+    private static int validPage(Scanner scanner, int pages) {
+        int page = 0;
+        boolean invalidInput = false;
+        
+        // Handles invalid input
+        do {
+            System.out.print("\nEnter an interger that corresponds to the menu above: ");
+            if (scanner.hasNextInt()) {
+                page = scanner.nextInt();
+                if (page < 1 || page > pages) {
+                    invalidInput = true;
+                    System.out.println("Input must be an integer from 1-" + pages + ".");
+                } else {
+                    invalidInput = false;
+                }
+            } else {
+                scanner.next();
+                invalidInput = true;
+                System.out.println("Input must be an integer from 1-" + pages + ".");
+            }
+        } while (invalidInput);
+        
+        return page;
+    }
 }

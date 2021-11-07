@@ -2,9 +2,13 @@
  * Loyalty Programs and Tiers
  */
 CREATE TABLE LoyaltyPrograms (
-    id integer,
-    isTiered boolean,
-    constraint pk_id primary key (id)  
+	id integer GENERATED ALWAYS AS IDENTITY,
+    pName varchar(255),
+    pCode varchar(255),
+    isTiered varchar(1),
+    bId integer,
+    constraint pk_id primary key (id),
+    constraint fk_bId foreign key bId references Brands (id)
 );
 
 -- CREATE TABLE RegularPrograms (
@@ -41,9 +45,7 @@ CREATE TABLE Brands (
     username varchar(255),
     pass varchar(255),
     joinDate date,
-    pId integer,
-    constraint pk_id primary key (id),
-    constraint fk_pId foreign key pId references LoyaltyPrograms (id)
+    constraint pk_id primary key (id)
 );
 
 /*
