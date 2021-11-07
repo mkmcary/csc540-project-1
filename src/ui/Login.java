@@ -67,21 +67,21 @@ public class Login {
     			
     			// If user selected to sign in, otherwise exit to menu above
     			if (selection == 1) {
-                    rs = stmt.executeQuery("SELECT id FROM Brands WHERE username = " + userID + " AND pass = " + password);
+                    rs = stmt.executeQuery("SELECT id FROM Brands WHERE username = \'" + userID + "\' AND pass = \'" + password + "\'");
                     
                     while(rs.next()) {
                     	signOn = true;
                     	//BrandLanding brandLanding = new BrandLanding(rs.getInt("id"), conn);
                     }
                     
-                    rs = stmt.executeQuery("SELECT id FROM Customers WHERE username = " + userID + " AND pass = " + password);
+                    rs = stmt.executeQuery("SELECT id FROM Customers WHERE username = \'" + userID + "\' AND pass = \'" + password + "\'");
                     
                     while(rs.next()) {
                 		signOn = true;
                 		new CustomerLanding(rs.getInt("id"), conn);
                     }
-                    
-                    rs = stmt.executeQuery("SELECT id FROM Customers WHERE username = " + userID + " AND pass = " + password);
+
+                    rs = stmt.executeQuery("SELECT id FROM Admins WHERE username = \'" + userID + "\' AND pass = \'" + password + "\'");
                     
                     while(rs.next()) {
                     	signOn = true;

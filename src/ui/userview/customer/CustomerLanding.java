@@ -35,7 +35,7 @@ public class CustomerLanding {
 		int walletId = 0;
 		try {
 			PreparedStatement pstmt = conn.prepareStatement("SELECT wId FROM CustomerWallets WHERE cId = ?");
-			pstmt.setInt(0, custId);
+			pstmt.setInt(1, custId);
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
 				walletId = rs.getInt("wId");
