@@ -32,7 +32,7 @@ CREATE TABLE Brands (
  * Loyalty Programs and Tiers
  */
 CREATE TABLE LoyaltyPrograms (
-    pName varchar(255),
+    pName varchar(255) NOT NULL,
     pCode varchar(255),
     isTiered varchar(1),
     bId integer,
@@ -60,7 +60,7 @@ CREATE TABLE Wallets (
 CREATE TABLE Tiers (
     pId integer,
     tnum integer,
-    tname varchar(255),
+    tname varchar(255) NOT NULL,
     multiplier float(3),
     threshold integer,
     constraint fk_tiers_pId foreign key (pId) references LoyaltyPrograms (id),
