@@ -60,9 +60,9 @@ public class ActivityTypes {
             if (page != i) {
                 boolean success = insertActivity(activities.get(page - 1)[0]);
                 if (success) {
-                    System.out.println("Activity Type has been successfully added.");
+                    System.out.println("Activity Type: " + activities.get(page - 1)[1] + " has been enabled in your program.");
                 } else {
-                    System.out.println("Activity Type was not added. ");
+                    System.out.println("Activity Type: " + activities.get(page - 1)[1] + " has already been enabled in the program.");
                 }
             } else {
                 back = true;

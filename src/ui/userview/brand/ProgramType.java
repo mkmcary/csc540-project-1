@@ -118,6 +118,7 @@ public class ProgramType {
      * @return id of program
      */
     private static int addProgram() {
+        System.out.println(SEPARATOR);
         int programId = -1;
         
         try {
@@ -139,6 +140,12 @@ public class ProgramType {
                     int rows = pstmt.executeUpdate();
                     if (rows < 1) {
                         throw new SQLException();
+                    } else {
+                        if (tiered) {
+                            System.out.println("Tiered Program: " + pName + " has been added.\n");
+                        } else {
+                            System.out.println("Regular Program: " + pName + " has been added.\n");
+                        }
                     }
                     
                     rs = pstmt.getGeneratedKeys();
@@ -146,7 +153,7 @@ public class ProgramType {
                         programId = rs.getInt(1);
                     }
                 } catch (SQLException e) {
-                    System.out.println("Invalid Input: " + e.getErrorCode() + "-" + e.getMessage());
+                    System.out.println("Error: " + e.getMessage());
                 }
             } finally {
                 close(rs);
