@@ -223,11 +223,11 @@ END;
  */
 CREATE OR REPLACE TRIGGER addWallets
 	AFTER INSERT ON Customers
-	FOR EACH
+	FOR EACH ROW
 BEGIN
 	INSERT INTO Wallets VALUES(NULL);
 	INSERT INTO CustomerWallets(cId, wId) VALUES(:NEW.id, :New.id);
-END 
+END; 
 /
 
 /*
