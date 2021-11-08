@@ -79,9 +79,9 @@ public class TierSetup {
 
                     boolean success = insertTiers(tierNames, thresholds, multipliers);
                     if (success) {
-                        System.out.println("Tiers have been successfully added. :))))");
+                        System.out.println("Tiers have been successfully added.");
                     } else {
-                        System.out.println("Tiers were not added. :((((");
+                        System.out.println("Tiers were not added.");
                     }
                 } catch (Exception e) {
                     // Incorrect data type.
@@ -127,7 +127,7 @@ public class TierSetup {
                     pstmt.executeBatch();
                 } catch (SQLException e) {
                     success = false;
-                    System.out.println("Invalid input: " + e.getErrorCode() + "-" + e.getMessage());
+                    System.out.println("Invalid input: " + e.getMessage());
                 }
             } finally {
                 close(pstmt);

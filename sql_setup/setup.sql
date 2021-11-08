@@ -1,3 +1,5 @@
+/** Variables */
+
 /*
  * Variables for LoyaltyPrograms pCode generation
  */
@@ -10,6 +12,8 @@ CREATE SEQUENCE TLPCount
 	START WITH 1 
 	INCREMENT BY 1 
 	NOMAXVALUE;
+
+/** Tables */
 
 /*
  * Brands
@@ -160,7 +164,6 @@ CREATE TABLE Rewards (
 CREATE TABLE ProgramRewards (
 	pId integer,
     rId varchar(255),
-    rewardQuantity integer,
     constraint pk_programrewards_id primary key (pId, rId),
     constraint fk_programrewards_pId foreign key (pId) references LoyaltyPrograms (id),
     constraint fk_programrewards_rId foreign key (rId) references Rewards (rId)
@@ -203,6 +206,8 @@ CREATE TABLE RewardInstances (
     constraint fk_rewardinstances_wId foreign key (wId) references Wallets (id)
 );
 
+/* Triggers */
+
 /*
  * Trigger for dynamically generating pCode in LoyaltyPrograms
  */
@@ -211,9 +216,27 @@ CREATE OR REPLACE TRIGGER generateLPCode
     FOR EACH ROW 
 BEGIN
     IF :NEW.isTiered = 'Y' THEN 
-	    :NEW.pCode := CONCAT('TLP', LPAD(TLPCount.NEXTVAL, 2, '0'));
+        :NEW.pCode := CONCAT('TLP', LPAD(TLPCount.NEXTVAL, 2, '0'));
 	ELSE
         :NEW.pCode := CONCAT('RLP', LPAD(RLPCount.NEXTVAL, 2, '0'));
+	END IF;
+END;
+/
+
+/*
+ * Trigger check higher Tiers have greater threshold and multipliers than their lower tiers for a program
+ */
+CREATE OR REPLACE TRIGGER validTierOrder 
+    BEFORE INSERT ON Tiers 
+    FOR EACH ROW 
+DECLARE 
+    invalidCount integer := 0;
+BEGIN
+    SELECT COUNT(*) INTO invalidCount 
+    FROM Tiers T1 
+    WHERE :NEW.bId = T1.bId AND :NEW.tnum > T1.tnum AND (:NEW.threshold <= T1.threshold OR :NEW.multiplier <= T1.multiplier);
+    IF invalidCount > 0 THEN 
+	    RAISE_APPLICATION_ERROR(-20005, 'Invalid Tier order.');
 	END IF;
 END;
 /

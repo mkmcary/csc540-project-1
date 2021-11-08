@@ -59,7 +59,6 @@ public class ProgramType {
      * 
      * @param tiered  whether program is tiered or not
      */
-    @SuppressWarnings("unused")
     public static void programTypeMenu() {
         Scanner scanner = new Scanner(System.in);
         boolean back = false;
@@ -78,13 +77,13 @@ public class ProgramType {
                 // Directs to page
                 switch (page) {
                 case 1:
-                    TierSetup ts = new TierSetup(programId, conn);
+                    new TierSetup(programId, conn);
                     break;
                 case 2:
-                    ActivityTypes at = new ActivityTypes(programId, conn);
+                    new ActivityTypes(programId, conn);
                     break;
                 case 3:
-                    RewardTypes rt = new RewardTypes(programId, conn);
+                    new RewardTypes(programId, conn);
                     break;
                 default:
                     back = true;
@@ -99,10 +98,10 @@ public class ProgramType {
                 // Directs to page
                 switch (page) {
                 case 1:
-                    ActivityTypes at = new ActivityTypes(programId, conn);
+                    new ActivityTypes(programId, conn);
                     break;
                 case 2:
-                    RewardTypes rt = new RewardTypes(programId, conn);
+                    new RewardTypes(programId, conn);
                     break;
                 default:
                     back = true;

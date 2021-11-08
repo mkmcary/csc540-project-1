@@ -58,11 +58,11 @@ public class ActivityTypes {
             int page = validPage(scanner, i);
             
             if (page != i) {
-                boolean success = insertActivity(activities.get(i - 2)[0]);
+                boolean success = insertActivity(activities.get(page - 1)[0]);
                 if (success) {
-                    System.out.println("Activity Type has been successfully added. :))))");
+                    System.out.println("Activity Type has been successfully added.");
                 } else {
-                    System.out.println("Activity Type was not added. :((((");
+                    System.out.println("Activity Type was not added. ");
                 }
             } else {
                 back = true;
@@ -131,7 +131,7 @@ public class ActivityTypes {
                     }
                 } catch (SQLException e) {
                     success = false;
-                    System.out.println("Invalid Input: " + e.getErrorCode() + "-" + e.getMessage());
+                    System.out.println("Duplicate insert: " + e.getMessage());
                 }
             } finally {
                 close(pstmt);

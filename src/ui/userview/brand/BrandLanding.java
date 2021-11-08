@@ -128,8 +128,7 @@ public class BrandLanding {
      * @param s class-wide scanner for user input
      */
     private static void addLoyaltyProgram(Scanner s) {
-    	@SuppressWarnings("unused") //Don't need to use LP in app since all storage happens in DB
-		LoyaltyPrograms lp = new LoyaltyPrograms(id, conn);
+		new LoyaltyPrograms(id, conn);
     }
     
     /**

@@ -55,9 +55,27 @@ INSERT INTO ActivityCategories (acId, acName) values ('A01', 'Purchase');
 INSERT INTO ActivityCategories (acId, acName) values ('A02', 'Write a Review');
 INSERT INTO ActivityCategories (acId, acName) values ('A03', 'Refer a Friend');
 
+-- Program Activities
+INSERT INTO ProgramActivities (pId, acId) values (1, 'A01');
+INSERT INTO ProgramActivities (pId, acId) values (1, 'A02');
+
+INSERT INTO ProgramActivities (pId, acId) values (2, 'A01');
+INSERT INTO ProgramActivities (pId, acId) values (2, 'A03');
+
+INSERT INTO ProgramActivities (pId, acId) values (3, 'A03');
+
 -- Rewards
 INSERT INTO Rewards (rId, rName) values ('R01', 'Gift Card');
 INSERT INTO Rewards (rId, rName) values ('R02', 'Free Product');
+
+-- Program Rewards
+INSERT INTO ProgramRewards (pId, rId) values (1, 'R01');
+INSERT INTO ProgramRewards (pId, rId) values (1, 'R02');
+
+INSERT INTO ProgramRewards (pId, rId) values (2, 'R01');
+INSERT INTO ProgramRewards (pId, rId) values (2, 'R02');
+
+INSERT INTO ProgramRewards (pId, rId) values (3, 'R01');
 
 -- Reward Earning Rules
 INSERT INTO RewardEarningRules (pId, ruleVersion, ruleCode, points, acId) values (1, 1, 'RE01', 15, 'A01');

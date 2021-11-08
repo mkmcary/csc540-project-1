@@ -13,8 +13,8 @@ import java.sql.*;
  */
 public class UserInterface {
 	
-	// static final String jdbcURL = "jdbc:oracle:thin:@ora.csc.ncsu.edu:1521:orcl01";
-    final static String jdbcURL = "jdbc:oracle:thin:tkwu@//localhost:1521/xe";
+	static final String jdbcURL = "jdbc:oracle:thin:@ora.csc.ncsu.edu:1521:orcl01";
+    // final static String jdbcURL = "jdbc:oracle:thin:@//localhost:1521/XEPDB1";
 	
 	public static void main(String[] args) {
 		
