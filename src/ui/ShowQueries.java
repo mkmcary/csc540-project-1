@@ -52,7 +52,7 @@ public class ShowQueries {
 			while (!selected) {
 				try {
 					selection = Integer.parseInt(scan.nextLine());
-					if (selection < 1 || selection > 8) {
+					if (selection < 1 || selection > 9) {
 						throw new InputMismatchException();
 					}
 					selected = true;
