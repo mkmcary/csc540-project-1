@@ -228,27 +228,30 @@ public class CustomerRedeemPoints {
 							
 							// If its a gift card, give the user a gift card
 							if(chosenRewardName.equals("Gift Card")) {
+								int gcVal = chosenRule.getInt("gcVal");
 								Date expDate = chosenRule.getDate("gcExp");
 								PreparedStatement giftCardInsertion = conn.prepareStatement("INSERT INTO GiftCards (pId, wId, cardValue, expiryDate) values (?, ?, ?, ?)");
 								giftCardInsertion.setInt(1, pChosen);
 								giftCardInsertion.setInt(2, walletId);
-								giftCardInsertion.setFloat(3, quantity);
+								giftCardInsertion.setInt(3, gcVal);
 								giftCardInsertion.setDate(4, expDate);
 								
 								giftCardInsertion.executeUpdate();
 							}
 							
 							// Record the reward instance
-							PreparedStatement rewardInstanceInsertion = conn.prepareStatement("INSERT INTO RewardInstances (instanceDate, pId, ruleVersion, ruleCode, wId) values (now(), ?, ?, ?, ?)");
-							rewardInstanceInsertion.setInt(1, pChosen);
-							rewardInstanceInsertion.setInt(2, chosenRuleVersion);
-							rewardInstanceInsertion.setString(3, chosenRuleCode);
-							rewardInstanceInsertion.setInt(4, walletId);
+							PreparedStatement rewardInstanceInsertion = conn.prepareStatement("INSERT INTO RewardInstances (instanceDate, pId, ruleVersion, ruleCode, wId) values (?, ?, ?, ?, ?)");
+							long millis = System.currentTimeMillis();
+							rewardInstanceInsertion.setDate(1, new Date(millis));
+							rewardInstanceInsertion.setInt(2, pChosen);
+							rewardInstanceInsertion.setInt(3, chosenRuleVersion);
+							rewardInstanceInsertion.setString(4, chosenRuleCode);
+							rewardInstanceInsertion.setInt(5, walletId);
 							rewardInstanceInsertion.executeUpdate();
 							
 							// Deduct the points from the user
 							userPoints -= chosenRulePoints;
-							PreparedStatement updateUserPoints = conn.prepareStatement("UPDATE TABLE WalletParticipation SET points = ? WHERE wId = ? AND pId = ?");
+							PreparedStatement updateUserPoints = conn.prepareStatement("UPDATE WalletParticipation SET points = ? WHERE wId = ? AND pId = ?");
 							updateUserPoints.setInt(1, userPoints);
 							updateUserPoints.setInt(2, walletId);
 							updateUserPoints.setInt(3, pChosen);
@@ -256,7 +259,7 @@ public class CustomerRedeemPoints {
 							
 							// Deduct the quantity from the rule
 							int newQuantity = quantity - 1;
-							PreparedStatement updateRuleQuantity = conn.prepareStatement("UPDATE TABLE RewardRedeemingRules SET quantity = ? WHERE WHERE pId = ? AND ruleVersion = ? AND ruleCode = ?");
+							PreparedStatement updateRuleQuantity = conn.prepareStatement("UPDATE RewardRedeemingRules SET quantity = ? WHERE pId = ? AND ruleVersion = ? AND ruleCode = ?");
 							updateRuleQuantity.setInt(1, newQuantity);
 							updateRuleQuantity.setInt(2, pChosen);
 							updateRuleQuantity.setInt(3, chosenRuleVersion);

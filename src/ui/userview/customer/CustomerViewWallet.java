@@ -1,6 +1,7 @@
 package ui.userview.customer;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Scanner;
@@ -30,8 +31,9 @@ public class CustomerViewWallet {
 			
 			System.out.println("------------------------------");
 			System.out.println("Your Wallet:");
+			System.out.println("Loyalty Programs:");
 			
-			// Go through our wallet
+			// Go through our wallet programs/points
 			while(rs.next()) {
 				// Get the information on this participation
 				int pid = rs.getInt("pId");
@@ -66,12 +68,29 @@ public class CustomerViewWallet {
 					}
 					
 					// Print to user
-					System.out.println("- Program: " + programName + "\n     Points: " + points + "\n     All Time Points Earned:" + pointsAllTime + "\n     Tier:" + tierName);
+					System.out.println("- Program: " + programName + "\n     Points: " + points + "\n     All Time Points Earned: " + pointsAllTime + "\n     Tier: " + tierName);
 				} else {
 					// Print to user
-					System.out.println("- Program: " + programName + "\n     Points: " + points + "\n     All Time Points Earned:" + pointsAllTime);
+					System.out.println("- Program: " + programName + "\n     Points: " + points + "\n     All Time Points Earned: " + pointsAllTime);
 				}
 			}
+			
+			PreparedStatement giftCardsQuery = conn.prepareStatement("SELECT * FROM GiftCards GC, LoyaltyPrograms LP WHERE GC.wId = ? AND LP.id = GC.pId");
+			giftCardsQuery.setInt(1, walletId);
+			ResultSet giftCards = giftCardsQuery.executeQuery();
+			
+			// Go through our gift cards
+			System.out.println("\nGift Cards:");
+			while(giftCards.next()) {
+				// Get the info on the card - program, value, exp date
+				String pName = giftCards.getString("pName");
+				int value = giftCards.getInt("cardValue");
+				Date expDate = giftCards.getDate("expiryDate");
+				
+				// Print out to the user
+				System.out.println("- $" + value + " for " + pName + ", Expires " + expDate.toString());
+			}
+			
 		} catch (Exception e) {
 			System.out.println("Could not connect to database.");
 			System.exit(1);

@@ -60,13 +60,13 @@ public class CustomerPurchase {
 						// Get the card id and value
 						int cardId = cards.getInt("id");
 						cardIds.add(cardId);
-						double value = cards.getDouble("cardValue");
+						double value = cards.getFloat("cardValue");
+						Date expDate = cards.getDate("expiryDate");
 						
 						// Print out option to user
-						System.out.println(i + ") $" + value);
+						System.out.println(i + ") $" + value + ", Expires " + expDate.toString());
 						
 						// Move to next tuple
-						cards.next();
 						i++;
 					}
 					
