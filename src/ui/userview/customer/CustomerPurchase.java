@@ -156,7 +156,7 @@ public class CustomerPurchase {
 					allTimePoints = origPoints.getInt("alltimepoints");
 					tierNumber = origPoints.getInt("tierNumber");
 				}
-				
+			
 				points += pointsToEarn;
 				allTimePoints += pointsToEarn;
 				
@@ -179,7 +179,7 @@ public class CustomerPurchase {
 				// Delete a gift card if necessary
 				if (chosenCardId != -1) {
 					PreparedStatement deleteCard = conn.prepareStatement("DELETE FROM GiftCards WHERE id = ?");
-					deleteCard.setInt(0, chosenCardId);
+					deleteCard.setInt(1, chosenCardId);
 					deleteCard.executeUpdate();
 				}
 				
