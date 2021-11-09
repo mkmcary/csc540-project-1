@@ -43,8 +43,7 @@ public class CustomerRedeemPoints {
 				
 				// All of the programs we participate in
 				pstmt = conn.prepareStatement("SELECT * FROM WalletParticipation WHERE wId = ?");
-				pstmt.setInt(0, walletId);
-				ResultSet participations = pstmt.executeQuery();
+				pstmt.setInt(1, walletId);
 				
 				ArrayList<Integer> ids = new ArrayList<Integer>();
 				//ArrayList<String> codes = new ArrayList<String>();
@@ -57,7 +56,7 @@ public class CustomerRedeemPoints {
 					
 					// See if we participate
 					boolean inProgram = false;
-					participations.beforeFirst();
+					ResultSet participations = pstmt.executeQuery();
 					while(participations.next()) {
 						if(participations.getInt("pId") == id) {
 							inProgram = true;
@@ -72,7 +71,7 @@ public class CustomerRedeemPoints {
 						// We need the program code, name, and points as well.
 						String code = programs.getString("pCode");
 						String name = programs.getString("pName");
-						allPoints.add(programs.getInt("points"));
+						allPoints.add(participations.getInt("points"));
 						
 						// Print out option to user
 						System.out.println(i + ") " + code + ": " + name);
@@ -275,6 +274,7 @@ public class CustomerRedeemPoints {
 			} catch (SQLException e1) {
 				// Could not connect to database - stop running
 				System.out.println("Could not connect to the database");
+				e1.printStackTrace();
 				System.exit(1);
 			}
 		}
