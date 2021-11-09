@@ -219,17 +219,23 @@ END;
 /
 
 /*
- * Trigger for adding wallet and customer-wallet binding for ever new customer
+ * Trigger for adding wallet for ever new customer
  */
 CREATE OR REPLACE TRIGGER addWallets
 	AFTER INSERT ON Customers
 	FOR EACH ROW
-	DECLARE
-	PRAGMA AUTONOMOUS_TRANSACTION;
 BEGIN
 	INSERT INTO Wallets VALUES(NULL);
-	COMMIT;
-	INSERT INTO CustomerWallets(cId, wId) VALUES(:NEW.id, :New.id);
 END; 
 /
 
+/*
+ * Trigger for adding customer-wallet binding for ever new customer
+ */
+CREATE OR REPLACE TRIGGER addCustomerWallets
+	AFTER INSERT ON Wallets
+	FOR EACH ROW
+BEGIN
+	INSERT INTO CustomerWallets(cId, wId) VALUES(:NEW.id, :New.id);
+END; 
+/

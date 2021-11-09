@@ -34,6 +34,12 @@ public class UserInterface {
         }
 		
 		new Home(conn);
+		try {
+			conn.close();
+		}
+		catch (SQLException e) {
+			System.out.println("Error closing database connection");
+		}
 	}
 
 	public static void newScreen() {
