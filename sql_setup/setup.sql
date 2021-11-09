@@ -61,7 +61,7 @@ CREATE TABLE Tiers (
     pId integer,
     tnum integer,
     tname varchar(255) NOT NULL,
-    multiplier float(3),
+    multiplier number(38, 3),
     threshold integer,
     constraint fk_tiers_pId foreign key (pId) references LoyaltyPrograms (id),
     constraint pk_tiers_tier primary key (pId, tnum),
@@ -234,7 +234,8 @@ DECLARE
 BEGIN
     SELECT COUNT(*) INTO invalidCount 
     FROM Tiers T1 
-    WHERE :NEW.bId = T1.bId AND :NEW.tnum > T1.tnum AND (:NEW.threshold <= T1.threshold OR :NEW.multiplier <= T1.multiplier);
+    WHERE :NEW.pId = T1.pId AND :NEW.tnum > T1.tnum AND (:NEW.threshold <= T1.threshold OR :NEW.multiplier <= T1.multiplier);
+
     IF invalidCount > 0 THEN 
 	    RAISE_APPLICATION_ERROR(-20005, 'Invalid Tier order.');
 	END IF;

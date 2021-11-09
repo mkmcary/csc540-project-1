@@ -65,6 +65,7 @@ public class LoyaltyPrograms {
             oops.printStackTrace();
         }
         
+        System.out.println(SEPARATOR);
         String pName = null;
         if (programId < 0) {
             pName = getProgramName(scanner);
@@ -72,7 +73,7 @@ public class LoyaltyPrograms {
         
         boolean back = false;
         while (!back) {
-            System.out.println(SEPARATOR);
+            System.out.println("\nSelect your program type: ");
             System.out.println("1. Regular");
             System.out.println("2. Tier");
             System.out.println("3. Go back");
@@ -108,6 +109,9 @@ public class LoyaltyPrograms {
                     back = true;
                 }
             }
+            if (!back) {
+                System.out.println(SEPARATOR);
+            }
         }
 
         // scanner.close();
@@ -119,7 +123,6 @@ public class LoyaltyPrograms {
      * @return name of program
      */
     private static String getProgramName(Scanner scanner) {
-        System.out.println(SEPARATOR);
         System.out.println("Enter a name for your loyalty program: ");
         String name = scanner.nextLine();
         return name;

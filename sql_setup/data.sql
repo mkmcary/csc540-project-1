@@ -2,7 +2,7 @@
 INSERT INTO Brands (bname, baddress, username, pass, joinDate) values ('Brand X', '503 Rolling Creek Dr Austin, AR', 'brandx', 'pass', TO_DATE('2021-04-01', 'yyyy-mm-dd'));
 INSERT INTO Brands (bname, baddress, username, pass, joinDate) values ('Brand Y', '939 Orange Ave Coronado, CA', 'brandy', 'pass', TO_DATE('2021-03-25', 'yyyy-mm-dd'));
 INSERT INTO Brands (bname, baddress, username, pass, joinDate) values ('Brand Z', '20 Roszel Rd Princeton, NJ', 'brandz', 'pass', TO_DATE('2021-05-08', 'yyyy-mm-dd'));
-
+INSERT INTO Brands (bname, baddress, username, pass, joinDate) values ('test', '503 Rolling Creek Dr Austin, AR', 'test', 'test', TO_DATE('2021-04-01', 'yyyy-mm-dd'));
 -- Loyalty Programs
 INSERT INTO LoyaltyPrograms (pName, isTiered, bId) values ('SportGoods', 'Y', 1);
 INSERT INTO LoyaltyPrograms (pName, isTiered, bId) values ('MegaCenter', 'Y', 2);

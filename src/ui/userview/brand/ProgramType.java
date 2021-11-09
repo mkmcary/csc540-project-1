@@ -48,9 +48,6 @@ public class ProgramType {
         this.tiered = tiered;
         this.conn = conn;
 
-        if (this.programId < 0) {
-            this.programId = addProgram();
-        }
         programTypeMenu();
     }
 
@@ -63,9 +60,12 @@ public class ProgramType {
         Scanner scanner = new Scanner(System.in);
         boolean back = false;
 
+        System.out.println(SEPARATOR);
+        if (programId < 0) {
+            programId = addProgram();
+        }
+        
         while (!back) {
-            System.out.println(SEPARATOR);
-
             if (tiered) {
                 System.out.println("1. Tier Set up");
                 System.out.println("2. Activity Type");
@@ -107,6 +107,10 @@ public class ProgramType {
                     back = true;
                 }
             }
+            
+            if (!back) {
+                System.out.println("\n" + SEPARATOR);
+            }
         }
         
         // scanner.close();
@@ -118,7 +122,6 @@ public class ProgramType {
      * @return id of program
      */
     private static int addProgram() {
-        System.out.println(SEPARATOR);
         int programId = -1;
         
         try {
@@ -150,7 +153,7 @@ public class ProgramType {
                     
                     rs = pstmt.getGeneratedKeys();
                     if (rs.next()) {
-                        programId = rs.getInt(1);
+                        programId = Integer.parseInt(rs.getString(5));
                     }
                 } catch (SQLException e) {
                     System.out.println("Error: " + e.getMessage());
