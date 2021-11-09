@@ -115,7 +115,7 @@ public class CustomerRedeemPoints {
 					System.out.println("------------------------------");
 					System.out.println("1. Rewards Selection");
 					System.out.println("2. Go Back");
-					System.out.println("Please enter your choice: ");
+					System.out.print("Please enter your choice: ");
 					String nextInput = scan.next();
 					// Convert and validate the user input
 					try {
@@ -142,8 +142,7 @@ public class CustomerRedeemPoints {
 							while(programRules.next()) {
 								// Get basic info
 								int pointsForRule = programRules.getInt("points");
-								int gcValue = programRules.getInt("gcValue");
-								String rewardId = programRules.getString("rId");
+								int gcValue = programRules.getInt("gcVal");
 								
 								String rewardName = programRules.getString("rName");
 								
@@ -169,6 +168,7 @@ public class CustomerRedeemPoints {
 							System.out.println(j + ") Go Back");
 							
 							// Get user input
+							System.out.print("Enter your selection (1-" + goBackOption + "): ");
 							String unvalidatedRewardIndexChoice = scan.next();
 							int rewardIndexChoice = 0;
 							try {
@@ -229,7 +229,7 @@ public class CustomerRedeemPoints {
 							// If its a gift card, give the user a gift card
 							if(chosenRewardName.equals("Gift Card")) {
 								Date expDate = chosenRule.getDate("gcExp");
-								PreparedStatement giftCardInsertion = conn.prepareStatement("INSERT INTO GiftCards (pId, wId, cardValue, gcExp) values (?, ?, ?, ?)");
+								PreparedStatement giftCardInsertion = conn.prepareStatement("INSERT INTO GiftCards (pId, wId, cardValue, expiryDate) values (?, ?, ?, ?)");
 								giftCardInsertion.setInt(1, pChosen);
 								giftCardInsertion.setInt(2, walletId);
 								giftCardInsertion.setFloat(3, quantity);
