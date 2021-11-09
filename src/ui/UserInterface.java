@@ -5,6 +5,8 @@ package ui;
 
 import java.sql.*;
 
+import db.SafeDatabaseConnection;
+
 /**
  * @author Matthew Martin
  * @author Grey Files
@@ -13,26 +15,21 @@ import java.sql.*;
  */
 public class UserInterface {
 	
-	static final String jdbcURL = "jdbc:oracle:thin:@ora.csc.ncsu.edu:1521:orcl01";
-	
 	public static void main(String[] args) {
+		// Create a safe database connection
+		SafeDatabaseConnection.initializeInstance(args[0], args[1]);
+		SafeDatabaseConnection sdc = SafeDatabaseConnection.getInstance();
+        Connection conn = sdc.getConnection();
 		
-        Connection conn = null;
-		
-		try {
-			Class.forName("oracle.jdbc.OracleDriver");
-
-		    String user = args[0];
-		    String passwd = args[1];
-	        
-		    System.out.println("user: " + user + " pass: " + passwd);
-            conn = DriverManager.getConnection(jdbcURL, user, passwd);
-            
-    	} catch (Throwable e) {
-    		System.out.println(e.getMessage());
-	        System.out.println("Error in database connection");
-        }
-		
+        // Create the shutdown hook to close the connection upon exit.
+        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+        	public void run() {
+        		System.out.println("Closing the db connection.");
+        		SafeDatabaseConnection.closeConnection();
+        	}
+        }, "Shutdown-thread"));
+        
+        // Create the homepage.
 		new Home(conn);
 		try {
 			conn.close();

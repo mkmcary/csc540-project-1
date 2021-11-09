@@ -183,6 +183,8 @@ public class CustomerPurchase {
 					deleteCard.executeUpdate();
 				}
 				
+				
+				
 				System.out.println("Successfully completed a purchase!");
 				break;
 			} catch (SQLException e1) {
