@@ -52,7 +52,7 @@ public class BrandLanding {
         
         // Handles invalid input
         do {
-            System.out.print("\nEnter an interger that corresponds to the menu above: ");
+            System.out.print("\nEnter an integer that corresponds to the menu above: ");
             if (scanner.hasNextInt()) {
                 page = scanner.nextInt();
                 if (page < 1 || page > pages) {

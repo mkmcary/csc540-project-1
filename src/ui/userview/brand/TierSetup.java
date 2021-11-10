@@ -50,10 +50,15 @@ public class TierSetup {
             int page = validPage(scanner, 2);
 
             if (page == 1) {
+                boolean scan = true;
                 try {
                     System.out.println("Please enter the following information:");
                     System.out.print("Number of tiers (max 3): ");
                     int tiers = scanner.nextInt();
+                    if (tiers < 1 || tiers > 3) {
+                        scan = false;
+                        throw new IllegalArgumentException();
+                    }
 
                     String[] tierNames = new String[tiers];
                     System.out.println("\nName of the tiers (in increasing order of precedence): ");
@@ -79,13 +84,14 @@ public class TierSetup {
 
                     boolean success = insertTiers(tierNames, thresholds, multipliers);
                     if (success) {
-                        System.out.println("Tiers have been successfully added to the program.");
+                        System.out.println("\nTiers have been successfully added to the program.");
                     } else {
-                        System.out.println("Tiers were not added to the program.");
+                        System.out.println("\nTiers were not added to the program.");
                     }
                 } catch (Exception e) {
-                    // Incorrect data type.
-                    scanner.next();
+                    if (scan) {
+                        scanner.next();
+                    }
                     System.out.println("\nInvalid input.");
                 }
             } else {
@@ -113,21 +119,28 @@ public class TierSetup {
             try {
                 pstmt = conn.prepareStatement("INSERT INTO Tiers VALUES(?,?,?,?,?)");
                 
-                for (int i = 0; i < names.length; i++) {
-                    pstmt.clearParameters();
-                    pstmt.setInt(1, id);
-                    pstmt.setInt(2, i);
-                    pstmt.setString(3, names[i]);
-                    pstmt.setFloat(4, multipliers[i]);
-                    pstmt.setInt(5, thresholds[i]);
-                    pstmt.addBatch();
-                }
-                
                 try {
+                    for (int i = 0; i < names.length; i++) {
+                        for (int j = 0; j < i; j++) {
+                            if (thresholds[i] <= thresholds[j] || multipliers[i] <= multipliers[j]) {
+                                close(pstmt);
+                                throw new SQLException("Invalid Ordering of Tiers.");
+                            }
+                        }
+                        
+                        pstmt.clearParameters();
+                        pstmt.setInt(1, id);
+                        pstmt.setInt(2, i);
+                        pstmt.setString(3, names[i]);
+                        pstmt.setFloat(4, multipliers[i]);
+                        pstmt.setInt(5, thresholds[i]);
+                        pstmt.addBatch();
+                    }
+                    
                     pstmt.executeBatch();
                 } catch (SQLException e) {
                     success = false;
-                    System.out.println("Error: " + e.getMessage());
+                    System.out.println("\nError: " + e.getMessage());
                 }
             } finally {
                 close(pstmt);
@@ -152,7 +165,7 @@ public class TierSetup {
 
         // Handles invalid input
         do {
-            System.out.print("\nEnter an interger that corresponds to the menu above: ");
+            System.out.print("\nEnter an integer that corresponds to the menu above: ");
             if (scanner.hasNextInt()) {
                 page = scanner.nextInt();
                 if (page < 1 || page > pages) {

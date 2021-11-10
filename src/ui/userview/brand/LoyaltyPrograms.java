@@ -43,36 +43,36 @@ public class LoyaltyPrograms {
     public static void loyaltyProgramMenu() {
         Scanner scanner = new Scanner(System.in);
         
-        int programId = -1;
-        String isTiered = null;
-        try {
-            Statement stmt = null;
-            ResultSet rs = null;
-
-            try {
-                stmt = conn.createStatement();
-                
-                rs = stmt.executeQuery("SELECT id, isTiered FROM LoyaltyPrograms WHERE bId =" + bId);
-                if (rs.next()) {
-                    programId = rs.getInt("id");
-                    isTiered = rs.getString("isTiered");
-                }
-            } finally {
-                close(rs);
-                close(stmt);
-            }
-        } catch (Throwable oops) {
-            oops.printStackTrace();
-        }
-        
         System.out.println(SEPARATOR);
-        String pName = null;
-        if (programId < 0) {
-            pName = getProgramName(scanner);
-        }
-        
         boolean back = false;
         while (!back) {
+            int programId = -1;
+            String isTiered = null;
+            try {
+                Statement stmt = null;
+                ResultSet rs = null;
+
+                try {
+                    stmt = conn.createStatement();
+                    
+                    rs = stmt.executeQuery("SELECT id, isTiered FROM LoyaltyPrograms WHERE bId =" + bId);
+                    if (rs.next()) {
+                        programId = rs.getInt("id");
+                        isTiered = rs.getString("isTiered");
+                    }
+                } finally {
+                    close(rs);
+                    close(stmt);
+                }
+            } catch (Throwable oops) {
+                oops.printStackTrace();
+            }
+            
+            String pName = null;
+            if (programId < 0) {
+                pName = getProgramName(scanner);
+            }
+            
             System.out.println("\nSelect your program type: ");
             System.out.println("1. Regular");
             System.out.println("2. Tier");
@@ -141,7 +141,7 @@ public class LoyaltyPrograms {
 
         // Handles invalid input
         do {
-            System.out.print("\nEnter an interger that corresponds to the menu above: ");
+            System.out.print("\nEnter an integer that corresponds to the menu above: ");
             if (scanner.hasNextInt()) {
                 page = scanner.nextInt();
                 if (page < 1 || page > pages) {

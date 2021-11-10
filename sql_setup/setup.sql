@@ -173,7 +173,7 @@ CREATE TABLE GiftCards (
     id integer GENERATED ALWAYS AS IDENTITY,
     pId integer,
     wId integer,
-    cardValue float,
+    cardValue number(38, 2),
     expiryDate date,
     constraint pk_giftcards_gcId primary key (id),
     constraint fk_giftcards_pId foreign key (pId) references LoyaltyPrograms (id),
@@ -224,14 +224,16 @@ END;
 /
 
 /*
- * Trigger check higher Tiers have greater threshold and multipliers than their lower tiers for a program
+ * Trigger check higher Tiers have greater threshold and multipliers than their lower tiers for a program.
+ * useless bc Oracle is dum
  */
+/*
 CREATE OR REPLACE TRIGGER validTierOrder 
-    BEFORE INSERT ON Tiers 
+    AFTER INSERT ON Tiers 
     FOR EACH ROW 
 DECLARE 
     invalidCount integer := 0;
-BEGIN
+BEGIN 
     SELECT COUNT(*) INTO invalidCount 
     FROM Tiers T1 
     WHERE :NEW.pId = T1.pId AND :NEW.tnum > T1.tnum AND (:NEW.threshold <= T1.threshold OR :NEW.multiplier <= T1.multiplier);
@@ -241,3 +243,4 @@ BEGIN
 	END IF;
 END;
 /
+*/
