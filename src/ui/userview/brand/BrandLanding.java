@@ -309,7 +309,7 @@ public class BrandLanding {
                 		System.out.println("Rule Code: " + tempCode);
                 	}
                 	
-                	System.out.print("Enter your Brand Reward rule code (format: RE##): ");
+                	System.out.print("\nEnter your Brand Reward rule code (format: RE##): ");
                 	eaBrandRuleCode = s.next();
                 	
                 	//Checks for uniqueness
@@ -319,7 +319,7 @@ public class BrandLanding {
         	    			+ "WHERE ruleCode ='" + eaBrandRuleCode + "'";
         	    	rs = stmt.executeQuery(SQL);
         	    	if (rs.next()) {
-        	    		System.out.println("This RE code already exists in the table! Use a unique one!");
+        	    		System.out.println("\nThis RE code already exists in the table! Use a unique one!");
         	    		brandRuleCodeRepeat = true;
         	    	}
                 	
@@ -332,15 +332,20 @@ public class BrandLanding {
                 	}
             	} while (brandRuleCodeRepeat);
     			
+            	//Get the loyalty ID from Brands table
+            	int lpId = getLoyaltyId(id);
+            	if (lpId == -1) return;
+            	
     			//Gets Activity Code
             	boolean anotherCode;
             	String eaCode;
             	do {
             		anotherCode = false;
-                	System.out.println("What activity would you like to update? ");
+                	System.out.println("What activity would you like to update?");
                 	
                 	Statement stmt = conn.createStatement();
-                	String SQL = "SELECT UNIQUE ruleCode, acId FROM RewardEarningRules";
+                	String SQL = "SELECT UNIQUE ruleCode, acId FROM RewardEarningRules "
+                			+ "WHERE pId=" + lpId;
                 	ResultSet rs = stmt.executeQuery(SQL);
            
                 	while (rs.next()) {
@@ -373,10 +378,6 @@ public class BrandLanding {
                 	    digit = true;
                 	}
             	} while (digit);
-            	
-            	//Get the loyalty ID from Brands table
-            	int lpId = getLoyaltyId(id);
-            	if (lpId == -1) return;
             	
             	System.out.println("\nPress 1 to submit and prompt another rule.");
                 System.out.println("Press 2 to discard info and go back to Brand Landing page");
@@ -638,7 +639,7 @@ public class BrandLanding {
         	    			+ "WHERE ruleCode ='" + rrBrandRuleCode + "'";
         	    	rs = stmt.executeQuery(SQL);
         	    	if (rs.next()) {
-        	    		System.out.println("This RE code already exists in the table! Use a unique one!");
+        	    		System.out.println("This RR code already exists in the table! Use a unique one!");
         	    		brandRuleCodeRepeat = true;
         	    	}
          
@@ -650,6 +651,10 @@ public class BrandLanding {
                 		brandRuleCodeRepeat = true;
                 	}
             	} while (brandRuleCodeRepeat);
+            	
+            	//Get the loyalty ID from Brands table
+            	int lpId = getLoyaltyId(id);
+            	if (lpId == -1) return;
     			
     			//Gets Reward Code
             	boolean anotherCode;
@@ -659,7 +664,8 @@ public class BrandLanding {
                 	System.out.println("What reward would you like to update from the list below? ");
                 	
                 	Statement stmt = conn.createStatement();
-                	String SQL = "SELECT UNIQUE ruleCode, rId FROM RewardRedeemingRules";
+                	String SQL = "SELECT UNIQUE ruleCode, rId FROM RewardRedeemingRules "
+                			+ "WHERE pId=" + lpId;
                 	ResultSet rs = stmt.executeQuery(SQL);
                 	
                 	while (rs.next()) {
@@ -729,10 +735,7 @@ public class BrandLanding {
                 	    digit = true;
                 	}
             	} while (digit);
-            	
-            	//Get the loyalty ID from Brands table
-            	int lpId = getLoyaltyId(id);
-            	if (lpId == -1) return;
+            
             	
             	System.out.println("\nPress 1 to submit and prompt another rule.");
                 System.out.println("Press 2 to discard info and go back to Brand Landing page");
