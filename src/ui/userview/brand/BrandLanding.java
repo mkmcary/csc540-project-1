@@ -187,17 +187,36 @@ public class BrandLanding {
             	} while (brandRuleCodeRepeat);
             	
             	System.out.println();
+            	
+            	//Get the loyalty ID from Brands table
+            	int lpId = getLoyaltyId(id);
+            	if (lpId == -1) return;
+            	
             	//Gets Activity Code
             	boolean anotherCode;
             	String eaCode;
             	do {
             		anotherCode = false;
                 	System.out.println("What activity would you like to add? ");
-                	
+
                 	Statement stmt = conn.createStatement();
-                	String SQL = "SELECT acId, acName FROM ActivityCategories";
+                	String SQL = "SELECT acId FROM ProgramActivities WHERE pId = " + lpId;
                 	ResultSet rs = stmt.executeQuery(SQL);
                 	
+                	if (!rs.next()) {
+                		System.out.println("LoyaltyProgram has no activated activities!");
+                		return;
+                	}
+                	//Find activity ID and name from categories only if the activity is activated by LP
+                	SQL = "SELECT acId, acName FROM ActivityCategories "
+                			+ "WHERE EXISTS ( "
+                				+ "SELECT * "
+                				+ "FROM ProgramActivities "
+                				+ "WHERE ActivityCategories.acId = ProgramActivities.acId "
+                				+ "AND ProgramActivities.pId = " + lpId + ")";
+                	
+                	rs = stmt.executeQuery(SQL);
+                
                 	while (rs.next()) {
                 		String tempCode = rs.getString("acId");
                 		String tempName = rs.getString("acName");
@@ -219,7 +238,7 @@ public class BrandLanding {
             	int eaPoints = -1;
             	do {
             	    digit = false;
-            		System.out.print("How many points will '"+ eaCode +"' earn?: ");
+            		System.out.print("\nHow many points will '"+ eaCode +"' earn?: ");
                 	if (s.hasNextInt()) {
                 		eaPoints = s.nextInt();
                 	} else {
@@ -229,11 +248,17 @@ public class BrandLanding {
                 	}
             	} while (digit);
             	
+            	//Check if RERuleCode already exists
+            	Statement stmt = conn.createStatement();
+            	String SQL = "SELECT * "
+            			+ "FROM RewardEarningRules "
+            			+ "WHERE pId = " + lpId + " AND acId = '"+ eaCode + "'";
+            	ResultSet rs = stmt.executeQuery(SQL);
+            	if (rs.next()) {
+            		System.out.println("Reward Earning Rule already exists! Going back...");
+            		return;
+            	}
             	
-            	//Get the loyalty ID from Brands table
-            	int lpId = getLoyaltyId(id);
-            	if (lpId == -1) return;
-
             	System.out.println("\nPress 1 to submit and prompt another rule.");
                 System.out.println("Press 2 to discard info and go back to Brand Landing page");
                 System.out.print("ans: ");
@@ -241,7 +266,7 @@ public class BrandLanding {
                 //Adds information to RE table if user hits 1
                 if (s.nextInt() == 1) {
                 	addToRETable(lpId, eaPoints, eaCode, eaBrandRuleCode);
-                	System.out.println("Rule successfully added!");
+                	System.out.println("\nRule successfully added!");
                 	anotherEntry = true;
                 }
             	
@@ -351,6 +376,7 @@ public class BrandLanding {
             	
             	//Get the loyalty ID from Brands table
             	int lpId = getLoyaltyId(id);
+            	if (lpId == -1) return;
             	
             	System.out.println("\nPress 1 to submit and prompt another rule.");
                 System.out.println("Press 2 to discard info and go back to Brand Landing page");
@@ -391,7 +417,7 @@ public class BrandLanding {
             	String rrBrandRuleCode;
             	do {
             		brandRuleCodeRepeat = false;
-                	System.out.println("what is the Brand Reward rule code?"
+                	System.out.println("\nWhat is the Brand Reward rule code?"
                 			+ "\nThe elements in this list are reward rule codes that are taken:");
                 	
                 	Statement stmt = conn.createStatement();
@@ -403,52 +429,70 @@ public class BrandLanding {
                 		System.out.println("Rule Code: " + tempCode);
                 	}
                 	
-                	System.out.print("Enter your Brand Reward rule code (format: RR##): ");
+                	System.out.print("\nEnter your Brand Reward rule code (format: RR##): ");
                 	rrBrandRuleCode = s.next();
                 	
                 	//Checks for uniqueness
                 	stmt = conn.createStatement();
         	    	SQL = "SELECT * "
-        	    			+ "FROM RewardEarningRules "
+        	    			+ "FROM RewardRedeemingRules "
         	    			+ "WHERE ruleCode ='" + rrBrandRuleCode + "'";
         	    	rs = stmt.executeQuery(SQL);
         	    	if (rs.next()) {
-        	    		System.out.println("This RE code already exists in the table! Use a unique one!");
+        	    		System.out.println("\nThis RE code already exists in the table! Use a unique one!");
         	    		brandRuleCodeRepeat = true;
         	    	}
                 	
         	    	//Checks for proper syntax
                 	if (!rrBrandRuleCode.substring(0,2).equals("RR") 
                 			|| Integer.parseInt(rrBrandRuleCode.substring(2)) < 0) {
-                		System.out.println("Brand Reward rule codes are in format 'RR##' "
-                				+ "where the number is positive");
+                		System.out.println("\nBrand Reward rule codes are in format 'RR##' "
+                				+ "where the number is positive\n");
                 		brandRuleCodeRepeat = true;
                 	}
             	} while (brandRuleCodeRepeat);
+            	
+            	//Get the loyalty ID from Brands table
+            	int lpId = getLoyaltyId(id);
+            	if (lpId == -1) return;
             	
             	//Gets Reward code
             	boolean anotherCode;
             	String rrCode;
             	do {
             		anotherCode = false;
-                	System.out.println("What reward would you like to add to the rule? ");
+                	System.out.println("\nWhat reward would you like to add to the rule?");
                 	
                 	Statement stmt = conn.createStatement();
-                	String SQL = "SELECT rId, rName FROM Rewards";
+                	String SQL = "SELECT rId FROM ProgramRewards WHERE pId = " + lpId;
                 	ResultSet rs = stmt.executeQuery(SQL);
+                	
+                	if (!rs.next()) {
+                		System.out.println("LoyaltyProgram has no activated rewards!");
+                		return;
+                	}
+                	//Find reward ID and name from categories only if the reward is activated by LP
+                	SQL = "SELECT rId, rName FROM Rewards "
+                			+ "WHERE EXISTS ( "
+                				+ "SELECT * "
+                				+ "FROM ProgramRewards "
+                				+ "WHERE Rewards.rId = ProgramRewards.rId "
+                				+ "AND ProgramRewards.pId = " + lpId + ")";
+                	
+                	rs = stmt.executeQuery(SQL);
                 	
                 	while (rs.next()) {
                 		String tempCode = rs.getString("rId");
                 		String tempName = rs.getString("rName");
-                		System.out.println("Reward ID: " + tempName
-                				+ " | Reward Name: " + tempCode);
+                		System.out.println("Reward Name: " + tempName
+                				+ " | Reward ID: " + tempCode);
                 	}
                 	
-                	System.out.print("Enter the reward id code for your selection: ");
+                	System.out.print("\nEnter the reward id code for your selection: ");
                 	rrCode = s.next();
                 	if (!rrCode.substring(0,1).equals("R") || Integer.parseInt(rrCode.substring(1)) < 0) {
-                		System.out.println("reward codes are in format 'R##' "
-                				+ "where the number is positive");
+                		System.out.println("r\neward codes are in format 'R##' "
+                				+ "where the number is positive\n");
                 		anotherCode = true;
                 	}
                 	
@@ -462,7 +506,7 @@ public class BrandLanding {
             	boolean rewardIsGiftCard = false;
             	if (rs.next()) {
             		String rId = rs.getString("rId");
-            		if (rrCode == rId) {
+            		if (rrCode.equals(rId)) {
             			rewardIsGiftCard = true;
             		}
             	}
@@ -470,12 +514,28 @@ public class BrandLanding {
             	//Reward is confirmed GiftCard here, so get info for it
             	int giftCardValue = -1;
             	String giftCardExpirationDate = null;
+            	
             	if (rewardIsGiftCard) {
-            		System.out.println("Your reward selection is a Gift Card! Specify the following. ");
-            		System.out.print("Gift Card value amount: ");
-            		giftCardValue = s.nextInt();
-            		System.out.print("Gift Card Expiration Date FORMAT (YYYY-MM-DD): ");
-            		giftCardExpirationDate = s.next();
+            		System.out.println("\nYour reward selection is a Gift Card! Specify the following. ");
+            		boolean invalid = false;
+            		do {
+            			if (invalid) {
+            				System.out.print("\n Incorrect GiftCard value or Date. Use proper format! \n");
+            			}
+            			invalid = false;
+            			
+                		System.out.print("Gift Card value amount: ");
+                		if (!s.hasNextInt()) {
+                			invalid = true;
+                		} else {
+                			giftCardValue = s.nextInt();
+                		}
+                		
+                		System.out.print("\n Enter the Gift Card Expiration Date FORMAT (YYYY-MM-DD): ");
+                		giftCardExpirationDate = s.next();
+                		if (giftCardExpirationDate.length() != 10) invalid = true;
+            		} while (invalid);
+            		
             	}
             	
             	
@@ -484,7 +544,7 @@ public class BrandLanding {
             	int rrPoints = -1;
             	do {
             	    digit = false;
-            		System.out.print("How many points will '" + rrCode + "' need?: ");
+            		System.out.print("\nHow many points will '" + rrCode + "' need?: ");
                 	if (s.hasNextInt()) {
                 		rrPoints = s.nextInt();
                 	} else {
@@ -508,11 +568,16 @@ public class BrandLanding {
                 	}
             	} while (digit);
             	
-
+            	//Check if RR RuleCode already exists
+            	stmt = conn.createStatement();
+            	SQL = "SELECT * FROM RewardRedeemingRules "
+            			+ "WHERE pId = " + lpId + " AND rId = '" + rrCode + "'";
+            	rs = stmt.executeQuery(SQL);
+            	if (rs.next()) {
+            		System.out.println("Reward Redeeming Rule already exists! Going back...");
+            		return;
+            	}
             	
-            	//Get the loyalty ID from Brands table
-            	int lpId = getLoyaltyId(id);
-
             	System.out.println("\nPress 1 to submit and prompt another rule.");
                 System.out.println("Press 2 to discard info and go back to Brand Landing page");
                 System.out.print("ans: ");
@@ -551,7 +616,7 @@ public class BrandLanding {
             	String rrBrandRuleCode;
             	do {
             		brandRuleCodeRepeat = false;
-                	System.out.println("what is the Brand Reward rule code?"
+                	System.out.println("\nWhat is the new Brand Reward rule code?"
                 			+ "\nThe elements in this list are reward rule codes that are taken:");
                 	
                 	Statement stmt = conn.createStatement();
@@ -586,7 +651,7 @@ public class BrandLanding {
                 	}
             	} while (brandRuleCodeRepeat);
     			
-    			//Gets Activity Code
+    			//Gets Reward Code
             	boolean anotherCode;
             	String rrCode;
             	do {
@@ -594,17 +659,17 @@ public class BrandLanding {
                 	System.out.println("What reward would you like to update from the list below? ");
                 	
                 	Statement stmt = conn.createStatement();
-                	String SQL = "SELECT rId, rName FROM Rewards";
+                	String SQL = "SELECT UNIQUE ruleCode, rId FROM RewardRedeemingRules";
                 	ResultSet rs = stmt.executeQuery(SQL);
                 	
                 	while (rs.next()) {
-                		String tempCode = rs.getString("rId");
-                		String tempName = rs.getString("rName");
-                		System.out.println("Reward ID: " + tempName
-                				+ " | Reward Name: " + tempCode);
+                		String tempCode = rs.getString("ruleCode");
+                		String tempName = rs.getString("rId");
+                		System.out.println("Rule Code: " + tempCode
+                				+ " | Reward Code: " + tempName);
                 	}
                 	
-                	System.out.print("\nEnter the reward id code for your selection: ");
+                	System.out.print("\nEnter the Reward Code for your selection: ");
                 	rrCode = s.next();
                 	if (!rrCode.substring(0,1).equals("R") || Integer.parseInt(rrCode.substring(1)) < 0) {
                 		System.out.println("reward codes are in format 'R##' "
@@ -620,7 +685,7 @@ public class BrandLanding {
             	boolean rewardIsGiftCard = false;
             	if (rs.next()) {
             		String rId = rs.getString("rId");
-            		if (rrCode == rId) {
+            		if (rrCode.equals(rId)) {
             			rewardIsGiftCard = true;
             		}
             	}
@@ -667,6 +732,7 @@ public class BrandLanding {
             	
             	//Get the loyalty ID from Brands table
             	int lpId = getLoyaltyId(id);
+            	if (lpId == -1) return;
             	
             	System.out.println("\nPress 1 to submit and prompt another rule.");
                 System.out.println("Press 2 to discard info and go back to Brand Landing page");
@@ -821,8 +887,11 @@ public class BrandLanding {
      */
     private static void addToRETable(int loyaltyId, int points, String code, String brandRuleCode) throws SQLException {
 
-    	//Check if RERuleCode already exists
-    	
+//    	  pId integer,
+//        ruleVersion integer,
+//        ruleCode varchar(6),
+//        points integer,
+//        acId varchar(255),
     	
     	PreparedStatement pstmt = null;
     	pstmt = conn.prepareStatement("INSERT INTO RewardEarningRules (pId, ruleVersion, ruleCode, points, acId) VALUES(?,?,?,?,?)",
@@ -893,7 +962,6 @@ public class BrandLanding {
             pstmt.setInt(4, points);
             pstmt.setString(5, code);
             pstmt.setInt(6, quantity);
-            
     	}
 
         //Add row to Table
@@ -901,7 +969,6 @@ public class BrandLanding {
         if (rows < 1) {
         	throw new SQLException();
         }
-    	
     }
 
 	/**
@@ -921,7 +988,7 @@ public class BrandLanding {
 		Statement stmt = conn.createStatement();
     	String SQL = "SELECT MAX(ruleVersion) AS latestVersion "
     			+ "FROM RewardEarningRules "
-    			+ "WHERE acId ='" + code + "'";
+    			+ "WHERE acId ='" + code + "' AND pId = "+ loyaltyId;
     	
     	ResultSet rs = stmt.executeQuery(SQL);
     	int latestVersion = -1;
@@ -972,17 +1039,21 @@ public class BrandLanding {
      * @throws SQLException
      */
 	private static void updateRRTable(int loyaltyId, int points, String code, String brandRuleCode, int quantity, boolean giftcard, int gcValue, String gcExpiration) throws SQLException {
-		
-		
 		//We need latest version and increment it by 1
 		Statement stmt = conn.createStatement();
-    	String SQL = "SELECT MAX(ruleVersion) "
-    			+ "FROM RewardEarningRules "
-    			+ "WHERE acId ='" + code + "')";
+    	String SQL = "SELECT MAX(ruleVersion) AS latestVersion "
+    			+ "FROM RewardRedeemingRules "
+    			+ "WHERE rId = '" + code + "' AND pId =" + loyaltyId;
     	ResultSet rs = stmt.executeQuery(SQL);
-    	int latestVersion = rs.getInt("ruleVersion");
+ 
+    	int latestVersion = -1;
+    	if (rs.next()) {
+    		latestVersion = rs.getInt("latestVersion");
+    	} else {
+    		System.out.println("\nRR rule with this reward hasn't been created yet! Add RR rule before updating\n");
+    		return;
+    	}
     	latestVersion++;
-		
 		//Add entry into table
 		PreparedStatement pstmt = null;
 		if (giftcard) {
@@ -1010,7 +1081,6 @@ public class BrandLanding {
             pstmt.setInt(6, quantity);
             
     	}
-         
         //Add row to Table
         int rows = pstmt.executeUpdate();
         if (rows < 1) {
