@@ -15,3 +15,6 @@ drop table PROGRAMREWARDS cascade constraints;
 drop table GIFTCARDS cascade constraints;
 drop table REWARDREDEEMINGRULES cascade constraints;
 drop table REWARDINSTANCES cascade constraints;
+
+drop sequence RLPCount;
+drop sequence TLPCount;

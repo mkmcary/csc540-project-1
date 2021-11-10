@@ -58,11 +58,11 @@ public class RewardTypes {
             int page = validPage(scanner, i);
 
             if (page != i) {
-                boolean success = insertReward(rewards.get(i - 2)[0]);
+                boolean success = insertReward(rewards.get(page - 1)[0]);
                 if (success) {
-                    System.out.println("Reward Type has been successfully added. :))))");
+                    System.out.println("Reward Type: " + rewards.get(page - 1)[1] + " has been enabled in your program.");
                 } else {
-                    System.out.println("Reward Type was not added. :((((");
+                    System.out.println("Reward Type: " + rewards.get(page - 1)[1] + " has already been enabled in the program.");
                 }
             } else {
                 back = true;
@@ -131,7 +131,7 @@ public class RewardTypes {
                     }
                 } catch (SQLException e) {
                     success = false;
-                    System.out.println("Invalid Input: " + e.getErrorCode() + "-" + e.getMessage());
+                    System.out.println("Duplicate insert: " + e.getMessage());
                 }
             } finally {
                 close(pstmt);

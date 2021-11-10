@@ -1,3 +1,5 @@
+/** Variables */
+
 /*
  * Variables for LoyaltyPrograms pCode generation
  */
@@ -10,6 +12,8 @@ CREATE SEQUENCE TLPCount
 	START WITH 1 
 	INCREMENT BY 1 
 	NOMAXVALUE;
+
+/** Tables */
 
 /*
  * Brands
@@ -28,7 +32,7 @@ CREATE TABLE Brands (
  * Loyalty Programs and Tiers
  */
 CREATE TABLE LoyaltyPrograms (
-    pName varchar(255),
+    pName varchar(255) NOT NULL,
     pCode varchar(255),
     isTiered varchar(1),
     bId integer,
@@ -56,8 +60,8 @@ CREATE TABLE Wallets (
 CREATE TABLE Tiers (
     pId integer,
     tnum integer,
-    tname varchar(255),
-    multiplier float(3),
+    tname varchar(255) NOT NULL,
+    multiplier number(38, 3),
     threshold integer,
     constraint fk_tiers_pId foreign key (pId) references LoyaltyPrograms (id),
     constraint pk_tiers_tier primary key (pId, tnum),
@@ -160,7 +164,6 @@ CREATE TABLE Rewards (
 CREATE TABLE ProgramRewards (
 	pId integer,
     rId varchar(255),
-    rewardQuantity integer,
     constraint pk_programrewards_id primary key (pId, rId),
     constraint fk_programrewards_pId foreign key (pId) references LoyaltyPrograms (id),
     constraint fk_programrewards_rId foreign key (rId) references Rewards (rId)
@@ -170,7 +173,7 @@ CREATE TABLE GiftCards (
     id integer GENERATED ALWAYS AS IDENTITY,
     pId integer,
     wId integer,
-    cardValue float,
+    cardValue number(38, 2),
     expiryDate date,
     constraint pk_giftcards_gcId primary key (id),
     constraint fk_giftcards_pId foreign key (pId) references LoyaltyPrograms (id),
@@ -203,6 +206,8 @@ CREATE TABLE RewardInstances (
     constraint fk_rewardinstances_wId foreign key (wId) references Wallets (id)
 );
 
+/* Triggers */
+
 /*
  * Trigger for dynamically generating pCode in LoyaltyPrograms
  */
@@ -211,7 +216,7 @@ CREATE OR REPLACE TRIGGER generateLPCode
     FOR EACH ROW 
 BEGIN
     IF :NEW.isTiered = 'Y' THEN 
-	    :NEW.pCode := CONCAT('TLP', LPAD(TLPCount.NEXTVAL, 2, '0'));
+        :NEW.pCode := CONCAT('TLP', LPAD(TLPCount.NEXTVAL, 2, '0'));
 	ELSE
         :NEW.pCode := CONCAT('RLP', LPAD(RLPCount.NEXTVAL, 2, '0'));
 	END IF;
@@ -219,7 +224,7 @@ END;
 /
 
 /*
- * Trigger for adding wallet for ever new customer
+ * Trigger for adding wallet for every new customer
  */
 CREATE OR REPLACE TRIGGER addWallets
 	AFTER INSERT ON Customers
@@ -230,7 +235,7 @@ END;
 /
 
 /*
- * Trigger for adding customer-wallet binding for ever new customer
+ * Trigger for adding customer-wallet binding for every new customer
  */
 CREATE OR REPLACE TRIGGER addCustomerWallets
 	AFTER INSERT ON Wallets

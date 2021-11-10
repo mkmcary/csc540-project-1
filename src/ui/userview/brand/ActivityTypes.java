@@ -58,11 +58,11 @@ public class ActivityTypes {
             int page = validPage(scanner, i);
             
             if (page != i) {
-                boolean success = insertActivity(activities.get(i - 2)[0]);
+                boolean success = insertActivity(activities.get(page - 1)[0]);
                 if (success) {
-                    System.out.println("Activity Type has been successfully added. :))))");
+                    System.out.println("Activity Type: " + activities.get(page - 1)[1] + " has been enabled in your program.");
                 } else {
-                    System.out.println("Activity Type was not added. :((((");
+                    System.out.println("Activity Type: " + activities.get(page - 1)[1] + " has already been enabled in the program.");
                 }
             } else {
                 back = true;
@@ -131,7 +131,7 @@ public class ActivityTypes {
                     }
                 } catch (SQLException e) {
                     success = false;
-                    System.out.println("Invalid Input: " + e.getErrorCode() + "-" + e.getMessage());
+                    System.out.println("Duplicate insert: " + e.getMessage());
                 }
             } finally {
                 close(pstmt);
@@ -156,7 +156,7 @@ public class ActivityTypes {
 
         // Handles invalid input
         do {
-            System.out.print("\nEnter an interger that corresponds to the menu above: ");
+            System.out.print("\nEnter an integer that corresponds to the menu above: ");
             if (scanner.hasNextInt()) {
                 page = scanner.nextInt();
                 if (page < 1 || page > pages) {

@@ -48,8 +48,9 @@ public class ProgramType {
         this.tiered = tiered;
         this.conn = conn;
 
+        System.out.println(SEPARATOR);
         if (this.programId < 0) {
-            this.programId = addProgram();
+            this.programId  = addProgram();
         }
         programTypeMenu();
     }
@@ -59,14 +60,11 @@ public class ProgramType {
      * 
      * @param tiered  whether program is tiered or not
      */
-    @SuppressWarnings("unused")
     public static void programTypeMenu() {
         Scanner scanner = new Scanner(System.in);
         boolean back = false;
-
+        
         while (!back) {
-            System.out.println(SEPARATOR);
-
             if (tiered) {
                 System.out.println("1. Tier Set up");
                 System.out.println("2. Activity Type");
@@ -78,13 +76,13 @@ public class ProgramType {
                 // Directs to page
                 switch (page) {
                 case 1:
-                    TierSetup ts = new TierSetup(programId, conn);
+                    new TierSetup(programId, conn);
                     break;
                 case 2:
-                    ActivityTypes at = new ActivityTypes(programId, conn);
+                    new ActivityTypes(programId, conn);
                     break;
                 case 3:
-                    RewardTypes rt = new RewardTypes(programId, conn);
+                    new RewardTypes(programId, conn);
                     break;
                 default:
                     back = true;
@@ -99,14 +97,18 @@ public class ProgramType {
                 // Directs to page
                 switch (page) {
                 case 1:
-                    ActivityTypes at = new ActivityTypes(programId, conn);
+                    new ActivityTypes(programId, conn);
                     break;
                 case 2:
-                    RewardTypes rt = new RewardTypes(programId, conn);
+                    new RewardTypes(programId, conn);
                     break;
                 default:
                     back = true;
                 }
+            }
+            
+            if (!back) {
+                System.out.println("\n" + SEPARATOR);
             }
         }
         
@@ -123,10 +125,11 @@ public class ProgramType {
         
         try {
             PreparedStatement pstmt = null;
+            Statement stmt = null;
             ResultSet rs = null;
 
             try {
-                pstmt = conn.prepareStatement("INSERT INTO LoyaltyPrograms (pName, isTiered, bId) VALUES(?,?,?)", Statement.RETURN_GENERATED_KEYS);
+                pstmt = conn.prepareStatement("INSERT INTO LoyaltyPrograms (pName, isTiered, bId) VALUES(?,?,?)");
                 pstmt.clearParameters();
                 pstmt.setString(1, pName);
                 if (tiered) {
@@ -136,22 +139,30 @@ public class ProgramType {
                 }
                 pstmt.setInt(3, bId);
 
+                stmt = conn.createStatement();
                 try {
                     int rows = pstmt.executeUpdate();
                     if (rows < 1) {
                         throw new SQLException();
+                    } else {
+                        if (tiered) {
+                            System.out.println("Tiered Program: " + pName + " has been added.\n");
+                        } else {
+                            System.out.println("Regular Program: " + pName + " has been added.\n");
+                        }
                     }
                     
-                    rs = pstmt.getGeneratedKeys();
+                    rs = stmt.executeQuery("SELECT id FROM LoyaltyPrograms WHERE bId =" + bId);
                     if (rs.next()) {
-                        programId = rs.getInt(1);
+                        programId = rs.getInt("id");
                     }
                 } catch (SQLException e) {
-                    System.out.println("Invalid Input: " + e.getErrorCode() + "-" + e.getMessage());
+                    System.out.println("Error: " + e.getMessage());
                 }
             } finally {
                 close(rs);
                 close(pstmt);
+                close(stmt);
             }
         } catch (Throwable oops) {
             oops.printStackTrace();
@@ -173,7 +184,7 @@ public class ProgramType {
 
         // Handles invalid input
         do {
-            System.out.print("\nEnter an interger that corresponds to the menu above: ");
+            System.out.print("\nEnter an integer that corresponds to the menu above: ");
             if (scanner.hasNextInt()) {
                 page = scanner.nextInt();
                 if (page < 1 || page > pages) {
@@ -193,6 +204,15 @@ public class ProgramType {
     }
     
     private static void close(PreparedStatement st) {
+        if (st != null) {
+            try {
+                st.close();
+            } catch (Throwable whatever) {
+            }
+        }
+    }
+    
+    private static void close(Statement st) {
         if (st != null) {
             try {
                 st.close();

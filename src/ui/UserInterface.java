@@ -15,6 +15,8 @@ import db.SafeDatabaseConnection;
  */
 public class UserInterface {
 	
+	static final String jdbcURL = "jdbc:oracle:thin:@ora.csc.ncsu.edu:1521:orcl01";
+
 	public static void main(String[] args) {
 		// Create a safe database connection
 		SafeDatabaseConnection.initializeInstance(args[0], args[1]);

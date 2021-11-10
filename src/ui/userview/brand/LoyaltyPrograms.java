@@ -40,36 +40,77 @@ public class LoyaltyPrograms {
     /**
      * Brand user adding Loyalty Program
      */
-    @SuppressWarnings("unused")
     public static void loyaltyProgramMenu() {
         Scanner scanner = new Scanner(System.in);
         
-        String pName = null;
-        int programId = getProgramId();
-        if (programId < 0) {
-            pName = getProgramName(scanner);
-        }
+        System.out.println(SEPARATOR);
         boolean back = false;
-        
         while (!back) {
-            System.out.println(SEPARATOR);
+            int programId = -1;
+            String isTiered = null;
+            try {
+                Statement stmt = null;
+                ResultSet rs = null;
+
+                try {
+                    stmt = conn.createStatement();
+                    
+                    rs = stmt.executeQuery("SELECT id, isTiered FROM LoyaltyPrograms WHERE bId =" + bId);
+                    if (rs.next()) {
+                        programId = rs.getInt("id");
+                        isTiered = rs.getString("isTiered");
+                    }
+                } finally {
+                    close(rs);
+                    close(stmt);
+                }
+            } catch (Throwable oops) {
+                oops.printStackTrace();
+            }
+            
+            String pName = null;
+            if (programId < 0) {
+                pName = getProgramName(scanner);
+            }
+            
+            System.out.println("\nSelect your program type: ");
             System.out.println("1. Regular");
             System.out.println("2. Tier");
             System.out.println("3. Go back");
 
             int page = validPage(scanner, 3);
-            ProgramType pt = null;
 
             // Directs to page
-            switch (page) {
-            case 1:
-                pt = new ProgramType(bId, programId, pName, false, conn);
-                break;
-            case 2:
-                pt = new ProgramType(bId, programId, pName, true, conn);
-                break;
-            default:
-                back = true;
+            if (programId < 0) {
+                switch (page) {
+                case 1:
+                    new ProgramType(bId, programId, pName, false, conn);
+                    break;
+                case 2:
+                    new ProgramType(bId, programId, pName, true, conn);
+                    break;
+                default:
+                    back = true;
+                }
+            } else {
+                if (page == 1) {
+                    if (isTiered.equals("N")) {
+                        new ProgramType(bId, programId, pName, false, conn);
+                    } else {
+                        System.out.println("\nRegular Program cannot be created. Tiered Program is already in place.");
+                    }
+                } else if (page == 2) {
+                    if (isTiered.equals("Y")) {
+                        new ProgramType(bId, programId, pName, true, conn);
+                    } else {
+                        System.out.println("\nTiered Program cannot be created. Regular Program is already in place.");
+                    }
+                } else {
+                    back = true;
+                }
+            }
+            if (!back) {
+                System.out.println(SEPARATOR);
             }
         }
 
@@ -82,39 +123,9 @@ public class LoyaltyPrograms {
      * @return name of program
      */
     private static String getProgramName(Scanner scanner) {
-        System.out.println(SEPARATOR);
         System.out.println("Enter a name for your loyalty program: ");
         String name = scanner.nextLine();
         return name;
-    }
-    
-    /**
-     * Gets the loyalty program id, if it exists. Otherwise, return -1.
-     * @return loyalty program id. if exists. Otherwise, -1
-     */
-    private static int getProgramId() {
-        int programId = -1;
-
-        try {
-            Statement stmt = null;
-            ResultSet rs = null;
-
-            try {
-                stmt = conn.createStatement();
-                
-                rs = stmt.executeQuery("SELECT id FROM LoyaltyPrograms WHERE bId =" + bId);
-                if (rs.next()) {
-                    programId = rs.getInt("id");
-                }
-            } finally {
-                close(rs);
-                close(stmt);
-            }
-        } catch (Throwable oops) {
-            oops.printStackTrace();
-        }
-
-        return programId;
     }
     
     /**
@@ -130,7 +141,7 @@ public class LoyaltyPrograms {
 
         // Handles invalid input
         do {
-            System.out.print("\nEnter an interger that corresponds to the menu above: ");
+            System.out.print("\nEnter an integer that corresponds to the menu above: ");
             if (scanner.hasNextInt()) {
                 page = scanner.nextInt();
                 if (page < 1 || page > pages) {
