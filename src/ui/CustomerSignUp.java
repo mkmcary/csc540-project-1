@@ -31,6 +31,9 @@ public class CustomerSignUp {
 		//Used to loop back if invalid brand input
 		boolean validInput = false;
 		
+		//Used to decide whether user gets direct to sign in screen
+		boolean signIn = false;
+		
 		while (!validInput) {
 			try {
 				//MessageDigest md = MessageDigest.getInstance("SHA3-256");
@@ -122,15 +125,13 @@ public class CustomerSignUp {
 	                pstmt.setString(5, password);
 	                
 	                int rows = pstmt.executeUpdate();
-	                rs = pstmt.getGeneratedKeys();
-	                rs.next();
-	                int cid = rs.getInt(1);
 	                
 	                if (rows < 1) {
 	                	throw new SQLException();
 	                }
 	                else {
 	                	validInput = true;
+	                	signIn = true;
 	                	this.submitted = true;
 	         
 	                	System.out.println("Customer information saved");
@@ -144,10 +145,13 @@ public class CustomerSignUp {
 	            
 			} catch (Throwable e) {
 				System.out.println("Invalid Customer Information. Try Again.");
+				System.out.println(e.getMessage());
 			}
 			
 		}
 		
-		new Login(conn);
+		if (signIn) {
+			new Login(conn);
+		}
 	}
 }

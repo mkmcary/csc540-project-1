@@ -52,7 +52,7 @@ public class ShowQueries {
 			while (!selected) {
 				try {
 					selection = Integer.parseInt(scan.nextLine());
-					if (selection < 1 || selection > 8) {
+					if (selection < 1 || selection > 9) {
 						throw new InputMismatchException();
 					}
 					selected = true;
@@ -93,13 +93,13 @@ public class ShowQueries {
 			ResultSet rs = stmt.executeQuery("SELECT C1.cname FROM Customers C1 WHERE NOT EXISTS "
 					+ "(SELECT WP1.wId FROM WalletParticipation WP1 WHERE (WP1.wId = "
 					+ "(SELECT CW1.wId FROM CustomerWallets CW1 WHERE (CW1.cId = C1.id)) AND "
-					+ "WP1.pId = (SELECT LP1.id FROM LoyaltyPrograms LP1 WHERE (LP1.bId = 2)))");
+					+ "WP1.pId = (SELECT LP1.id FROM LoyaltyPrograms LP1 WHERE (LP1.bId = 2))))");
 			
 			while (rs.next()) {
 				System.out.println(rs.getString("cname"));
 			}
 		} catch (Throwable e) {
-			e.printStackTrace();
+			System.out.println(e.getMessage());
 		}
 	}
 	
@@ -107,7 +107,7 @@ public class ShowQueries {
 		try {
 			Statement stmt = conn.createStatement();
 			
-			ResultSet rs = stmt.executeQuery("SELECT C1.id, WP.pId FROM Customers C1, WalletParticipation WP1, CustomerWallets CW1 WHERE "
+			ResultSet rs = stmt.executeQuery("SELECT C1.id, WP1.pId FROM Customers C1, WalletParticipation WP1, CustomerWallets CW1 WHERE "
 					+ "(C1.id = CW1.cId AND CW1.wId = WP1.wId AND WP1.points = 0 AND WP1.alltimepoints = 0)");
 			
 			while (rs.next()) {
@@ -116,7 +116,7 @@ public class ShowQueries {
 				System.out.println("---");
 			}
 		} catch (Throwable e) {
-			e.printStackTrace();
+			System.out.println(e.getMessage());
 		}
 	}
 
@@ -131,7 +131,7 @@ public class ShowQueries {
 				System.out.println(rs.getString("rName"));
 			}
 		} catch (Throwable e) {
-			e.printStackTrace();
+			System.out.println(e.getMessage());
 		}
 	}
 	
@@ -139,14 +139,14 @@ public class ShowQueries {
 		try {
 			Statement stmt = conn.createStatement();
 			
-			ResultSet rs = stmt.executeQuery("SELECT DISTINCT LP1.pName FROM LoyaltyPrograms LP1, RewardRedeemingRules RR1, Rewards R1 WHERE "
-					+ "(LP1.id = RR1.pId AND R1.rId = RR1.rId AND R1.rName = 'Refer a Friend')");
+			ResultSet rs = stmt.executeQuery("SELECT DISTINCT LP1.pName FROM LoyaltyPrograms LP1, RewardEarningRules RE1, ActivityCategories AC1 WHERE "
+					+ "(LP1.id = RE1.pId AND AC1.acId = RE1.acId AND AC1.acName = 'Refer a Friend')");
 			
 			while (rs.next()) {
 				System.out.println(rs.getString("pName"));
 			}
 		} catch (Throwable e) {
-			e.printStackTrace();
+			System.out.println(e.getMessage());
 		}
 	}
 	
