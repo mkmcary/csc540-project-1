@@ -4,6 +4,7 @@
 package ui.userview.customer;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -129,13 +130,9 @@ public class CustomerRedeemPoints {
 					if (choice == 1) {
 						while(true) {
 							// All the rules for this program
-							PreparedStatement programRuleQuery = conn.prepareStatement("SELECT * FROM RewardRedeemingRules WHERE pId = ?");
-							programRuleQuery.setInt(0, pChosen);
+							PreparedStatement programRuleQuery = conn.prepareStatement("SELECT * FROM RewardRedeemingRules RR, Rewards R WHERE pId = ? AND RR.rId = R.rId");
+							programRuleQuery.setInt(1, pChosen);
 							ResultSet programRules = programRuleQuery.executeQuery();
-							
-							// All the rewards
-							PreparedStatement rewardQuery = conn.prepareStatement("SELECT * FROM Rewards");
-							ResultSet allRewards = rewardQuery.executeQuery();
 							
 							// Print out the options to the user
 							ArrayList<String> ruleCodes = new ArrayList<String>();
@@ -146,25 +143,18 @@ public class CustomerRedeemPoints {
 							while(programRules.next()) {
 								// Get basic info
 								int pointsForRule = programRules.getInt("points");
-								int quantity = programRules.getInt("quantity");
+								int gcValue = programRules.getInt("gcValue");
 								String rewardId = programRules.getString("rId");
 								
-								String rewardName = "";
-								allRewards.beforeFirst();
-								while(allRewards.next()) {
-									if(allRewards.getString("rId").equals(rewardId)) {
-										rewardName = allRewards.getString("rName");
-										break;
-									}
-								}
+								String rewardName = programRules.getString("rName");
 								
 								// Special case for gift cards
 								if(rewardName.equals("Gift Card")) {
 									// Print out to the user
-									System.out.println(j + ") $" + quantity + " Gift Card, " + pointsForRule + " Points");
+									System.out.println(j + ") $" + gcValue + " Gift Card, " + pointsForRule + " Points");
 								} else {
 									// Print out to the user
-									System.out.println(j + ") " + quantity + " " + rewardName +", " + pointsForRule + " Points");
+									System.out.println(j + ") " + rewardName +", " + pointsForRule + " Points");
 								}
 								
 								// Get information on this rule in case the user selects it
@@ -208,10 +198,10 @@ public class CustomerRedeemPoints {
 							int chosenRuleVersion = ruleVersions.get(rewardIndexChoice - 1);
 							
 							// Get info on this rule
-							PreparedStatement chosenRuleRequest = conn.prepareStatement("SELECT * FROM RewardRedeemingRules WHERE pId = ? AND ruleVersion = ? AND ruleCode = ?");
-							chosenRuleRequest.setInt(0, pChosen);
-							chosenRuleRequest.setInt(1, chosenRuleVersion);
-							chosenRuleRequest.setString(2, chosenRuleCode);
+							PreparedStatement chosenRuleRequest = conn.prepareStatement("SELECT * FROM RewardRedeemingRules RR, Rewards R WHERE pId = ? AND ruleVersion = ? AND ruleCode = ? AND RR.rId = R.rId");
+							chosenRuleRequest.setInt(1, pChosen);
+							chosenRuleRequest.setInt(2, chosenRuleVersion);
+							chosenRuleRequest.setString(3, chosenRuleCode);
 							ResultSet chosenRule = chosenRuleRequest.executeQuery();
 							
 							// Get the points, rId, and quantity
@@ -219,6 +209,13 @@ public class CustomerRedeemPoints {
 							int chosenRulePoints = chosenRule.getInt("points");
 							String chosenRuleRID = chosenRule.getString("rId");
 							int quantity = chosenRule.getInt("quantity");
+							
+							// Is there enough quantity for this?
+							if (quantity == 0) {
+								// No, we can't get this reward
+								System.out.println("There is no more of this reward to claim.");
+								break;
+							}
 							
 							// Do we have enough points to do this?
 							if (userPoints < chosenRulePoints) {
@@ -228,40 +225,44 @@ public class CustomerRedeemPoints {
 							}
 							
 							// Find out what reward this actually is
-							String chosenRewardName = "";
-							allRewards.beforeFirst();
-							while(allRewards.next()) {
-								if(allRewards.getString("rId").equals(chosenRuleRID)) {
-									chosenRewardName = allRewards.getString("rName");
-									break;
-								}
-							}
+							String chosenRewardName = chosenRule.getString("rName");
 							
 							// If its a gift card, give the user a gift card
 							if(chosenRewardName.equals("Gift Card")) {
-								PreparedStatement giftCardInsertion = conn.prepareStatement("INSERT INTO GiftCards (pId, wId, cardValue) values (?, ?, ?)");
-								giftCardInsertion.setInt(0, pChosen);
-								giftCardInsertion.setInt(1, walletId);
-								giftCardInsertion.setFloat(2, quantity);
+								Date expDate = chosenRule.getDate("gcExp");
+								PreparedStatement giftCardInsertion = conn.prepareStatement("INSERT INTO GiftCards (pId, wId, cardValue, gcExp) values (?, ?, ?, ?)");
+								giftCardInsertion.setInt(1, pChosen);
+								giftCardInsertion.setInt(2, walletId);
+								giftCardInsertion.setFloat(3, quantity);
+								giftCardInsertion.setDate(4, expDate);
 								
 								giftCardInsertion.executeUpdate();
 							}
 							
 							// Record the reward instance
 							PreparedStatement rewardInstanceInsertion = conn.prepareStatement("INSERT INTO RewardInstances (instanceDate, pId, ruleVersion, ruleCode, wId) values (now(), ?, ?, ?, ?)");
-							rewardInstanceInsertion.setInt(0, pChosen);
-							rewardInstanceInsertion.setInt(1, chosenRuleVersion);
-							rewardInstanceInsertion.setString(2, chosenRuleCode);
-							rewardInstanceInsertion.setInt(3, walletId);
+							rewardInstanceInsertion.setInt(1, pChosen);
+							rewardInstanceInsertion.setInt(2, chosenRuleVersion);
+							rewardInstanceInsertion.setString(3, chosenRuleCode);
+							rewardInstanceInsertion.setInt(4, walletId);
 							rewardInstanceInsertion.executeUpdate();
 							
 							// Deduct the points from the user
 							userPoints -= chosenRulePoints;
 							PreparedStatement updateUserPoints = conn.prepareStatement("UPDATE TABLE WalletParticipation SET points = ? WHERE wId = ? AND pId = ?");
-							updateUserPoints.setInt(0, userPoints);
-							updateUserPoints.setInt(1, walletId);
-							updateUserPoints.setInt(2, pChosen);
+							updateUserPoints.setInt(1, userPoints);
+							updateUserPoints.setInt(2, walletId);
+							updateUserPoints.setInt(3, pChosen);
 							updateUserPoints.executeUpdate();
+							
+							// Deduct the quantity from the rule
+							int newQuantity = quantity - 1;
+							PreparedStatement updateRuleQuantity = conn.prepareStatement("UPDATE TABLE RewardRedeemingRules SET quantity = ? WHERE WHERE pId = ? AND ruleVersion = ? AND ruleCode = ?");
+							updateRuleQuantity.setInt(1, newQuantity);
+							updateRuleQuantity.setInt(2, pChosen);
+							updateRuleQuantity.setInt(3, chosenRuleVersion);
+							updateRuleQuantity.setString(4, chosenRuleCode);
+							updateRuleQuantity.executeUpdate();
 							
 							// Print out success to the user
 							System.out.println("Congratulations! You have earned your chosen reward!");
@@ -277,6 +278,6 @@ public class CustomerRedeemPoints {
 				System.exit(1);
 			}
 		}
-		scan.close();
+		//scan.close();
 	}
 }

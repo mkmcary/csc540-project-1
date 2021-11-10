@@ -52,7 +52,5 @@ public class Home {
 						break;
 			}
 		}
-		
-		scan.close();
 	}
 }

@@ -103,8 +103,5 @@ public class Login {
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
-		
-		
-		scan.close();
 	}
 }
