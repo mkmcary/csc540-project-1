@@ -40,6 +40,7 @@ public class Login {
             
             while (!signOn) {
             	
+            	System.out.println("User Log-in\n");
         		System.out.print("Enter Your User ID: ");
         		String userID = scan.nextLine();
         		System.out.print("Enter Your Password: ");
@@ -91,6 +92,13 @@ public class Login {
                     
                     if (!signOn) {
                     	System.out.println("Login Incorrect. Please try again");
+//                    	rs = stmt.executeQuery("SELECT id FROM Admins WHERE username = \'admin\' AND pass = \'pass\'");
+//                    	if (rs.next()) {
+//                    		System.out.println(rs.getInt("id"));
+//                    	}
+//                    	else {
+//                    		System.out.println("No entries found in admin table");
+//                    	}
                     }
     			}
     			else {

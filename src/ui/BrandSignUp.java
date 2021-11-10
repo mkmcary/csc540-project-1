@@ -32,6 +32,9 @@ public class BrandSignUp {
 		//Used to loop back if invalid brand input
 		boolean validInput = false;
 		
+		//Used to decide whether user gets direct to sign in screen
+		boolean signIn = false;
+		
 		while (!validInput) {
 			try {
 				//MessageDigest md = MessageDigest.getInstance("SHA3-256");
@@ -128,6 +131,7 @@ public class BrandSignUp {
 	                }
 	                else {
 	                	validInput = true;
+	                	signIn = true;
 	                	this.submitted = true;
 	                	System.out.println("Brand information saved");
 	                }
@@ -143,6 +147,8 @@ public class BrandSignUp {
 			}
 		}
 		
-		new Login(conn);
+		if (signIn) {
+			new Login(conn);
+		}
 	}
 }

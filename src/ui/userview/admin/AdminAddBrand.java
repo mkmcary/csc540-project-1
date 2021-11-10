@@ -36,7 +36,7 @@ public class AdminAddBrand {
 		while (!validInput) {
 			
 			try {
-				MessageDigest md = MessageDigest.getInstance("SHA3-256");
+				//MessageDigest md = MessageDigest.getInstance("SHA3-256");
 				
 				//Class.forName("oracle.jdbc.OracleDriver");
 
@@ -51,7 +51,7 @@ public class AdminAddBrand {
 	    		String username = scan.nextLine();
 	    		System.out.print("Enter Brand Password: ");
 	    		String password = scan.nextLine();
-				String hashedpw = new String(md.digest(password.getBytes()), StandardCharsets.UTF_8);
+				//String hashedpw = new String(md.digest(password.getBytes()), StandardCharsets.UTF_8);
 				
 				System.out.println("\n1) Add Brand\n2) Go Back");
 				System.out.print("\nSelect an Option: ");
@@ -119,7 +119,7 @@ public class AdminAddBrand {
 	                pstmt.setString(1, name);
 	                pstmt.setString(2, address);
 	                pstmt.setString(3, username);
-	                pstmt.setString(4, hashedpw);
+	                pstmt.setString(4, password);
 	                long millis=System.currentTimeMillis();  
 	                pstmt.setDate(5, new Date(millis));
 	                

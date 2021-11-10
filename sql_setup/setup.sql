@@ -224,33 +224,23 @@ END;
 /
 
 /*
- * Trigger for adding wallet and customer-wallet binding for ever new customer
+ * Trigger for adding wallet for every new customer
  */
 CREATE OR REPLACE TRIGGER addWallets
 	AFTER INSERT ON Customers
 	FOR EACH ROW
 BEGIN
 	INSERT INTO Wallets VALUES(NULL);
-	INSERT INTO CustomerWallets(cId, wId) VALUES(:NEW.id, :New.id);
 END; 
 /
 
 /*
- * Trigger check higher Tiers have greater threshold and multipliers than their lower tiers for a program.
- * Not in use because mutation error from oracle.
+ * Trigger for adding customer-wallet binding for every new customer
  */
--- CREATE OR REPLACE TRIGGER validTierOrder 
---     AFTER INSERT ON Tiers 
---     FOR EACH ROW 
--- DECLARE 
---     invalidCount integer := 0;
--- BEGIN 
---     SELECT COUNT(*) INTO invalidCount 
---     FROM Tiers T1 
---     WHERE :NEW.pId = T1.pId AND :NEW.tnum > T1.tnum AND (:NEW.threshold <= T1.threshold OR :NEW.multiplier <= T1.multiplier);
--- 
---     IF invalidCount > 0 THEN 
---         RAISE_APPLICATION_ERROR(-20005, 'Invalid Tier order.');
---     END IF;
--- END;
--- /
+CREATE OR REPLACE TRIGGER addCustomerWallets
+	AFTER INSERT ON Wallets
+	FOR EACH ROW
+BEGIN
+	INSERT INTO CustomerWallets(cId, wId) VALUES(:NEW.id, :New.id);
+END; 
+/
