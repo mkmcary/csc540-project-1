@@ -228,8 +228,19 @@ public class BrandLanding {
                 	eaCode = s.next();
                 	if (!eaCode.substring(0,1).equals("A") || Integer.parseInt(eaCode.substring(1)) < 0) {
                 		System.out.println("Activity codes are in format 'A##' "
-                				+ "where the number is positive");
+                				+ "where the number is positive\n");
                 		anotherCode = true;
+                	
+                		
+                	//Check if the entry matches an A## in the list
+                	} else {
+                		SQL = "SELECT * FROM ProgramActivities "
+                    			+ "WHERE acId = '" + eaCode + "' AND pId = " + lpId;
+                		rs = stmt.executeQuery(SQL);
+                		if (!rs.next()) {
+                			System.out.print("\nYou have to pick an Activity code from the list!\n");
+                			anotherCode = true;
+                		}
                 	}
             	} while (anotherCode);
             	
@@ -270,8 +281,8 @@ public class BrandLanding {
                 	anotherEntry = true;
                 }
             	
-        	} catch (SQLException e) {
-        		System.out.println("An SQL error occured!");
+        	} catch (Exception e) {
+        		System.out.println("An error occured!");
         	}
 
     	} while (anotherEntry);
@@ -361,6 +372,16 @@ public class BrandLanding {
                 		System.out.println("Activity codes are in format 'A##' "
                 				+ "where the number is positive");
                 		anotherCode = true;
+                		
+                		//Check if the entry matches an A## in the list
+                	} else {
+                		SQL = "SELECT * FROM ProgramActivities "
+                    			+ "WHERE acId = '" + eaCode + "' AND pId = " + lpId;
+                		rs = stmt.executeQuery(SQL);
+                		if (!rs.next()) {
+                			System.out.print("\nYou have to pick an Activity code from the list!\n");
+                			anotherCode = true;
+                		}
                 	}
             	} while (anotherCode);
             	
@@ -390,8 +411,8 @@ public class BrandLanding {
                 	anotherEntry = true;
                 }
             	
-    		} catch (SQLException e) {
-    			System.out.println("An SQL error occured!");
+    		} catch (Exception e) {
+    			System.out.println("An error occured!");
     		}
             
     	} while (anotherEntry);
@@ -495,6 +516,15 @@ public class BrandLanding {
                 		System.out.println("r\neward codes are in format 'R##' "
                 				+ "where the number is positive\n");
                 		anotherCode = true;
+                	
+                	} else {
+                		SQL = "SELECT * FROM ProgramRewards "
+                    			+ "WHERE rId = '" + rrCode + "' AND pId = " + lpId;
+                		rs = stmt.executeQuery(SQL);
+                		if (!rs.next()) {
+                			System.out.print("\nYou have to pick a Reward Code from the list!\n");
+                			anotherCode = true;
+                		}
                 	}
                 	
             	} while (anotherCode);
@@ -563,7 +593,7 @@ public class BrandLanding {
                 	if (s.hasNextInt()) {
                 		rrQuant = s.nextInt();
                 	} else {
-                		System.out.print("Please enter a number: ");
+                		System.out.print("Please enter a number.");
                 	    s.next();
                 	    digit = true;
                 	}
@@ -590,8 +620,8 @@ public class BrandLanding {
                 	anotherEntry = true;
                 }
                 
-        	} catch (SQLException e) {
-        		System.out.println("An SQL error occured!");
+        	} catch (Exception e) {
+        		System.out.println("An error occured!");
         	}
         
     	} while (anotherEntry);
@@ -681,7 +711,17 @@ public class BrandLanding {
                 		System.out.println("reward codes are in format 'R##' "
                 				+ "where the number is positive");
                 		anotherCode = true;
+                	
+                	} else {
+                		SQL = "SELECT * FROM ProgramRewards "
+                    			+ "WHERE rId = '" + rrCode + "' AND pId = " + lpId;
+                		rs = stmt.executeQuery(SQL);
+                		if (!rs.next()) {
+                			System.out.print("\nYou have to pick a Reward Code from the list!\n");
+                			anotherCode = true;
+                		}
                 	}
+                	
             	} while (anotherCode);
             	
             	//See if the reward is a gift card
@@ -699,12 +739,27 @@ public class BrandLanding {
             	//Reward is confirmed GiftCard here, so get info for it
             	int giftCardValue = -1;
             	String giftCardExpirationDate = null;
+            	
             	if (rewardIsGiftCard) {
-            		System.out.println("Your reward selection is a Gift Card! Specify the following. ");
-            		System.out.print("Gift Card value amount: ");
-            		giftCardValue = s.nextInt();
-            		System.out.print("Gift Card Expiration Date FORMAT (YYYY-MM-DD): ");
-            		giftCardExpirationDate = s.next();
+            		System.out.println("\nYour reward selection is a Gift Card! Specify the following. ");
+            		boolean invalid = false;
+            		do {
+            			if (invalid) {
+            				System.out.print("\n Incorrect GiftCard value or Date. Use proper format! \n");
+            			}
+            			invalid = false;
+            			
+                		System.out.print("Gift Card value amount: ");
+                		if (!s.hasNextInt()) {
+                			invalid = true;
+                		} else {
+                			giftCardValue = s.nextInt();
+                		}
+                		
+                		System.out.print("\n Enter the Gift Card Expiration Date FORMAT (YYYY-MM-DD): ");
+                		giftCardExpirationDate = s.next();
+                		if (giftCardExpirationDate.length() != 10) invalid = true;
+            		} while (invalid);
             	}
             	
             	//Gets point value for the reward
@@ -748,8 +803,8 @@ public class BrandLanding {
                 	anotherEntry = true;
                 }
             	
-    		} catch (SQLException e) {
-    			System.out.println("An SQL error occured!");
+    		} catch (Exception e) {
+    			System.out.println("An error occured!");
     		}
     		
     	} while (anotherEntry);
@@ -777,12 +832,13 @@ public class BrandLanding {
         		return false;
         	}
         	System.out.println(" -- Brand has a loyalty program!");
-    	} catch (SQLException e) {
-    		System.out.println("An SQL Error has occured!");
+    	
+    	
+    	} catch (Exception e) {
+    		System.out.println("An Error has occured!");
     		return false;
     	}
-    	
-    	
+
     	//Check if loyalty program has RE Rules
     	try {
         	Statement stmt = conn.createStatement();
@@ -800,9 +856,9 @@ public class BrandLanding {
         		return false;
         	}
         	System.out.println(" -- loyalty program has a reward earning rule!");
-    	} catch (SQLException e) {
+    	} catch (Exception e) {
     		
-    		System.out.println("An SQL Error has occured!");
+    		System.out.println("An Error has occured!");
     		return false;
     	}
     	
@@ -823,8 +879,8 @@ public class BrandLanding {
         		return false;
         	}
         	System.out.println(" -- loyalty program has a reward redeeming rule!");
-    	} catch (SQLException e) {
-    		System.out.println("An SQL Error has occured!");
+    	} catch (Exception e) {
+    		System.out.println("An Error has occured!");
     		return false;
     	}
     	
@@ -846,8 +902,8 @@ public class BrandLanding {
         		String tiered = rs.getString("isTiered");
         		if (tiered.toLowerCase().equals("y")) checkTiered = true;
         	}
-    	} catch (SQLException e) {
-    		System.out.println("An SQL error has occured!");
+    	} catch (Exception e) {
+    		System.out.println("An error has occured!");
     		return false;
     	}
     	
@@ -869,8 +925,8 @@ public class BrandLanding {
             		return false;
             	}
             	System.out.println(" -- loyalty program is tiered and has levels!");
-        	} catch (SQLException e) {
-        		System.out.println("An SQL error has occured!");
+        	} catch (Exception e) {
+        		System.out.println("An error has occured!");
         		return false;
         	}
     	}
