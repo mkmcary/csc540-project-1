@@ -86,7 +86,7 @@ public class TierSetup {
                     if (success) {
                         System.out.println("\nTiers have been successfully added to the program.");
                     } else {
-                        System.out.println("\nTiers were not added to the program.");
+                        System.out.println("Tiers were not added to the program.");
                     }
                 } catch (Exception e) {
                     if (scan) {
@@ -124,7 +124,10 @@ public class TierSetup {
                         for (int j = 0; j < i; j++) {
                             if (thresholds[i] <= thresholds[j] || multipliers[i] <= multipliers[j]) {
                                 close(pstmt);
-                                throw new SQLException("Invalid Ordering of Tiers.");
+                                throw new SQLException("Invalid Ordering of Tiers.\n");
+                            } else if (names[i].equals(names[j])) {
+                                close(pstmt);
+                                throw new SQLException("Tier Names must be unique.\n");
                             }
                         }
                         
