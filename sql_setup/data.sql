@@ -73,13 +73,13 @@ INSERT INTO RewardEarningRules (pId, ruleVersion, ruleCode, points, acId) values
 INSERT INTO RewardEarningRules (pId, ruleVersion, ruleCode, points, acId) values (3, 1, 'RE01', 10, 'A03');
 
 -- Reward Redeeming Rules
-INSERT INTO RewardRedeemingRules (pId, ruleVersion, ruleCode, points, rId, quantity) values (1, 1, 'RR01', 80, 'R01', 40);
+INSERT INTO RewardRedeemingRules (pId, ruleVersion, ruleCode, points, rId, quantity, gcVal, gcExp) values (1, 1, 'RR01', 80, 'R01', 40, 10, TO_DATE('2022-12-31', 'yyyy-mm-dd'));
 INSERT INTO RewardRedeemingRules (pId, ruleVersion, ruleCode, points, rId, quantity) values (1, 1, 'RR02', 70, 'R02', 25);
 
-INSERT INTO RewardRedeemingRules (pId, ruleVersion, ruleCode, points, rId, quantity) values (2, 1, 'RR01', 120, 'R01', 30);
+INSERT INTO RewardRedeemingRules (pId, ruleVersion, ruleCode, points, rId, quantity, gcVal, gcExp) values (2, 1, 'RR01', 120, 'R01', 30, 10, TO_DATE('2022-12-31', 'yyyy-mm-dd'));
 INSERT INTO RewardRedeemingRules (pId, ruleVersion, ruleCode, points, rId, quantity) values (2, 1, 'RR02', 90, 'R02', 50);
 
-INSERT INTO RewardRedeemingRules (pId, ruleVersion, ruleCode, points, rId, quantity) values (3, 1, 'RR01', 100, 'R01', 25);
+INSERT INTO RewardRedeemingRules (pId, ruleVersion, ruleCode, points, rId, quantity, gcVal, gcExp) values (3, 1, 'RR01', 100, 'R01', 25, 10, TO_DATE('2022-12-31', 'yyyy-mm-dd'));
 
 -- Activity Instances
 INSERT INTO ActivityInstances (instanceDate, relevantInfo, pId, ruleVersion, ruleCode, wId) values (TO_DATE('2021-06-10', 'yyyy-mm-dd'), 'Description', 1, 1, 'RE01', 1);
@@ -122,11 +122,11 @@ INSERT INTO RewardInstances (instanceDate, pId, ruleVersion, ruleCode, wId) valu
 INSERT INTO RewardInstances (instanceDate, pId, ruleVersion, ruleCode, wId) values (TO_DATE('2021-10-17', 'yyyy-mm-dd'), 1, 1, 'RR02', 5);
 
 -- Gift Cards
-INSERT INTO GiftCards (pId, wId, cardValue) values (1, 1, 40);
-INSERT INTO GiftCards (pId, wId, cardValue) values (2, 1, 30);
+INSERT INTO GiftCards (pId, wId, cardValue, expiryDate) values (1, 1, 10, TO_DATE('2022-12-31', 'yyyy-mm-dd'));
+INSERT INTO GiftCards (pId, wId, cardValue, expiryDate) values (2, 1, 10, TO_DATE('2022-12-31', 'yyyy-mm-dd'));
 
-INSERT INTO GiftCards (pId, wId, cardValue) values (2, 5, 30);
-INSERT INTO GiftCards (pId, wId, cardValue) values (1, 5, 40);
+INSERT INTO GiftCards (pId, wId, cardValue, expiryDate) values (2, 5, 10, TO_DATE('2022-12-31', 'yyyy-mm-dd'));
+INSERT INTO GiftCards (pId, wId, cardValue, expiryDate) values (1, 5, 10, TO_DATE('2022-12-31', 'yyyy-mm-dd'));
 
 -- Admin
 INSERT INTO Admins (username, pass) values ('admin', 'pass');

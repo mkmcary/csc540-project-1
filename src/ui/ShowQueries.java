@@ -157,10 +157,10 @@ public class ShowQueries {
 		try {
 			Statement stmt = conn.createStatement();
 			
-			ResultSet rs = stmt.executeQuery("SELECT AC.acName AS name, COUNT(*) AS count"
-					+ "FROM LoyaltyPrograms LP, ActivityInstances AI, RewardEarningRules RE, ActivityCategories AC"
-					+ "WHERE LP.bId = 1 AND AI.pId = LP.id AND RE.pId = AI.pId AND RE.ruleVersion = AI.ruleVersion AND RE.ruleCode = AI.ruleCode"
-					+ "AND RE.acId = AC.acId"
+			ResultSet rs = stmt.executeQuery("SELECT AC.acName AS name, COUNT(*) AS count "
+					+ "FROM LoyaltyPrograms LP, ActivityInstances AI, RewardEarningRules RE, ActivityCategories AC "
+					+ "WHERE LP.bId = 1 AND AI.pId = LP.id AND RE.pId = AI.pId AND RE.ruleVersion = AI.ruleVersion AND RE.ruleCode = AI.ruleCode "
+					+ "AND RE.acId = AC.acId "
 					+ "GROUP BY AC.acName");
 			
 			while (rs.next()) {
@@ -177,10 +177,10 @@ public class ShowQueries {
 		try {
 			Statement stmt = conn.createStatement();
 			
-			ResultSet rs = stmt.executeQuery("SELECT C.cname AS name"
-					+ "FROM Customers C, CustomerWallets CW, Brands B, LoyaltyPrograms LP, RewardInstances RI"
-					+ "WHERE B.id = 1 AND LP.bId = B.id AND RI.pId = LP.id AND CW.cId = C.id AND RI.wId = CW.wId"
-					+ "GROUP BY C.cname"
+			ResultSet rs = stmt.executeQuery("SELECT C.cname AS name "
+					+ "FROM Customers C, CustomerWallets CW, Brands B, LoyaltyPrograms LP, RewardInstances RI "
+					+ "WHERE B.id = 1 AND LP.bId = B.id AND RI.pId = LP.id AND CW.cId = C.id AND RI.wId = CW.wId "
+					+ "GROUP BY C.cname "
 					+ "HAVING COUNT(*) > 1");
 			
 			while (rs.next()) {
@@ -196,16 +196,18 @@ public class ShowQueries {
 		try {
 			Statement stmt = conn.createStatement();
 			
-			ResultSet rs = stmt.executeQuery("SELECT B.bname AS name"
-					+ "FROM Brands B1, LoyaltyPrograms LP1, RewardRedeemingRules RR1, (SELECT RR.pId, RR.ruleVersion, RR.ruleCode, COUNT(*) AS count"
-									+ "FROM Brands B2, LoyaltyPrograms LP, RewardInstances RI, RewardRedeemingRules RR"
-									+ "WHERE LP.bId = B2.id AND RI.pId = LP.id AND RR.pId = RI.pId AND RR.ruleVersion = RI.ruleVersion AND RR.ruleCode = RI.ruleCode"
-									+ "GROUP BY RR.pId, RR.ruleVersion, RR.ruleCode) AS CountTable"
-					+ "WHERE B1.id = LP1.pId AND LP1.pId = RR1.pId AND RR1.pId = CountTable.pId AND RR1.ruleVersion = CountTable.ruleVersion AND RR1.ruleCode = CountTable.ruleCode"
-					+ "AND CountTable.count * RR1.points < 500");
+			ResultSet rs = stmt.executeQuery("SELECT B1.bname, LP1.pCode " + 
+					"FROM BRANDS B1, LoyaltyPrograms LP1, RewardInstances RI1, RewardRedeemingRules RRR1 " + 
+					"WHERE (B1.id = LP1.bId AND RI1.pId = LP1.id AND RI1.pId = RRR1.pId AND RI1.ruleVersion = RRR1.ruleVersion AND RI1.ruleCode = RRR1.ruleCode) " + 
+					"GROUP BY (B1.bname, LP1.pCode) " + 
+					"HAVING (SUM(RRR1.points) < 500) " + 
+					"UNION " + 
+					"SELECT B2.bname, LP2.pCode " + 
+					"FROM Brands B2, LoyaltyPrograms LP2 " + 
+					"WHERE (B2.id = LP2.bId AND NOT EXISTS (SELECT * FROM RewardInstances RI2 WHERE RI2.pId = LP2.id))");
 			
 			while (rs.next()) {
-				System.out.println(rs.getString("name"));
+				System.out.println("Brand: " + rs.getString("bname") + ", Code: " + rs.getString("pCode"));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -218,10 +220,10 @@ public class ShowQueries {
 		try {
 			Statement stmt = conn.createStatement();
 			
-			ResultSet rs = stmt.executeQuery("SELECT COUNT(*) AS count"
-					+ "FROM Customers C, CustomerWallets CW, Brands B, LoyaltyPrograms LP, ActivityInstances AI"
-					+ "WHERE C.id = 3 AND CW.cId = 3 AND B.id = 2 AND LP.bId = B.id AND AI.wId = CW.wId"
-					+ "AND AI.pId = LP.id AND AI.instanceDate >= to_date(\'01-08-2021\') AND AI.instanceDate <= to_date(\'30-09-2021\')");
+			ResultSet rs = stmt.executeQuery("SELECT COUNT(*) AS count "
+					+ "FROM Customers C, CustomerWallets CW, Brands B, LoyaltyPrograms LP, ActivityInstances AI "
+					+ "WHERE C.id = 3 AND CW.cId = 3 AND B.id = 2 AND LP.bId = B.id AND AI.wId = CW.wId "
+					+ "AND AI.pId = LP.id AND AI.instanceDate >= to_date(\'01-08-2021\', \'dd-mm-yyyy\') AND AI.instanceDate <= to_date(\'30-09-2021\', \'dd-mm-yyyy\')");
 		
 			while (rs.next()) {
 				System.out.println(rs.getInt("count"));

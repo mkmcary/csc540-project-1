@@ -102,12 +102,14 @@ public class CustomerRewardActivities {
 					
 					// List each choice
 					ArrayList<String> activityChoices = new ArrayList<String>();
+					ArrayList<String> ruleCodes = new ArrayList<String>();
+					ArrayList<Integer> ruleVersions = new ArrayList<Integer>();
 					int choiceNum = 1;
 
 					// Find the appropriate earning types for this program
 					ResultSet reRules = null;
 					try {
-						PreparedStatement findRules = conn.prepareStatement("SELECT * FROM RewardEarningRules WHERE pId = ?");
+						PreparedStatement findRules = conn.prepareStatement("SELECT * FROM RewardEarningRules R1 WHERE pId = ? AND ruleVersion = (SELECT MAX(ruleVersion) FROM RewardEarningRules R2 WHERE R2.pId = R1.pId AND R2.ruleCode = R1.ruleCode)");
 						findRules.setInt(1, pChosen);
 						reRules = findRules.executeQuery();
 					} catch (Exception e) {
@@ -132,6 +134,9 @@ public class CustomerRewardActivities {
 							System.out.println("Could not connect to db2.");
 							System.exit(1);
 						}
+						
+						ruleCodes.add(reRules.getString("ruleCode"));
+						ruleVersions.add(reRules.getInt("ruleVersion"));
 						
 						// Print the option
 						System.out.println(choiceNum + ". " + acName);
@@ -159,31 +164,19 @@ public class CustomerRewardActivities {
 						String chosenActivity = activityChoices.get(choice - 1);
 						
 						// Get the rule with this acId
-						int pid = 0;
-						int ruleVersion = 0;
-						String ruleCode = "";
+						int pid = pChosen;
+						int ruleVersion = ruleVersions.get(choice - 1);
+						String ruleCode = ruleCodes.get(choice - 1);
 						int pointsToEarn = 0;
 						
-						// Reset reRules
-						reRules = null;
-						try {
-							PreparedStatement findRules = conn.prepareStatement("SELECT * FROM RewardEarningRules WHERE pId = ?");
-							findRules.setInt(1, pChosen);
-							reRules = findRules.executeQuery();
-						} catch (Exception e) {
-							System.out.println("Could not connect to db1.");
-							System.exit(1);
-						}
+						PreparedStatement findRuleInfo = conn.prepareStatement("SELECT * FROM RewardEarningRules WHERE pId = ? AND ruleCode = ? AND ruleVersion = ?");
+						findRuleInfo.setInt(1, pid);
+						findRuleInfo.setString(2, ruleCode);
+						findRuleInfo.setInt(3, ruleVersion);
+						ResultSet ruleInfo = findRuleInfo.executeQuery();
 						
-						while(reRules.next()) {
-							String localACID = reRules.getString("acId");
-							if (localACID.equals(chosenActivity)) {
-								pid = reRules.getInt("pId");
-								ruleVersion = reRules.getInt("ruleVersion");
-								ruleCode = reRules.getString("ruleCode");
-								pointsToEarn = reRules.getInt("points");
-							}
-						}
+						ruleInfo.next();
+						pointsToEarn = ruleInfo.getInt("points");
 						
 						// Adjust points to earn if this is a tiered program
 						ArrayList<Integer> tierThresholds = new ArrayList<Integer>();
