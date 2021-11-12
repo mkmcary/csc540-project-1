@@ -62,7 +62,7 @@ public class Login {
     					}
     					selected = true;
     					
-    				} catch (InputMismatchException e) {
+    				} catch (Exception e) {
     					UserInterface.invalidInput();
     				}
     			}

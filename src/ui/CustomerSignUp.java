@@ -70,7 +70,7 @@ public class CustomerSignUp {
 						}
 						selected = true;
 						
-					} catch (InputMismatchException e) {
+					} catch (Exception e) {
 						UserInterface.invalidInput();
 					}
 				}

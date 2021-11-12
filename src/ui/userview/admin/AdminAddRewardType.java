@@ -54,7 +54,7 @@ public class AdminAddRewardType {
 						}
 						selected = true;
 						
-					} catch (InputMismatchException e) {
+					} catch (Exception e) {
 						UserInterface.invalidInput();
 					}
 				}

@@ -54,7 +54,7 @@ public class AdminAddActivityType {
 						}
 						selected = true;
 						
-					} catch (InputMismatchException e) {
+					} catch (Exception e) {
 						UserInterface.invalidInput();
 					}
 				}

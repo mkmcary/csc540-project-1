@@ -53,7 +53,7 @@ public class AdminShowCustomerInfo {
 	    					}
 	    					selected = true;
 	    					
-	    				} catch (InputMismatchException e) {
+	    				} catch (Exception e) {
 	    					UserInterface.invalidInput();
 	    				}
 	    			}

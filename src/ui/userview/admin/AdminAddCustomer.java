@@ -68,7 +68,7 @@ public class AdminAddCustomer {
 						}
 						selected = true;
 						
-					} catch (InputMismatchException e) {
+					} catch (Exception e) {
 						UserInterface.invalidInput();
 					}
 				}
