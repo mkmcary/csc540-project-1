@@ -87,7 +87,6 @@ public class AdminShowBrandInfo {
 	            
 			} catch (Throwable e) {
 				System.out.println("Invalid Brand User ID. Try Again.");
-				System.out.println(e.getMessage());
 			}
 		}
 	    

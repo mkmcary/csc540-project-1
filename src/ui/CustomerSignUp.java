@@ -145,7 +145,6 @@ public class CustomerSignUp {
 	            
 			} catch (Throwable e) {
 				System.out.println("Invalid Customer Information. Try Again.");
-				System.out.println(e.getMessage());
 			}
 			
 		}
