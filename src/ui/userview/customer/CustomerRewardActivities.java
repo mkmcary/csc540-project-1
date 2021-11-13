@@ -40,7 +40,8 @@ public class CustomerRewardActivities {
 				System.out.println("Welcome to the Reward Activities Page!\n");
 				System.out.println("Please choose an program below or exit:");
 				
-				PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM LoyaltyPrograms");
+				PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM LoyaltyPrograms LP, WalletParticipation WP WHERE WP.wId = ? AND WP.pId = LP.id");
+				pstmt.setInt(1, walletId);
 				
 				ResultSet programs = pstmt.executeQuery();
 				ArrayList<Integer> ids = new ArrayList<Integer>();
